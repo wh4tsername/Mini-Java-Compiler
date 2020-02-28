@@ -1,0 +1,75 @@
+%{
+    #include <stdlib.h>
+	#include <string.h>
+	#include <stdio.h>
+%}
+
+IDENT [a-zA-Z][_a-zA-Z0-9]*
+NUMBER ([1-9][0-9]*)|0
+
+%option noyywrap nounput noinput batch debug
+
+%option c++
+%option yyclass="Scanner"
+
+%%
+"class" { return class_n; }
+"public" { return public_n; }
+"static" { return static_n; }
+"void" { return void_n; }
+"main" { return main_n; }
+"extends" { return extends_n; }
+
+"int" { return int_n; }
+"boolean" { return boolean_n; }
+
+"assert" { return assert_n; }
+
+"if" { return if_n; }
+"else" { return else_n; }
+
+"while" { return while_n; }
+
+"System.out.println" { return System.out.println_n; }
+
+"return" { return return_n; }
+
+"length" { return length_n; }
+
+"new" { return new_n; }
+"this" { return this_n; }
+
+"true" { return true_n; }
+"false" { return false_n; }
+
+"{" { return '{'; }
+"}" { return '}'; }
+"(" { return ')'; }
+")" { return ')'; }
+"[" { return '['; }
+"]" { return ']'; }
+";" { return ';'; }
+"," { return ','; }
+"=" { return '='; }
+"." { return '.'; }
+"!" { return '!'; }
+"&&" { return AND; }
+"||" { return OR; }
+"<" { return '<'; }
+">" { return '>'; }
+"<=" { return LE; }
+">=" { return GE; }
+"==" { return EQ; }
+"+" { return '+'; }
+"-" { return '-'; }
+"*" { return '*'; }
+"/" { return '/'; }
+"%" { return '%'; }
+
+" "         { /* space - do nothing */ }
+"\t"        { /* tab symbol - do nothing */ }
+"\n"        { /* end of line symbol - do nothing */}
+{IDENT}     { strcpy(yylval.id_name, yytext); return IDENT; }
+{NUMBER}    { yylval.int_value = strtol(yytext, NULL, 10); return NUMBER; }
+.           { printf("Lexical error: %s\n", yytext); exit(1); }
+%%

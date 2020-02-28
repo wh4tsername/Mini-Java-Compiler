@@ -1,0 +1,4985 @@
+State 60 conflicts: 1 reduce/reduce
+State 68 conflicts: 1 shift/reduce
+State 187 conflicts: 1 shift/reduce
+State 188 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program "end of file"
+
+    1 program: main_class class_declarations
+
+    2 class_declarations: class_declarations class_declaration
+    3                   | %empty
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+    5 class_declaration: "class" "identifier" "{" declarations "}"
+    6                  | "class" "identifier" "extends" "identifier" "{" declarations "}"
+
+    7 declarations: declarations declaration
+    8             | %empty
+
+    9 declaration: variable_declaration
+   10            | method_declaration
+
+   11 method_declaration: "public" type "identifier" "(" ")" "{" statements "}"
+   12                   | "public" type "identifier" "(" formals ")" "{" statements "}"
+
+   13 variable_declaration: type "identifier" ";"
+
+   14 formals: formals "," type "identifier"
+   15        | type "identifier"
+
+   16 type: simple_type
+   17     | array_type
+
+   18 simple_type: "int"
+   19            | "boolean"
+   20            | "void"
+   21            | type_identifier
+
+   22 array_type: simple_type "[" "]"
+
+   23 type_identifier: "identifier"
+
+   24 statements: statements statement
+   25           | %empty
+
+   26 statement: "assert" "(" expression ")"
+   27          | local_variable_declaration
+   28          | "if" "(" expression ")" statement
+   29          | "if" "(" logical_expression ")" statement
+   30          | "if" "(" expression ")" statement "else" statement
+   31          | "if" "(" logical_expression ")" statement "else" statement
+   32          | "while" "(" expression ")" statement
+   33          | "while" "(" logical_expression ")" statement
+   34          | "System.out.println" "(" expression ")" ";"
+   35          | lvalue "=" expression ";"
+   36          | lvalue "=" logical_expression ";"
+   37          | "return" expression ";"
+   38          | "return" logical_expression ";"
+   39          | method_invocation ";"
+   40          | "{" statements "}"
+
+   41 local_variable_declaration: variable_declaration
+
+   42 method_invocation: expression "." "identifier" "(" method_expression ")"
+   43                  | expression "." "identifier" "(" ")"
+
+   44 method_expression: method_expression "," expression
+   45                  | expression
+
+   46 lvalue: expression
+
+   47 expression: "identifier"
+   48           | "number"
+   49           | "-" expression
+   50           | expression "+" expression
+   51           | expression "-" expression
+   52           | expression "*" expression
+   53           | expression "/" expression
+   54           | expression "%" expression
+   55           | "(" expression ")"
+   56           | array_access "." "length"
+   57           | array_access
+   58           | "new" simple_type "[" expression "]"
+   59           | "new" type_identifier "(" ")"
+   60           | "this"
+   61           | method_invocation
+
+   62 array_access: expression "[" expression "]"
+
+   63 logical_expression: expression "&&" expression
+   64                   | expression "||" expression
+   65                   | expression "<" expression
+   66                   | expression ">" expression
+   67                   | expression "<=" expression
+   68                   | expression ">=" expression
+   69                   | expression "==" expression
+   70                   | expression "!=" expression
+   71                   | logical_expression "&&" expression
+   72                   | logical_expression "||" expression
+   73                   | logical_expression "<" expression
+   74                   | logical_expression ">" expression
+   75                   | logical_expression "<=" expression
+   76                   | logical_expression ">=" expression
+   77                   | logical_expression "==" expression
+   78                   | logical_expression "!=" expression
+   79                   | expression "&&" logical_expression
+   80                   | expression "||" logical_expression
+   81                   | expression "<" logical_expression
+   82                   | expression ">" logical_expression
+   83                   | expression "<=" logical_expression
+   84                   | expression ">=" logical_expression
+   85                   | expression "==" logical_expression
+   86                   | expression "!=" logical_expression
+   87                   | "(" logical_expression ")"
+   88                   | "!" logical_expression
+   89                   | "true"
+   90                   | "false"
+
+
+Terminals, with rules where they appear
+
+"end of file" (0) 0
+error (256)
+"class" (258) 4 5 6
+"public" (259) 4 11 12
+"static" (260) 4
+"void" (261) 4 20
+"main" (262) 4
+"extends" (263) 6
+"int" (264) 18
+"boolean" (265) 19
+"assert" (266) 26
+"if" (267) 28 29 30 31
+"else" (268) 30 31
+"while" (269) 32 33
+"System.out.println" (270) 34
+"return" (271) 37 38
+"length" (272) 56
+"new" (273) 58 59
+"this" (274) 60
+"true" (275) 89
+"false" (276) 90
+"{" (277) 4 5 6 11 12 40
+"}" (278) 4 5 6 11 12 40
+"(" (279) 4 11 12 26 28 29 30 31 32 33 34 42 43 55 59 87
+")" (280) 4 11 12 26 28 29 30 31 32 33 34 42 43 55 59 87
+"[" (281) 22 58 62
+"]" (282) 22 58 62
+";" (283) 13 34 35 36 37 38 39
+"," (284) 14 44
+"=" (285) 35 36
+"." (286) 42 43 56
+"!" (287) 88
+"&&" (288) 63 71 79
+"||" (289) 64 72 80
+"<" (290) 65 73 81
+">" (291) 66 74 82
+"<=" (292) 67 75 83
+">=" (293) 68 76 84
+"==" (294) 69 77 85
+"!=" (295) 70 78 86
+"+" (296) 50
+"-" (297) 49 51
+"*" (298) 52
+"/" (299) 53
+"%" (300) 54
+UMINUS (301)
+"identifier" (302) 4 5 6 11 12 13 14 15 23 42 43 47
+"number" (303) 48
+
+
+Nonterminals, with rules where they appear
+
+$accept (49)
+    on left: 0
+program (50)
+    on left: 1, on right: 0
+class_declarations (51)
+    on left: 2 3, on right: 1 2
+main_class (52)
+    on left: 4, on right: 1
+class_declaration (53)
+    on left: 5 6, on right: 2
+declarations (54)
+    on left: 7 8, on right: 5 6 7
+declaration (55)
+    on left: 9 10, on right: 7
+method_declaration (56)
+    on left: 11 12, on right: 10
+variable_declaration (57)
+    on left: 13, on right: 9 41
+formals (58)
+    on left: 14 15, on right: 12 14
+type (59)
+    on left: 16 17, on right: 11 12 13 14 15
+simple_type (60)
+    on left: 18 19 20 21, on right: 16 22 58
+array_type (61)
+    on left: 22, on right: 17
+type_identifier (62)
+    on left: 23, on right: 21 59
+statements (63)
+    on left: 24 25, on right: 4 11 12 24 40
+statement (64)
+    on left: 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40, on right:
+    24 28 29 30 31 32 33
+local_variable_declaration (65)
+    on left: 41, on right: 27
+method_invocation (66)
+    on left: 42 43, on right: 39 61
+method_expression (67)
+    on left: 44 45, on right: 42 44
+lvalue (68)
+    on left: 46, on right: 35 36
+expression (69)
+    on left: 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61, on right:
+    26 28 30 32 34 35 37 42 43 44 45 46 49 50 51 52 53 54 55 58 62
+    63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83
+    84 85 86
+array_access (70)
+    on left: 62, on right: 56 57
+logical_expression (71)
+    on left: 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
+    81 82 83 84 85 86 87 88 89 90, on right: 29 31 33 36 38 71 72 73
+    74 75 76 77 78 79 80 81 82 83 84 85 86 87 88
+
+
+State 0
+
+    0 $accept: . program "end of file"
+    1 program: . main_class class_declarations
+    4 main_class: . "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+    "class"  shift, and go to state 1
+
+    program     go to state 2
+    main_class  go to state 3
+
+
+State 1
+
+    4 main_class: "class" . "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+    "identifier"  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: program . "end of file"
+
+    "end of file"  shift, and go to state 5
+
+
+State 3
+
+    1 program: main_class . class_declarations
+    2 class_declarations: . class_declarations class_declaration
+    3                   | . %empty
+
+    $default  reduce using rule 3 (class_declarations)
+
+    class_declarations  go to state 6
+
+
+State 4
+
+    4 main_class: "class" "identifier" . "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+    "{"  shift, and go to state 7
+
+
+State 5
+
+    0 $accept: program "end of file" .
+
+    $default  accept
+
+
+State 6
+
+    1 program: main_class class_declarations .
+    2 class_declarations: class_declarations . class_declaration
+    5 class_declaration: . "class" "identifier" "{" declarations "}"
+    6                  | . "class" "identifier" "extends" "identifier" "{" declarations "}"
+
+    "class"  shift, and go to state 8
+
+    $default  reduce using rule 1 (program)
+
+    class_declaration  go to state 9
+
+
+State 7
+
+    4 main_class: "class" "identifier" "{" . "public" "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+    "public"  shift, and go to state 10
+
+
+State 8
+
+    5 class_declaration: "class" . "identifier" "{" declarations "}"
+    6                  | "class" . "identifier" "extends" "identifier" "{" declarations "}"
+
+    "identifier"  shift, and go to state 11
+
+
+State 9
+
+    2 class_declarations: class_declarations class_declaration .
+
+    $default  reduce using rule 2 (class_declarations)
+
+
+State 10
+
+    4 main_class: "class" "identifier" "{" "public" . "static" "void" "main" "(" ")" "{" statements "}" "}"
+
+    "static"  shift, and go to state 12
+
+
+State 11
+
+    5 class_declaration: "class" "identifier" . "{" declarations "}"
+    6                  | "class" "identifier" . "extends" "identifier" "{" declarations "}"
+
+    "extends"  shift, and go to state 13
+    "{"        shift, and go to state 14
+
+
+State 12
+
+    4 main_class: "class" "identifier" "{" "public" "static" . "void" "main" "(" ")" "{" statements "}" "}"
+
+    "void"  shift, and go to state 15
+
+
+State 13
+
+    6 class_declaration: "class" "identifier" "extends" . "identifier" "{" declarations "}"
+
+    "identifier"  shift, and go to state 16
+
+
+State 14
+
+    5 class_declaration: "class" "identifier" "{" . declarations "}"
+    7 declarations: . declarations declaration
+    8             | . %empty
+
+    $default  reduce using rule 8 (declarations)
+
+    declarations  go to state 17
+
+
+State 15
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" . "main" "(" ")" "{" statements "}" "}"
+
+    "main"  shift, and go to state 18
+
+
+State 16
+
+    6 class_declaration: "class" "identifier" "extends" "identifier" . "{" declarations "}"
+
+    "{"  shift, and go to state 19
+
+
+State 17
+
+    5 class_declaration: "class" "identifier" "{" declarations . "}"
+    7 declarations: declarations . declaration
+    9 declaration: . variable_declaration
+   10            | . method_declaration
+   11 method_declaration: . "public" type "identifier" "(" ")" "{" statements "}"
+   12                   | . "public" type "identifier" "(" formals ")" "{" statements "}"
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+
+    "public"      shift, and go to state 20
+    "void"        shift, and go to state 21
+    "int"         shift, and go to state 22
+    "boolean"     shift, and go to state 23
+    "}"           shift, and go to state 24
+    "identifier"  shift, and go to state 25
+
+    declaration           go to state 26
+    method_declaration    go to state 27
+    variable_declaration  go to state 28
+    type                  go to state 29
+    simple_type           go to state 30
+    array_type            go to state 31
+    type_identifier       go to state 32
+
+
+State 18
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" . "(" ")" "{" statements "}" "}"
+
+    "("  shift, and go to state 33
+
+
+State 19
+
+    6 class_declaration: "class" "identifier" "extends" "identifier" "{" . declarations "}"
+    7 declarations: . declarations declaration
+    8             | . %empty
+
+    $default  reduce using rule 8 (declarations)
+
+    declarations  go to state 34
+
+
+State 20
+
+   11 method_declaration: "public" . type "identifier" "(" ")" "{" statements "}"
+   12                   | "public" . type "identifier" "(" formals ")" "{" statements "}"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+
+    "void"        shift, and go to state 21
+    "int"         shift, and go to state 22
+    "boolean"     shift, and go to state 23
+    "identifier"  shift, and go to state 25
+
+    type             go to state 35
+    simple_type      go to state 30
+    array_type       go to state 31
+    type_identifier  go to state 32
+
+
+State 21
+
+   20 simple_type: "void" .
+
+    $default  reduce using rule 20 (simple_type)
+
+
+State 22
+
+   18 simple_type: "int" .
+
+    $default  reduce using rule 18 (simple_type)
+
+
+State 23
+
+   19 simple_type: "boolean" .
+
+    $default  reduce using rule 19 (simple_type)
+
+
+State 24
+
+    5 class_declaration: "class" "identifier" "{" declarations "}" .
+
+    $default  reduce using rule 5 (class_declaration)
+
+
+State 25
+
+   23 type_identifier: "identifier" .
+
+    $default  reduce using rule 23 (type_identifier)
+
+
+State 26
+
+    7 declarations: declarations declaration .
+
+    $default  reduce using rule 7 (declarations)
+
+
+State 27
+
+   10 declaration: method_declaration .
+
+    $default  reduce using rule 10 (declaration)
+
+
+State 28
+
+    9 declaration: variable_declaration .
+
+    $default  reduce using rule 9 (declaration)
+
+
+State 29
+
+   13 variable_declaration: type . "identifier" ";"
+
+    "identifier"  shift, and go to state 36
+
+
+State 30
+
+   16 type: simple_type .
+   22 array_type: simple_type . "[" "]"
+
+    "["  shift, and go to state 37
+
+    $default  reduce using rule 16 (type)
+
+
+State 31
+
+   17 type: array_type .
+
+    $default  reduce using rule 17 (type)
+
+
+State 32
+
+   21 simple_type: type_identifier .
+
+    $default  reduce using rule 21 (simple_type)
+
+
+State 33
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" . ")" "{" statements "}" "}"
+
+    ")"  shift, and go to state 38
+
+
+State 34
+
+    6 class_declaration: "class" "identifier" "extends" "identifier" "{" declarations . "}"
+    7 declarations: declarations . declaration
+    9 declaration: . variable_declaration
+   10            | . method_declaration
+   11 method_declaration: . "public" type "identifier" "(" ")" "{" statements "}"
+   12                   | . "public" type "identifier" "(" formals ")" "{" statements "}"
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+
+    "public"      shift, and go to state 20
+    "void"        shift, and go to state 21
+    "int"         shift, and go to state 22
+    "boolean"     shift, and go to state 23
+    "}"           shift, and go to state 39
+    "identifier"  shift, and go to state 25
+
+    declaration           go to state 26
+    method_declaration    go to state 27
+    variable_declaration  go to state 28
+    type                  go to state 29
+    simple_type           go to state 30
+    array_type            go to state 31
+    type_identifier       go to state 32
+
+
+State 35
+
+   11 method_declaration: "public" type . "identifier" "(" ")" "{" statements "}"
+   12                   | "public" type . "identifier" "(" formals ")" "{" statements "}"
+
+    "identifier"  shift, and go to state 40
+
+
+State 36
+
+   13 variable_declaration: type "identifier" . ";"
+
+    ";"  shift, and go to state 41
+
+
+State 37
+
+   22 array_type: simple_type "[" . "]"
+
+    "]"  shift, and go to state 42
+
+
+State 38
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" ")" . "{" statements "}" "}"
+
+    "{"  shift, and go to state 43
+
+
+State 39
+
+    6 class_declaration: "class" "identifier" "extends" "identifier" "{" declarations "}" .
+
+    $default  reduce using rule 6 (class_declaration)
+
+
+State 40
+
+   11 method_declaration: "public" type "identifier" . "(" ")" "{" statements "}"
+   12                   | "public" type "identifier" . "(" formals ")" "{" statements "}"
+
+    "("  shift, and go to state 44
+
+
+State 41
+
+   13 variable_declaration: type "identifier" ";" .
+
+    $default  reduce using rule 13 (variable_declaration)
+
+
+State 42
+
+   22 array_type: simple_type "[" "]" .
+
+    $default  reduce using rule 22 (array_type)
+
+
+State 43
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" . statements "}" "}"
+   24 statements: . statements statement
+   25           | . %empty
+
+    $default  reduce using rule 25 (statements)
+
+    statements  go to state 45
+
+
+State 44
+
+   11 method_declaration: "public" type "identifier" "(" . ")" "{" statements "}"
+   12                   | "public" type "identifier" "(" . formals ")" "{" statements "}"
+   14 formals: . formals "," type "identifier"
+   15        | . type "identifier"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+
+    "void"        shift, and go to state 21
+    "int"         shift, and go to state 22
+    "boolean"     shift, and go to state 23
+    ")"           shift, and go to state 46
+    "identifier"  shift, and go to state 25
+
+    formals          go to state 47
+    type             go to state 48
+    simple_type      go to state 30
+    array_type       go to state 31
+    type_identifier  go to state 32
+
+
+State 45
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements . "}" "}"
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   24 statements: statements . statement
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "}"                   shift, and go to state 57
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 63
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 46
+
+   11 method_declaration: "public" type "identifier" "(" ")" . "{" statements "}"
+
+    "{"  shift, and go to state 69
+
+
+State 47
+
+   12 method_declaration: "public" type "identifier" "(" formals . ")" "{" statements "}"
+   14 formals: formals . "," type "identifier"
+
+    ")"  shift, and go to state 70
+    ","  shift, and go to state 71
+
+
+State 48
+
+   15 formals: type . "identifier"
+
+    "identifier"  shift, and go to state 72
+
+
+State 49
+
+   26 statement: "assert" . "(" expression ")"
+
+    "("  shift, and go to state 73
+
+
+State 50
+
+   28 statement: "if" . "(" expression ")" statement
+   29          | "if" . "(" logical_expression ")" statement
+   30          | "if" . "(" expression ")" statement "else" statement
+   31          | "if" . "(" logical_expression ")" statement "else" statement
+
+    "("  shift, and go to state 74
+
+
+State 51
+
+   32 statement: "while" . "(" expression ")" statement
+   33          | "while" . "(" logical_expression ")" statement
+
+    "("  shift, and go to state 75
+
+
+State 52
+
+   34 statement: "System.out.println" . "(" expression ")" ";"
+
+    "("  shift, and go to state 76
+
+
+State 53
+
+   37 statement: "return" . expression ";"
+   38          | "return" . logical_expression ";"
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 83
+    array_access        go to state 68
+    logical_expression  go to state 84
+
+
+State 54
+
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   23 type_identifier: . "identifier"
+   58 expression: "new" . simple_type "[" expression "]"
+   59           | "new" . type_identifier "(" ")"
+
+    "void"        shift, and go to state 21
+    "int"         shift, and go to state 22
+    "boolean"     shift, and go to state 23
+    "identifier"  shift, and go to state 25
+
+    simple_type      go to state 85
+    type_identifier  go to state 86
+
+
+State 55
+
+   60 expression: "this" .
+
+    $default  reduce using rule 60 (expression)
+
+
+State 56
+
+   24 statements: . statements statement
+   25           | . %empty
+   40 statement: "{" . statements "}"
+
+    $default  reduce using rule 25 (statements)
+
+    statements  go to state 87
+
+
+State 57
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" . "}"
+
+    "}"  shift, and go to state 88
+
+
+State 58
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   55           | "(" . expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 89
+    array_access       go to state 68
+
+
+State 59
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   49           | "-" . expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 90
+    array_access       go to state 68
+
+
+State 60
+
+   23 type_identifier: "identifier" .
+   47 expression: "identifier" .
+
+    "["           reduce using rule 23 (type_identifier)
+    "["           [reduce using rule 47 (expression)]
+    "identifier"  reduce using rule 23 (type_identifier)
+    $default      reduce using rule 47 (expression)
+
+
+State 61
+
+   48 expression: "number" .
+
+    $default  reduce using rule 48 (expression)
+
+
+State 62
+
+   41 local_variable_declaration: variable_declaration .
+
+    $default  reduce using rule 41 (local_variable_declaration)
+
+
+State 63
+
+   24 statements: statements statement .
+
+    $default  reduce using rule 24 (statements)
+
+
+State 64
+
+   27 statement: local_variable_declaration .
+
+    $default  reduce using rule 27 (statement)
+
+
+State 65
+
+   39 statement: method_invocation . ";"
+   61 expression: method_invocation .
+
+    ";"  shift, and go to state 91
+
+    $default  reduce using rule 61 (expression)
+
+
+State 66
+
+   35 statement: lvalue . "=" expression ";"
+   36          | lvalue . "=" logical_expression ";"
+
+    "="  shift, and go to state 92
+
+
+State 67
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   46 lvalue: expression .
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 46 (lvalue)
+
+
+State 68
+
+   56 expression: array_access . "." "length"
+   57           | array_access .
+
+    "."  shift, and go to state 100
+
+    "."       [reduce using rule 57 (expression)]
+    $default  reduce using rule 57 (expression)
+
+
+State 69
+
+   11 method_declaration: "public" type "identifier" "(" ")" "{" . statements "}"
+   24 statements: . statements statement
+   25           | . %empty
+
+    $default  reduce using rule 25 (statements)
+
+    statements  go to state 101
+
+
+State 70
+
+   12 method_declaration: "public" type "identifier" "(" formals ")" . "{" statements "}"
+
+    "{"  shift, and go to state 102
+
+
+State 71
+
+   14 formals: formals "," . type "identifier"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+
+    "void"        shift, and go to state 21
+    "int"         shift, and go to state 22
+    "boolean"     shift, and go to state 23
+    "identifier"  shift, and go to state 25
+
+    type             go to state 103
+    simple_type      go to state 30
+    array_type       go to state 31
+    type_identifier  go to state 32
+
+
+State 72
+
+   15 formals: type "identifier" .
+
+    $default  reduce using rule 15 (formals)
+
+
+State 73
+
+   26 statement: "assert" "(" . expression ")"
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 104
+    array_access       go to state 68
+
+
+State 74
+
+   28 statement: "if" "(" . expression ")" statement
+   29          | "if" "(" . logical_expression ")" statement
+   30          | "if" "(" . expression ")" statement "else" statement
+   31          | "if" "(" . logical_expression ")" statement "else" statement
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 105
+    array_access        go to state 68
+    logical_expression  go to state 106
+
+
+State 75
+
+   32 statement: "while" "(" . expression ")" statement
+   33          | "while" "(" . logical_expression ")" statement
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 107
+    array_access        go to state 68
+    logical_expression  go to state 108
+
+
+State 76
+
+   34 statement: "System.out.println" "(" . expression ")" ";"
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 109
+    array_access       go to state 68
+
+
+State 77
+
+   89 logical_expression: "true" .
+
+    $default  reduce using rule 89 (logical_expression)
+
+
+State 78
+
+   90 logical_expression: "false" .
+
+    $default  reduce using rule 90 (logical_expression)
+
+
+State 79
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   55           | "(" . expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   87                   | "(" . logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 110
+    array_access        go to state 68
+    logical_expression  go to state 111
+
+
+State 80
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   88                   | "!" . logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 112
+    array_access        go to state 68
+    logical_expression  go to state 113
+
+
+State 81
+
+   47 expression: "identifier" .
+
+    $default  reduce using rule 47 (expression)
+
+
+State 82
+
+   61 expression: method_invocation .
+
+    $default  reduce using rule 61 (expression)
+
+
+State 83
+
+   37 statement: "return" expression . ";"
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    ";"   shift, and go to state 114
+    "."   shift, and go to state 94
+    "&&"  shift, and go to state 115
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+
+State 84
+
+   38 statement: "return" logical_expression . ";"
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+
+    ";"   shift, and go to state 123
+    "&&"  shift, and go to state 124
+    "||"  shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+
+State 85
+
+   58 expression: "new" simple_type . "[" expression "]"
+
+    "["  shift, and go to state 132
+
+
+State 86
+
+   21 simple_type: type_identifier .
+   59 expression: "new" type_identifier . "(" ")"
+
+    "("  shift, and go to state 133
+
+    $default  reduce using rule 21 (simple_type)
+
+
+State 87
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   24 statements: statements . statement
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   40          | "{" statements . "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "}"                   shift, and go to state 134
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 63
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 88
+
+    4 main_class: "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" .
+
+    $default  reduce using rule 4 (main_class)
+
+
+State 89
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   55           | "(" expression . ")"
+   62 array_access: expression . "[" expression "]"
+
+    ")"  shift, and go to state 135
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+
+State 90
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   49 expression: "-" expression .
+   50           | expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+
+    $default  reduce using rule 49 (expression)
+
+
+State 91
+
+   39 statement: method_invocation ";" .
+
+    $default  reduce using rule 39 (statement)
+
+
+State 92
+
+   35 statement: lvalue "=" . expression ";"
+   36          | lvalue "=" . logical_expression ";"
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 136
+    array_access        go to state 68
+    logical_expression  go to state 137
+
+
+State 93
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   62             | expression "[" . expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 138
+    array_access       go to state 68
+
+
+State 94
+
+   42 method_invocation: expression "." . "identifier" "(" method_expression ")"
+   43                  | expression "." . "identifier" "(" ")"
+
+    "identifier"  shift, and go to state 139
+
+
+State 95
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   50           | expression "+" . expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 140
+    array_access       go to state 68
+
+
+State 96
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   51           | expression "-" . expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 141
+    array_access       go to state 68
+
+
+State 97
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   52           | expression "*" . expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 142
+    array_access       go to state 68
+
+
+State 98
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   53           | expression "/" . expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 143
+    array_access       go to state 68
+
+
+State 99
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   54           | expression "%" . expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 144
+    array_access       go to state 68
+
+
+State 100
+
+   56 expression: array_access "." . "length"
+
+    "length"  shift, and go to state 145
+
+
+State 101
+
+   11 method_declaration: "public" type "identifier" "(" ")" "{" statements . "}"
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   24 statements: statements . statement
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "}"                   shift, and go to state 146
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 63
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 102
+
+   12 method_declaration: "public" type "identifier" "(" formals ")" "{" . statements "}"
+   24 statements: . statements statement
+   25           | . %empty
+
+    $default  reduce using rule 25 (statements)
+
+    statements  go to state 147
+
+
+State 103
+
+   14 formals: formals "," type . "identifier"
+
+    "identifier"  shift, and go to state 148
+
+
+State 104
+
+   26 statement: "assert" "(" expression . ")"
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    ")"  shift, and go to state 149
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+
+State 105
+
+   28 statement: "if" "(" expression . ")" statement
+   30          | "if" "(" expression . ")" statement "else" statement
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    ")"   shift, and go to state 150
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "&&"  shift, and go to state 115
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+
+State 106
+
+   29 statement: "if" "(" logical_expression . ")" statement
+   31          | "if" "(" logical_expression . ")" statement "else" statement
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+
+    ")"   shift, and go to state 151
+    "&&"  shift, and go to state 124
+    "||"  shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+
+State 107
+
+   32 statement: "while" "(" expression . ")" statement
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    ")"   shift, and go to state 152
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "&&"  shift, and go to state 115
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+
+State 108
+
+   33 statement: "while" "(" logical_expression . ")" statement
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+
+    ")"   shift, and go to state 153
+    "&&"  shift, and go to state 124
+    "||"  shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+
+State 109
+
+   34 statement: "System.out.println" "(" expression . ")" ";"
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    ")"  shift, and go to state 154
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+
+State 110
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   55           | "(" expression . ")"
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    ")"   shift, and go to state 135
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "&&"  shift, and go to state 115
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+
+State 111
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   87                   | "(" logical_expression . ")"
+
+    ")"   shift, and go to state 155
+    "&&"  shift, and go to state 124
+    "||"  shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+
+State 112
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "&&"  shift, and go to state 115
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+
+State 113
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   88                   | "!" logical_expression .
+
+    $default  reduce using rule 88 (logical_expression)
+
+
+State 114
+
+   37 statement: "return" expression ";" .
+
+    $default  reduce using rule 37 (statement)
+
+
+State 115
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   63                   | expression "&&" . expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   79                   | expression "&&" . logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 156
+    array_access        go to state 68
+    logical_expression  go to state 157
+
+
+State 116
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   64                   | expression "||" . expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   80                   | expression "||" . logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 158
+    array_access        go to state 68
+    logical_expression  go to state 159
+
+
+State 117
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   65                   | expression "<" . expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   81                   | expression "<" . logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 160
+    array_access        go to state 68
+    logical_expression  go to state 161
+
+
+State 118
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   66                   | expression ">" . expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   82                   | expression ">" . logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 162
+    array_access        go to state 68
+    logical_expression  go to state 163
+
+
+State 119
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   67                   | expression "<=" . expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   83                   | expression "<=" . logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 164
+    array_access        go to state 68
+    logical_expression  go to state 165
+
+
+State 120
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   68                   | expression ">=" . expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   84                   | expression ">=" . logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 166
+    array_access        go to state 68
+    logical_expression  go to state 167
+
+
+State 121
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   69                   | expression "==" . expression
+   70                   | . expression "!=" expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   85                   | expression "==" . logical_expression
+   86                   | . expression "!=" logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 168
+    array_access        go to state 68
+    logical_expression  go to state 169
+
+
+State 122
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   63 logical_expression: . expression "&&" expression
+   64                   | . expression "||" expression
+   65                   | . expression "<" expression
+   66                   | . expression ">" expression
+   67                   | . expression "<=" expression
+   68                   | . expression ">=" expression
+   69                   | . expression "==" expression
+   70                   | . expression "!=" expression
+   70                   | expression "!=" . expression
+   71                   | . logical_expression "&&" expression
+   72                   | . logical_expression "||" expression
+   73                   | . logical_expression "<" expression
+   74                   | . logical_expression ">" expression
+   75                   | . logical_expression "<=" expression
+   76                   | . logical_expression ">=" expression
+   77                   | . logical_expression "==" expression
+   78                   | . logical_expression "!=" expression
+   79                   | . expression "&&" logical_expression
+   80                   | . expression "||" logical_expression
+   81                   | . expression "<" logical_expression
+   82                   | . expression ">" logical_expression
+   83                   | . expression "<=" logical_expression
+   84                   | . expression ">=" logical_expression
+   85                   | . expression "==" logical_expression
+   86                   | . expression "!=" logical_expression
+   86                   | expression "!=" . logical_expression
+   87                   | . "(" logical_expression ")"
+   88                   | . "!" logical_expression
+   89                   | . "true"
+   90                   | . "false"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "true"        shift, and go to state 77
+    "false"       shift, and go to state 78
+    "("           shift, and go to state 79
+    "!"           shift, and go to state 80
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation   go to state 82
+    expression          go to state 170
+    array_access        go to state 68
+    logical_expression  go to state 171
+
+
+State 123
+
+   38 statement: "return" logical_expression ";" .
+
+    $default  reduce using rule 38 (statement)
+
+
+State 124
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   71 logical_expression: logical_expression "&&" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 172
+    array_access       go to state 68
+
+
+State 125
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   72 logical_expression: logical_expression "||" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 173
+    array_access       go to state 68
+
+
+State 126
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   73 logical_expression: logical_expression "<" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 174
+    array_access       go to state 68
+
+
+State 127
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   74 logical_expression: logical_expression ">" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 175
+    array_access       go to state 68
+
+
+State 128
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   75 logical_expression: logical_expression "<=" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 176
+    array_access       go to state 68
+
+
+State 129
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   76 logical_expression: logical_expression ">=" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 177
+    array_access       go to state 68
+
+
+State 130
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   77 logical_expression: logical_expression "==" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 178
+    array_access       go to state 68
+
+
+State 131
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+   78 logical_expression: logical_expression "!=" . expression
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 179
+    array_access       go to state 68
+
+
+State 132
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   58           | "new" simple_type "[" . expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 180
+    array_access       go to state 68
+
+
+State 133
+
+   59 expression: "new" type_identifier "(" . ")"
+
+    ")"  shift, and go to state 181
+
+
+State 134
+
+   40 statement: "{" statements "}" .
+
+    $default  reduce using rule 40 (statement)
+
+
+State 135
+
+   55 expression: "(" expression ")" .
+
+    $default  reduce using rule 55 (expression)
+
+
+State 136
+
+   35 statement: lvalue "=" expression . ";"
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    ";"   shift, and go to state 182
+    "."   shift, and go to state 94
+    "&&"  shift, and go to state 115
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+
+State 137
+
+   36 statement: lvalue "=" logical_expression . ";"
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+
+    ";"   shift, and go to state 183
+    "&&"  shift, and go to state 124
+    "||"  shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+
+State 138
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   62             | expression "[" expression . "]"
+
+    "["  shift, and go to state 93
+    "]"  shift, and go to state 184
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+
+State 139
+
+   42 method_invocation: expression "." "identifier" . "(" method_expression ")"
+   43                  | expression "." "identifier" . "(" ")"
+
+    "("  shift, and go to state 185
+
+
+State 140
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   50           | expression "+" expression .
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 50 (expression)
+
+
+State 141
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   51           | expression "-" expression .
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 51 (expression)
+
+
+State 142
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   52           | expression "*" expression .
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+
+    $default  reduce using rule 52 (expression)
+
+
+State 143
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   53           | expression "/" expression .
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+
+    $default  reduce using rule 53 (expression)
+
+
+State 144
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   54           | expression "%" expression .
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+
+    $default  reduce using rule 54 (expression)
+
+
+State 145
+
+   56 expression: array_access "." "length" .
+
+    $default  reduce using rule 56 (expression)
+
+
+State 146
+
+   11 method_declaration: "public" type "identifier" "(" ")" "{" statements "}" .
+
+    $default  reduce using rule 11 (method_declaration)
+
+
+State 147
+
+   12 method_declaration: "public" type "identifier" "(" formals ")" "{" statements . "}"
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   24 statements: statements . statement
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "}"                   shift, and go to state 186
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 63
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 148
+
+   14 formals: formals "," type "identifier" .
+
+    $default  reduce using rule 14 (formals)
+
+
+State 149
+
+   26 statement: "assert" "(" expression ")" .
+
+    $default  reduce using rule 26 (statement)
+
+
+State 150
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   28          | "if" "(" expression ")" . statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   30          | "if" "(" expression ")" . statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 187
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 151
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   29          | "if" "(" logical_expression ")" . statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   31          | "if" "(" logical_expression ")" . statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 188
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 152
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   32          | "while" "(" expression ")" . statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 189
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 153
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   33          | "while" "(" logical_expression ")" . statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 190
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 154
+
+   34 statement: "System.out.println" "(" expression ")" . ";"
+
+    ";"  shift, and go to state 191
+
+
+State 155
+
+   87 logical_expression: "(" logical_expression ")" .
+
+    $default  reduce using rule 87 (logical_expression)
+
+
+State 156
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   63                   | expression "&&" expression .
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "||"  shift, and go to state 116
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+    $default  reduce using rule 63 (logical_expression)
+
+
+State 157
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   79                   | expression "&&" logical_expression .
+
+    "||"  shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+    $default  reduce using rule 79 (logical_expression)
+
+
+State 158
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   64                   | expression "||" expression .
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "=="  shift, and go to state 121
+    "!="  shift, and go to state 122
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+    $default  reduce using rule 64 (logical_expression)
+
+
+State 159
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   80                   | expression "||" logical_expression .
+
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+    "=="  shift, and go to state 130
+    "!="  shift, and go to state 131
+
+    $default  reduce using rule 80 (logical_expression)
+
+
+State 160
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   65                   | expression "<" expression .
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 65 (logical_expression)
+
+
+State 161
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   81                   | expression "<" logical_expression .
+
+    $default  reduce using rule 81 (logical_expression)
+
+
+State 162
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   66                   | expression ">" expression .
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 66 (logical_expression)
+
+
+State 163
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   82                   | expression ">" logical_expression .
+
+    $default  reduce using rule 82 (logical_expression)
+
+
+State 164
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   67                   | expression "<=" expression .
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 67 (logical_expression)
+
+
+State 165
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   83                   | expression "<=" logical_expression .
+
+    $default  reduce using rule 83 (logical_expression)
+
+
+State 166
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   68                   | expression ">=" expression .
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 68 (logical_expression)
+
+
+State 167
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   84                   | expression ">=" logical_expression .
+
+    $default  reduce using rule 84 (logical_expression)
+
+
+State 168
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   69                   | expression "==" expression .
+   70                   | expression . "!=" expression
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+    $default  reduce using rule 69 (logical_expression)
+
+
+State 169
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   85                   | expression "==" logical_expression .
+
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+
+    $default  reduce using rule 85 (logical_expression)
+
+
+State 170
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   63 logical_expression: expression . "&&" expression
+   64                   | expression . "||" expression
+   65                   | expression . "<" expression
+   66                   | expression . ">" expression
+   67                   | expression . "<=" expression
+   68                   | expression . ">=" expression
+   69                   | expression . "==" expression
+   70                   | expression . "!=" expression
+   70                   | expression "!=" expression .
+   79                   | expression . "&&" logical_expression
+   80                   | expression . "||" logical_expression
+   81                   | expression . "<" logical_expression
+   82                   | expression . ">" logical_expression
+   83                   | expression . "<=" logical_expression
+   84                   | expression . ">=" logical_expression
+   85                   | expression . "==" logical_expression
+   86                   | expression . "!=" logical_expression
+
+    "["   shift, and go to state 93
+    "."   shift, and go to state 94
+    "<"   shift, and go to state 117
+    ">"   shift, and go to state 118
+    "<="  shift, and go to state 119
+    ">="  shift, and go to state 120
+    "+"   shift, and go to state 95
+    "-"   shift, and go to state 96
+    "*"   shift, and go to state 97
+    "/"   shift, and go to state 98
+    "%"   shift, and go to state 99
+
+    $default  reduce using rule 70 (logical_expression)
+
+
+State 171
+
+   71 logical_expression: logical_expression . "&&" expression
+   72                   | logical_expression . "||" expression
+   73                   | logical_expression . "<" expression
+   74                   | logical_expression . ">" expression
+   75                   | logical_expression . "<=" expression
+   76                   | logical_expression . ">=" expression
+   77                   | logical_expression . "==" expression
+   78                   | logical_expression . "!=" expression
+   86                   | expression "!=" logical_expression .
+
+    "<"   shift, and go to state 126
+    ">"   shift, and go to state 127
+    "<="  shift, and go to state 128
+    ">="  shift, and go to state 129
+
+    $default  reduce using rule 86 (logical_expression)
+
+
+State 172
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   71 logical_expression: logical_expression "&&" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 71 (logical_expression)
+
+
+State 173
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   72 logical_expression: logical_expression "||" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 72 (logical_expression)
+
+
+State 174
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   73 logical_expression: logical_expression "<" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 73 (logical_expression)
+
+
+State 175
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   74 logical_expression: logical_expression ">" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 74 (logical_expression)
+
+
+State 176
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   75 logical_expression: logical_expression "<=" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 75 (logical_expression)
+
+
+State 177
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   76 logical_expression: logical_expression ">=" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 76 (logical_expression)
+
+
+State 178
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   77 logical_expression: logical_expression "==" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 77 (logical_expression)
+
+
+State 179
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+   78 logical_expression: logical_expression "!=" expression .
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 78 (logical_expression)
+
+
+State 180
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   58           | "new" simple_type "[" expression . "]"
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "]"  shift, and go to state 192
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+
+State 181
+
+   59 expression: "new" type_identifier "(" ")" .
+
+    $default  reduce using rule 59 (expression)
+
+
+State 182
+
+   35 statement: lvalue "=" expression ";" .
+
+    $default  reduce using rule 35 (statement)
+
+
+State 183
+
+   36 statement: lvalue "=" logical_expression ";" .
+
+    $default  reduce using rule 36 (statement)
+
+
+State 184
+
+   62 array_access: expression "[" expression "]" .
+
+    $default  reduce using rule 62 (array_access)
+
+
+State 185
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   42                  | expression "." "identifier" "(" . method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   43                  | expression "." "identifier" "(" . ")"
+   44 method_expression: . method_expression "," expression
+   45                  | . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    ")"           shift, and go to state 193
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    method_expression  go to state 194
+    expression         go to state 195
+    array_access       go to state 68
+
+
+State 186
+
+   12 method_declaration: "public" type "identifier" "(" formals ")" "{" statements "}" .
+
+    $default  reduce using rule 12 (method_declaration)
+
+
+State 187
+
+   28 statement: "if" "(" expression ")" statement .
+   30          | "if" "(" expression ")" statement . "else" statement
+
+    "else"  shift, and go to state 196
+
+    "else"    [reduce using rule 28 (statement)]
+    $default  reduce using rule 28 (statement)
+
+
+State 188
+
+   29 statement: "if" "(" logical_expression ")" statement .
+   31          | "if" "(" logical_expression ")" statement . "else" statement
+
+    "else"  shift, and go to state 197
+
+    "else"    [reduce using rule 29 (statement)]
+    $default  reduce using rule 29 (statement)
+
+
+State 189
+
+   32 statement: "while" "(" expression ")" statement .
+
+    $default  reduce using rule 32 (statement)
+
+
+State 190
+
+   33 statement: "while" "(" logical_expression ")" statement .
+
+    $default  reduce using rule 33 (statement)
+
+
+State 191
+
+   34 statement: "System.out.println" "(" expression ")" ";" .
+
+    $default  reduce using rule 34 (statement)
+
+
+State 192
+
+   58 expression: "new" simple_type "[" expression "]" .
+
+    $default  reduce using rule 58 (expression)
+
+
+State 193
+
+   43 method_invocation: expression "." "identifier" "(" ")" .
+
+    $default  reduce using rule 43 (method_invocation)
+
+
+State 194
+
+   42 method_invocation: expression "." "identifier" "(" method_expression . ")"
+   44 method_expression: method_expression . "," expression
+
+    ")"  shift, and go to state 198
+    ","  shift, and go to state 199
+
+
+State 195
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   45 method_expression: expression .
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 45 (method_expression)
+
+
+State 196
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   30          | "if" "(" expression ")" statement "else" . statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 200
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 197
+
+   13 variable_declaration: . type "identifier" ";"
+   16 type: . simple_type
+   17     | . array_type
+   18 simple_type: . "int"
+   19            | . "boolean"
+   20            | . "void"
+   21            | . type_identifier
+   22 array_type: . simple_type "[" "]"
+   23 type_identifier: . "identifier"
+   26 statement: . "assert" "(" expression ")"
+   27          | . local_variable_declaration
+   28          | . "if" "(" expression ")" statement
+   29          | . "if" "(" logical_expression ")" statement
+   30          | . "if" "(" expression ")" statement "else" statement
+   31          | . "if" "(" logical_expression ")" statement "else" statement
+   31          | "if" "(" logical_expression ")" statement "else" . statement
+   32          | . "while" "(" expression ")" statement
+   33          | . "while" "(" logical_expression ")" statement
+   34          | . "System.out.println" "(" expression ")" ";"
+   35          | . lvalue "=" expression ";"
+   36          | . lvalue "=" logical_expression ";"
+   37          | . "return" expression ";"
+   38          | . "return" logical_expression ";"
+   39          | . method_invocation ";"
+   40          | . "{" statements "}"
+   41 local_variable_declaration: . variable_declaration
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   46 lvalue: . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "void"                shift, and go to state 21
+    "int"                 shift, and go to state 22
+    "boolean"             shift, and go to state 23
+    "assert"              shift, and go to state 49
+    "if"                  shift, and go to state 50
+    "while"               shift, and go to state 51
+    "System.out.println"  shift, and go to state 52
+    "return"              shift, and go to state 53
+    "new"                 shift, and go to state 54
+    "this"                shift, and go to state 55
+    "{"                   shift, and go to state 56
+    "("                   shift, and go to state 58
+    "-"                   shift, and go to state 59
+    "identifier"          shift, and go to state 60
+    "number"              shift, and go to state 61
+
+    variable_declaration        go to state 62
+    type                        go to state 29
+    simple_type                 go to state 30
+    array_type                  go to state 31
+    type_identifier             go to state 32
+    statement                   go to state 201
+    local_variable_declaration  go to state 64
+    method_invocation           go to state 65
+    lvalue                      go to state 66
+    expression                  go to state 67
+    array_access                go to state 68
+
+
+State 198
+
+   42 method_invocation: expression "." "identifier" "(" method_expression ")" .
+
+    $default  reduce using rule 42 (method_invocation)
+
+
+State 199
+
+   42 method_invocation: . expression "." "identifier" "(" method_expression ")"
+   43                  | . expression "." "identifier" "(" ")"
+   44 method_expression: method_expression "," . expression
+   47 expression: . "identifier"
+   48           | . "number"
+   49           | . "-" expression
+   50           | . expression "+" expression
+   51           | . expression "-" expression
+   52           | . expression "*" expression
+   53           | . expression "/" expression
+   54           | . expression "%" expression
+   55           | . "(" expression ")"
+   56           | . array_access "." "length"
+   57           | . array_access
+   58           | . "new" simple_type "[" expression "]"
+   59           | . "new" type_identifier "(" ")"
+   60           | . "this"
+   61           | . method_invocation
+   62 array_access: . expression "[" expression "]"
+
+    "new"         shift, and go to state 54
+    "this"        shift, and go to state 55
+    "("           shift, and go to state 58
+    "-"           shift, and go to state 59
+    "identifier"  shift, and go to state 81
+    "number"      shift, and go to state 61
+
+    method_invocation  go to state 82
+    expression         go to state 202
+    array_access       go to state 68
+
+
+State 200
+
+   30 statement: "if" "(" expression ")" statement "else" statement .
+
+    $default  reduce using rule 30 (statement)
+
+
+State 201
+
+   31 statement: "if" "(" logical_expression ")" statement "else" statement .
+
+    $default  reduce using rule 31 (statement)
+
+
+State 202
+
+   42 method_invocation: expression . "." "identifier" "(" method_expression ")"
+   43                  | expression . "." "identifier" "(" ")"
+   44 method_expression: method_expression "," expression .
+   50 expression: expression . "+" expression
+   51           | expression . "-" expression
+   52           | expression . "*" expression
+   53           | expression . "/" expression
+   54           | expression . "%" expression
+   62 array_access: expression . "[" expression "]"
+
+    "["  shift, and go to state 93
+    "."  shift, and go to state 94
+    "+"  shift, and go to state 95
+    "-"  shift, and go to state 96
+    "*"  shift, and go to state 97
+    "/"  shift, and go to state 98
+    "%"  shift, and go to state 99
+
+    $default  reduce using rule 44 (method_expression)
