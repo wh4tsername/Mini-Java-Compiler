@@ -113,7 +113,7 @@
 %left MUL DIV MOD
 %right UMINUS NOT
 %left DOT
-%nonassoc "["
+%right "["
 
 %token <std::string> IDENT "identifier"
 %token <int> NUMBER "number"
@@ -176,10 +176,10 @@ statements:
 statement:
     "assert" "(" expression ")" {}
     | local_variable_declaration {}
-    | "if"  "(" expression ")" statement {}
-    | "if"  "(" logical_expression ")" statement {}
-    | "if"  "(" expression ")" statement "else" statement {}
-    | "if"  "(" logical_expression ")" statement "else" statement {}
+    | "if"  "(" expression ")" "{" statement1 "}" {}
+    | "if"  "(" logical_expression ")" "{" statement1 "}" {}
+    | "if"  "(" expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
+    | "if"  "(" logical_expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
     | "while"  "(" expression ")" statement {}
     | "while"  "(" logical_expression ")" statement {}
     | "System.out.println" "(" expression ")" ";" {}
@@ -189,6 +189,22 @@ statement:
     | "return" logical_expression ";" {}
     | method_invocation ";" {}
     | "{" statements "}" {}
+
+statement1:
+    "assert" "(" expression ")" {}
+    | local_variable_declaration {}
+    | "if"  "(" expression ")" "{" statement1 "}" {}
+    | "if"  "(" logical_expression ")" "{" statement1 "}" {}
+    | "if"  "(" expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
+    | "if"  "(" logical_expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
+    | "while"  "(" expression ")" statement {}
+    | "while"  "(" logical_expression ")" statement {}
+    | "System.out.println" "(" expression ")" ";" {}
+    | lvalue "=" expression ";" {}
+    | lvalue "=" logical_expression ";" {}
+    | "return" expression ";" {}
+    | "return" logical_expression ";" {}
+    | method_invocation ";" {}
 
 local_variable_declaration:
     variable_declaration {}
@@ -214,7 +230,7 @@ expression:
     | expression "/" expression {}
     | expression "%" expression {}
     | "(" expression ")" {}
-    | array_access "." "length" {}
+    | expression "." "length" {}
     | array_access {}
     | "new" simple_type "[" expression "]" {}
     | "new" type_identifier "(" ")" {}
