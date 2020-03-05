@@ -2,3 +2,23 @@
 cmake-build-debug/
 
 .idea/
+
+interpreter/stack.hh
+
+interpreter/scanner.cpp
+
+interpreter/position.hh
+
+interpreter/parser.tab.h
+
+interpreter/parser.tab.c
+
+interpreter/parser.output
+
+interpreter/parser.hh
+
+interpreter/parser.cpp
+
+interpreter/location.hh
+
+interpreter/lex.yy.cc

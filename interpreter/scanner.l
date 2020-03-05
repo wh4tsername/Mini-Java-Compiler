@@ -74,6 +74,7 @@ BLANK  [ \t\r]
 "}"        return yy::parser::make_RPAREN_F  (loc);
 "("        return yy::parser::make_LPAREN    (loc);
 ")"        return yy::parser::make_RPAREN    (loc);
+"[]"       return yy::parser::make_DOUBLE_PAREN_S (loc);
 "["        return yy::parser::make_LPAREN_S  (loc);
 "]"        return yy::parser::make_RPAREN_S  (loc);
 ";"        return yy::parser::make_SEMICOLON (loc);

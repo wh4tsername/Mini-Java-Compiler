@@ -83,6 +83,7 @@
     RPAREN_F "}"
     LPAREN "("
     RPAREN ")"
+    DOUBLE_PAREN_S "[]"
     LPAREN_S "["
     RPAREN_S "]"
     SEMICOLON ";"
@@ -117,7 +118,6 @@
 
 %token <std::string> IDENT "identifier"
 %token <int> NUMBER "number"
-//%nterm <Expression*> exp
 
 %%
 %start program;
@@ -165,7 +165,7 @@ simple_type:
     | type_identifier {}
 
 array_type:
-    simple_type "[" "]" {}
+    simple_type "[]" {}
 
 type_identifier: "identifier" {}
 
