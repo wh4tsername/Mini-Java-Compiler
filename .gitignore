@@ -3,6 +3,8 @@ cmake-build-debug/
 
 .idea/
 
+other/
+
 interpreter/stack.hh
 
 interpreter/scanner.cpp
