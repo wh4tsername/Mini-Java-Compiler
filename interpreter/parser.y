@@ -10,28 +10,24 @@
     #include <string>
     class Scanner;
     class Driver;
-//    class Expression;
-//    class NumberExpression;
-//    class AddExpression;
-//    class SubstractExpression;
+    class Expression;
+    class NumberExpression;
+    class AritmeticalExpression;
 
     #ifdef YYDEBUG
        yydebug = 1;
     #endif
 }
 
-//%define parse.trace
-//%define parse.error verbose
+%define parse.trace
+%define parse.error verbose
 
 %code {
     #include "driver.hh"
     #include "location.hh"
 
-//    #include "expressions/NumberExpression.h"
-//    #include "expressions/AddExpression.h"
-//    #include "expressions/MulExpression.h"
-//    #include "expressions/DivExpression.h"
-//    #include "expressions/SubstractExpression.h"
+    #include "class/expressions/NumeralExpression.h"
+    #include "class/expressions/ArithmeticalExpression.h"
 
     static yy::parser::symbol_type yylex(Scanner &scanner, Driver& driver) {
         return scanner.ScanToken();
@@ -119,6 +115,9 @@
 %token <std::string> IDENT "identifier"
 %token <int> NUMBER "number"
 
+%nterm <Expresion*> expression
+%nterm <LogicalExpression*> logical_expression
+
 %%
 %start program;
 program:
@@ -167,7 +166,8 @@ simple_type:
 array_type:
     simple_type "[]" {}
 
-type_identifier: "identifier" {}
+type_identifier:
+    "identifier" {}
 
 statements:
     statements statement {}
@@ -177,16 +177,11 @@ statement:
     "assert" "(" expression ")" {}
     | local_variable_declaration {}
     | "if"  "(" expression ")" "{" statement1 "}" {}
-    | "if"  "(" logical_expression ")" "{" statement1 "}" {}
     | "if"  "(" expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
-    | "if"  "(" logical_expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
     | "while"  "(" expression ")" statement {}
-    | "while"  "(" logical_expression ")" statement {}
     | "System.out.println" "(" expression ")" ";" {}
     | lvalue "=" expression ";" {}
-    | lvalue "=" logical_expression ";" {}
     | "return" expression ";" {}
-    | "return" logical_expression ";" {}
     | method_invocation ";" {}
     | "{" statements "}" {}
 
@@ -194,16 +189,11 @@ statement1:
     "assert" "(" expression ")" {}
     | local_variable_declaration {}
     | "if"  "(" expression ")" "{" statement1 "}" {}
-    | "if"  "(" logical_expression ")" "{" statement1 "}" {}
     | "if"  "(" expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
-    | "if"  "(" logical_expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
     | "while"  "(" expression ")" statement {}
-    | "while"  "(" logical_expression ")" statement {}
     | "System.out.println" "(" expression ")" ";" {}
     | lvalue "=" expression ";" {}
-    | lvalue "=" logical_expression ";" {}
     | "return" expression ";" {}
-    | "return" logical_expression ";" {}
     | method_invocation ";" {}
 
 local_variable_declaration:
@@ -222,51 +212,35 @@ lvalue:
 
 expression:
     "identifier" {}
-    | "number" {}
-    | "-" expression %prec UMINUS {}
-    | expression "+" expression {}
-    | expression "-" expression {}
-    | expression "*" expression {}
-    | expression "/" expression {}
-    | expression "%" expression {}
-    | "(" expression ")" {}
+    | "number" {$$ = new NumberExpression($1);}
+    | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", $2, NULL);}
+    | expression "+" expression {$$ = new ArithmeticalExpression("+", $1, $3);}
+    | expression "-" expression {$$ = new ArithmeticalExpression("-", $1, $3);}
+    | expression "*" expression {$$ = new ArithmeticalExpression("*", $1, $3);}
+    | expression "/" expression {$$ = new ArithmeticalExpression("/", $1, $3);}
+    | expression "%" expression {$$ = new ArithmeticalExpression("%", $1, $3);}
+    | "(" expression ")" {$$ = $2;}
     | expression "." "length" {}
     | array_access {}
     | "new" simple_type "[" expression "]" {}
     | "new" type_identifier "(" ")" {}
     | "this" {}
+    | logical_expression {}
     | method_invocation {}
 
 array_access:
     expression "[" expression "]" {}
 
 logical_expression:
-    expression "&&" expression {}
-    | expression "||" expression {}
-    | expression "<" expression {}
-    | expression ">" expression {}
-    | expression "<=" expression {}
-    | expression ">=" expression {}
-    | expression "==" expression {}
-    | expression "!=" expression {}
-    | logical_expression "&&" expression {}
-    | logical_expression "||" expression {}
-    | logical_expression "<" expression {}
-    | logical_expression ">" expression {}
-    | logical_expression "<=" expression {}
-    | logical_expression ">=" expression {}
-    | logical_expression "==" expression {}
-    | logical_expression "!=" expression {}
-    | expression "&&" logical_expression {}
-    | expression "||" logical_expression {}
-    | expression "<" logical_expression {}
-    | expression ">" logical_expression {}
-    | expression "<=" logical_expression {}
-    | expression ">=" logical_expression {}
-    | expression "==" logical_expression {}
-    | expression "!=" logical_expression {}
-    | "(" logical_expression ")" {}
-    | "!" logical_expression %prec NOT {}
-    | "true" {}
-    | "false" {}
+    expression "&&" expression {$$ = new LogicalExpression("&&", $1, $3);}
+    | expression "||" expression {$$ = new LogicalExpression("||", $1, $3);}
+    | expression "<" expression {$$ = new LogicalExpression("<", $1, $3);}
+    | expression ">" expression {$$ = new LogicalExpression(">", $1, $3);}
+    | expression "<=" expression {$$ = new LogicalExpression("<=", $1, $3);}
+    | expression ">=" expression {$$ = new LogicalExpression(">=", $1, $3);}
+    | expression "==" expression {$$ = new LogicalExpression("==", $1, $3);}
+    | expression "!=" expression {$$ = new LogicalExpression("!=", $1, $3);}
+    | "!" expression %prec NOT {$$ = new LogicalExpression("!", $2, NULL);}
+    | "true" {$$ = new LogicalExpression("true", NULL, NULL);}
+    | "false" {$$ = new LogicalExpression("false", NULL, NULL);}
 %%

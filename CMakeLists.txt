@@ -28,6 +28,9 @@ add_executable(
         Interpreter
         main.cpp
         interpreter/driver.cpp
+        interpreter/classes/expressions/NumeralExpression.cpp
+        interpreter/classes/expressions/ArithmeticalExpression.cpp
+        interpreter/classes/expressions/LogicalExpression.cpp
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )

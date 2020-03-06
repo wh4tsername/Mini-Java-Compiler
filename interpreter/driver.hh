@@ -6,27 +6,25 @@
 #include "scanner.h"
 #include "parser.hh"
 
-//#include "Program.h"
+#include "Program.h"
 
 class Driver {
  public:
   Driver();
-  std::map<std::string, int> variables;
-  int result;
-  int parse(const std::string& f);
-  std::string file;
-  bool trace_parsing;
+  int Parse(const std::string& file);
+  std::string file_;
+  bool trace_parsing_;
 
-  void scan_begin();
-  void scan_end();
+  void ScanBegin();
+  void ScanEnd();
 
-  bool trace_scanning;
-  yy::location location;
+  bool trace_scanning_;
+  yy::location location_;
 
   friend class Scanner;
-  Scanner scanner;
-  yy::parser parser;
-//  Program* program;
+  Scanner scanner_;
+  yy::parser parser_;
+  Program* program_;
  private:
-  std::ifstream stream;
+  std::ifstream stream_;
 };

@@ -7,10 +7,10 @@ int main(int argc, char** argv) {
 
   for (int i = 1; i < argc; ++i) {
     if (argv[i] == std::string("-p")) {
-      driver.trace_parsing = true;
+      driver.trace_parsing_ = true;
     } else if (argv[i] == std::string("-s")) {
-      driver.trace_scanning = true;
-    } else if (!driver.parse(argv[i])) {
+      driver.trace_scanning_ = true;
+    } else if (!driver.Parse(argv[i])) {
       std::cout << driver.result << std::endl;
     } else {
       result = 1;

@@ -2,36 +2,35 @@
 #include "parser.hh"
 
 Driver::Driver() :
-    trace_parsing(false),
-    trace_scanning(false),
-    scanner(*this), parser(scanner, *this) {
-  variables["one"] = 1;
-  variables["two"] = 2;
+    trace_parsing_(false),
+    trace_scanning_(false),
+    scanner_(*this), parser_(scanner_, *this) {
 }
 
-int Driver::parse(const std::string& f) {
-  file = f;
-  location.initialize(&file);
-  scan_begin();
-  parser.set_debug_level(trace_parsing);
-  int res = parser();
+int Driver::Parse(const std::string& file) {
+  file_ = file;
+  location_.initialize(&file_);
+  ScanBegin();
+  parser_.set_debug_level(trace_parsing_);
+  int return_code = parser_();
 
-  std::cout << program << std::endl;
-  scan_end();
-  return res;
+  std::cout << program_ << std::endl;
+  ScanEnd();
+
+  return return_code;
 }
 
-void Driver::scan_begin() {
-  scanner.set_debug(trace_scanning);
-  if (file.empty () || file == "-") {
+void Driver::ScanBegin() {
+  scanner_.set_debug(trace_scanning_);
+  if (file_.empty () || file_ == "-") {
   } else {
-    stream.open(file);
-    std::cout << file << std::endl;
-    scanner.yyrestart(&stream);
+    stream_.open(file_);
+    std::cout << file_ << std::endl;
+    scanner_.yyrestart(&stream_);
   }
 }
 
-void Driver::scan_end()
+void Driver::ScanEnd()
 {
-  stream.close();
+  stream_.close();
 }
