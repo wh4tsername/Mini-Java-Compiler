@@ -112,106 +112,112 @@
 %left DOT
 %right "["
 
+%nonassoc NO_ELSE
+%nonassoc "else"
+
 %token <std::string> IDENT "identifier"
 %token <int> NUMBER "number"
 
 %nterm <Expresion*> expression
 %nterm <LogicalExpression*> logical_expression
+%nterm <ArrayAccessExpression*> array_access
+%nterm <Type*> type_identifier simple_type type
+%nterm <ArrayType*> array_type
+%nterm <MethodInvocation*> method_invocation
+%nterm <MethodExpression*> method_expression
+%nterm <Lvalue*> lvalue
+%nterm <VariableDeclaration*> variable_declaration local_variable_declaration
+%nterm <Statement*> statement declaration
+%nterm <ListOfStatements*> statements declarations class_declarations
+%nterm <Formals*> formals
+%nterm <MethodDeclaration*> method_declaration
+%nterm <ClassDeclaration*> class_declaration
+%nterm <MainClass*> main_class
+%nterm <Program*> program
 
 %%
 %start program;
 program:
-    main_class class_declarations {}
+    main_class class_declarations {$$ = new Program($1, $2);}
 
 class_declarations:
-    class_declarations class_declaration {}
-    | %empty {}
+    class_declarations class_declaration {$1->AddStatement($2); $$ = $1;}
+    | %empty {$$ = new ListOfStatements();}
 
 main_class:
-    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" {}
+    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" {$$ = new MainClass($2, $11);}
 
 class_declaration:
-    "class" "identifier" "{" declarations "}" {}
-    | "class" "identifier" "extends" "identifier" "{" declarations "}" {}
+    "class" "identifier" "{" declarations "}" {$$ = new ClassDeclaration($2, $4);}
+//    | "class" "identifier" "extends" "identifier" "{" declarations "}" {}
 
 declarations:
-    declarations declaration {}
-    | %empty {}
+    declarations declaration {$1->AddStatement($2); $$ = $1;}
+    | %empty {$$ = new ListOfStatements();}
 
 declaration:
-    variable_declaration {}
-    | method_declaration {}
+    variable_declaration {$$ = $1;}
+    | method_declaration {$$ = $1;}
 
 method_declaration:
-    "public" type "identifier" "(" ")" "{" statements "}" {}
-    | "public" type "identifier" "(" formals ")" "{" statements "}" {}
+    "public" type "identifier" "(" ")" "{" statements "}" {$$ = MethodDeclaration($2, NULL, $7);}
+    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = MethodDeclaration($2, $5, $8);}
 
 variable_declaration:
-    type "identifier" ";" {}
+    type "identifier" ";" {$$ = new VariableDeclaraion($1, $2);}
 
 formals:
-    formals "," type "identifier" {}
-    | type "identifier" {}
+    formals "," type "identifier" {$1->AddFormal($3, $4); $$ = $1;}
+    | type "identifier" {$$ = new Formals(); $$->AddFormal($1, $2);}
 
 type:
-    simple_type {}
-    | array_type {}
+    simple_type {$$ = $1;}
+    | array_type {$$ = $1;}
 
 simple_type:
-    "int" {}
-    | "boolean" {}
-    | "void" {}
-    | type_identifier {}
+    "int" {$$ = new Type("int");}
+    | "boolean" {$$ = new Type("bool");}
+    | "void" {$$ = new Type("void");}
+    | type_identifier {$$ = $1;}
 
 array_type:
-    simple_type "[]" {}
+    simple_type "[]" {$$ = new ArrayType($1);}
 
 type_identifier:
-    "identifier" {}
+    "identifier" {$$ = new Type($1);}
 
 statements:
-    statements statement {}
-    | %empty {}
+    statements statement {$1->AddStatement($2); $$ = $1;}
+    | %empty {$$ = new ListOfStatements();}
 
 statement:
-    "assert" "(" expression ")" {}
-    | local_variable_declaration {}
-    | "if"  "(" expression ")" "{" statement1 "}" {}
-    | "if"  "(" expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
-    | "while"  "(" expression ")" statement {}
-    | "System.out.println" "(" expression ")" ";" {}
-    | lvalue "=" expression ";" {}
-    | "return" expression ";" {}
-    | method_invocation ";" {}
-    | "{" statements "}" {}
-
-statement1:
-    "assert" "(" expression ")" {}
-    | local_variable_declaration {}
-    | "if"  "(" expression ")" "{" statement1 "}" {}
-    | "if"  "(" expression ")" "{" statement1 "}" "else" "{" statement1 "}" {}
-    | "while"  "(" expression ")" statement {}
-    | "System.out.println" "(" expression ")" ";" {}
-    | lvalue "=" expression ";" {}
-    | "return" expression ";" {}
-    | method_invocation ";" {}
+    "assert" "(" expression ")" {$$ = new AssertStatement($3);}
+    | local_variable_declaration {$$ = $1;}
+    | "if"  "(" expression ")" statement %prec NO_ELSE {$$ = new IfStatement($3, $5, NULL);}
+    | "if"  "(" expression ")" statement "else" statement {$$ = new IfStatement($3, $5, $7);}
+    | "while"  "(" expression ")" statement {$$ = new WhileStatement($3, $5);}
+    | "System.out.println" "(" expression ")" ";" {$$ = new PrintStatement($3);}
+    | lvalue "=" expression ";" {$$ = new AssignmentStatement($1, $3);}
+    | "return" expression ";" {$$ = ReturnStatement($2);}
+    | method_invocation ";" {$$ = $1;}
+    | "{" statements "}" {$$ = $2;}
 
 local_variable_declaration:
-    variable_declaration {}
+    variable_declaration {$$ = $1;}
 
 method_invocation:
-    expression "." "identifier" "(" method_expression ")" {}
-    | expression "." "identifier" "(" ")" {}
+    expression "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation($1, $3, $5);}
+    | expression "." "identifier" "(" ")" {$$ = new MethodInvocation($1, $3, NULL);}
 
 method_expression:
-    method_expression "," expression {}
-    | expression {}
+    method_expression "," expression {$1->AddExpression($3); $$ = $1;}
+    | expression {$$ = new MethodExpression($1);}
 
 lvalue:
-    expression {}
+    expression {$$ = new Lvalue($1);}
 
 expression:
-    "identifier" {}
+    "identifier" {$$ = new VariableExpression($1);}
     | "number" {$$ = new NumberExpression($1);}
     | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", $2, NULL);}
     | expression "+" expression {$$ = new ArithmeticalExpression("+", $1, $3);}
@@ -220,16 +226,16 @@ expression:
     | expression "/" expression {$$ = new ArithmeticalExpression("/", $1, $3);}
     | expression "%" expression {$$ = new ArithmeticalExpression("%", $1, $3);}
     | "(" expression ")" {$$ = $2;}
-    | expression "." "length" {}
-    | array_access {}
-    | "new" simple_type "[" expression "]" {}
-    | "new" type_identifier "(" ")" {}
-    | "this" {}
-    | logical_expression {}
-    | method_invocation {}
+    | expression "." "length" {$$ = new LengthExpression($1);}
+    | array_access {$$ = $1;}
+    | "new" simple_type "[" expression "]" {$$ = new NewArrayExpression($2, $4);}
+    | "new" type_identifier "(" ")" {$$ = new NewVariableExpression($2);}
+    | "this" {$$ = new This();}
+    | logical_expression {$$ = $1;}
+    | method_invocation {$$ = $1;}
 
 array_access:
-    expression "[" expression "]" {}
+    expression "[" expression "]" {$$ = new ArrayAccessExpression($1, $3);}
 
 logical_expression:
     expression "&&" expression {$$ = new LogicalExpression("&&", $1, $3);}

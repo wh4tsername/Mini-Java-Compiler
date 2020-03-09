@@ -31,6 +31,29 @@ add_executable(
         interpreter/classes/expressions/NumeralExpression.cpp
         interpreter/classes/expressions/ArithmeticalExpression.cpp
         interpreter/classes/expressions/LogicalExpression.cpp
+        interpreter/classes/expressions/VariableExpression.cpp
+        interpreter/classes/expressions/LengthExpression.cpp
+        interpreter/classes/expressions/ArrayAccessExpression.cpp
+        interpreter/classes/expressions/NewVariableExpression.cpp
+        interpreter/classes/expressions/NewArrayExpression.cpp
+        interpreter/classes/expressions/MethodInvocation.cpp
+        interpreter/classes/expressions/MethodExpression.cpp
+        interpreter/classes/Type.cpp
+        interpreter/classes/ArrayType.cpp
+        interpreter/classes/expressions/This.cpp
+        interpreter/classes/Lvalue.cpp
+        interpreter/classes/statements/VariableDeclaration.cpp
+        interpreter/classes/statements/ListOfStatements.cpp
+        interpreter/classes/statements/AssignmentStatement.cpp
+        interpreter/classes/statements/AssertStatement.cpp
+        interpreter/classes/statements/ReturnStatement.cpp
+        interpreter/classes/statements/PrintStatement.cpp
+        interpreter/classes/statements/WhileStatement.cpp
+        interpreter/classes/statements/IfStatement.cpp
+        interpreter/classes/statements/MethodDeclaration.cpp
+        interpreter/classes/Formals.cpp
+        interpreter/classes/statements/ClassDeclaration.cpp
+        interpreter/classes/Program.cpp
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )
