@@ -14,7 +14,8 @@ int Driver::Parse(const std::string& file) {
   parser_.set_debug_level(trace_parsing_);
   int return_code = parser_();
 
-  std::cout << program_ << std::endl;
+  program_->Run();
+
   ScanEnd();
 
   return return_code;
@@ -22,7 +23,7 @@ int Driver::Parse(const std::string& file) {
 
 void Driver::ScanBegin() {
   scanner_.set_debug(trace_scanning_);
-  if (file_.empty () || file_ == "-") {
+  if (file_.empty() || file_ == "-") {
   } else {
     stream_.open(file_);
     std::cout << file_ << std::endl;
@@ -34,3 +35,8 @@ void Driver::ScanEnd()
 {
   stream_.close();
 }
+
+//Driver::PrintTree(const std::string& filename) {
+//  PrintVisitor visitor;
+//  visitor.Visit(program_);
+//}

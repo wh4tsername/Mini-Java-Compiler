@@ -6,7 +6,7 @@
 #include "scanner.h"
 #include "parser.hh"
 
-#include "Program.h"
+#include "classes/Program.h"
 
 class Driver {
  public:
@@ -18,6 +18,8 @@ class Driver {
   void ScanBegin();
   void ScanEnd();
 
+//  void PrintTree(const std::string& filename);
+
   bool trace_scanning_;
   yy::location location_;
 
@@ -25,6 +27,7 @@ class Driver {
   Scanner scanner_;
   yy::parser parser_;
   Program* program_;
+
  private:
   std::ifstream stream_;
 };

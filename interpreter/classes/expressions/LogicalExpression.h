@@ -5,7 +5,7 @@
 
 #include "Expression.h"
 
-class LogicalExpression : Expression {
+class LogicalExpression : public Expression {
  public:
   LogicalExpression(std::string operation, Expression* lhs, Expression* rhs);
 

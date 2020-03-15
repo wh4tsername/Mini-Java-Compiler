@@ -1,6 +1,6 @@
 #include "Program.h"
 
-Program::Program(ListOfStatements* main_class,
+Program::Program(MainClass* main_class,
                  ListOfStatements* class_declarations)
     : main_class_(main_class), class_declarations_(class_declarations) {}
 

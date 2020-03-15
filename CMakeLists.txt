@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 
+set(BISON_EXECUTABLE /usr/local/bin/bison)
+
 project(Interpreter)
 set(
         HEADERS
@@ -7,7 +9,7 @@ set(
         interpreter/parser.hh
 )
 
-find_package(BISON 3.0.0)
+FIND_PACKAGE(BISON REQUIRED)
 BISON_TARGET(
         Parser
         ${Interpreter_SOURCE_DIR}/interpreter/parser.y
@@ -15,7 +17,7 @@ BISON_TARGET(
         DEFINES_FILE ${Interpreter_SOURCE_DIR}/interpreter/parser.hh
 )
 
-find_package(FLEX 2.6.4)
+FIND_PACKAGE(FLEX REQUIRED)
 FLEX_TARGET(
         Scanner
         ${Interpreter_SOURCE_DIR}/interpreter/scanner.l
@@ -54,6 +56,7 @@ add_executable(
         interpreter/classes/Formals.cpp
         interpreter/classes/statements/ClassDeclaration.cpp
         interpreter/classes/Program.cpp
+        interpreter/classes/statements/MainClass.cpp
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )

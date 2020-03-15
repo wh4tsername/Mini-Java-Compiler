@@ -33,7 +33,7 @@ BLANK  [ \t\r]
 %%
 %{
   // A handy shortcut to the location held by the driver.
-  yy::location& loc = driver.location;
+  yy::location& loc = driver.location_;
   // Code run each time yylex is called.
   loc.step();
 %}

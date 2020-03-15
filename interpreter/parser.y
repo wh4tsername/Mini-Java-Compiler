@@ -1,5 +1,5 @@
 %skeleton "lalr1.cc"
-%require "3.0.4"
+%require "3.5.2"
 
 %defines
 %define api.token.constructor
@@ -10,9 +10,7 @@
     #include <string>
     class Scanner;
     class Driver;
-    class Expression;
-    class NumberExpression;
-    class AritmeticalExpression;
+    #include "declarations.h"
 
     #ifdef YYDEBUG
        yydebug = 1;
@@ -26,10 +24,9 @@
     #include "driver.hh"
     #include "location.hh"
 
-    #include "class/expressions/NumeralExpression.h"
-    #include "class/expressions/ArithmeticalExpression.h"
+    #include "nodes.h"
 
-    static yy::parser::symbol_type yylex(Scanner &scanner, Driver& driver) {
+    static yy::parser::symbol_type yylex(Scanner& scanner, Driver& driver) {
         return scanner.ScanToken();
     }
 }
@@ -118,7 +115,7 @@
 %token <std::string> IDENT "identifier"
 %token <int> NUMBER "number"
 
-%nterm <Expresion*> expression
+%nterm <Expression*> expression
 %nterm <LogicalExpression*> logical_expression
 %nterm <ArrayAccessExpression*> array_access
 %nterm <Type*> type_identifier simple_type type
@@ -138,7 +135,7 @@
 %%
 %start program;
 program:
-    main_class class_declarations {$$ = new Program($1, $2);}
+    main_class class_declarations {$$ = new Program($1, $2); driver.program_ = $$;}
 
 class_declarations:
     class_declarations class_declaration {$1->AddStatement($2); $$ = $1;}
@@ -149,7 +146,6 @@ main_class:
 
 class_declaration:
     "class" "identifier" "{" declarations "}" {$$ = new ClassDeclaration($2, $4);}
-//    | "class" "identifier" "extends" "identifier" "{" declarations "}" {}
 
 declarations:
     declarations declaration {$1->AddStatement($2); $$ = $1;}
@@ -160,11 +156,11 @@ declaration:
     | method_declaration {$$ = $1;}
 
 method_declaration:
-    "public" type "identifier" "(" ")" "{" statements "}" {$$ = MethodDeclaration($2, NULL, $7);}
-    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = MethodDeclaration($2, $5, $8);}
+    "public" type "identifier" "(" ")" "{" statements "}" {$$ = new MethodDeclaration($2, NULL, $7);}
+    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = new MethodDeclaration($2, $5, $8);}
 
 variable_declaration:
-    type "identifier" ";" {$$ = new VariableDeclaraion($1, $2);}
+    type "identifier" ";" {$$ = new VariableDeclaration($1, $2);}
 
 formals:
     formals "," type "identifier" {$1->AddFormal($3, $4); $$ = $1;}
@@ -198,7 +194,7 @@ statement:
     | "while"  "(" expression ")" statement {$$ = new WhileStatement($3, $5);}
     | "System.out.println" "(" expression ")" ";" {$$ = new PrintStatement($3);}
     | lvalue "=" expression ";" {$$ = new AssignmentStatement($1, $3);}
-    | "return" expression ";" {$$ = ReturnStatement($2);}
+    | "return" expression ";" {$$ = new ReturnStatement($2);}
     | method_invocation ";" {$$ = $1;}
     | "{" statements "}" {$$ = $2;}
 
@@ -218,7 +214,7 @@ lvalue:
 
 expression:
     "identifier" {$$ = new VariableExpression($1);}
-    | "number" {$$ = new NumberExpression($1);}
+    | "number" {$$ = new NumeralExpression($1);}
     | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", $2, NULL);}
     | expression "+" expression {$$ = new ArithmeticalExpression("+", $1, $3);}
     | expression "-" expression {$$ = new ArithmeticalExpression("-", $1, $3);}
