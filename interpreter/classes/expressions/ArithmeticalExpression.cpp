@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ArithmeticalExpression.h"
 
 ArithmeticalExpression::ArithmeticalExpression(std::string operation,

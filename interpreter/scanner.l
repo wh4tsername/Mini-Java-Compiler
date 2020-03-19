@@ -110,3 +110,5 @@ yy::parser::symbol_type make_NUMBER(const std::string &s, const yy::parser::loca
   }
   return yy::parser::make_NUMBER((int) n, loc);
 }
+
+void yy::parser::error(const yy::parser::location_type& loc, const std::string& m) {}

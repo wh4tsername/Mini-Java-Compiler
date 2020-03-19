@@ -1,5 +1,3 @@
-#pragma once
-
 #include "NumeralExpression.h"
 
 NumeralExpression::NumeralExpression(int value) : value_(value) {}
