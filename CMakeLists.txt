@@ -2,66 +2,66 @@ cmake_minimum_required(VERSION 3.10.2)
 
 set(BISON_EXECUTABLE /usr/local/bin/bison)
 
-project(Interpreter)
+project(Compiler)
 set(
         HEADERS
-        interpreter/driver.hh
-        interpreter/parser.hh
+        compiler/driver.hh
+        compiler/parser.hh
 )
 
 FIND_PACKAGE(BISON REQUIRED)
 BISON_TARGET(
         Parser
-        ${Interpreter_SOURCE_DIR}/interpreter/parser.y
-        ${Interpreter_SOURCE_DIR}/interpreter/parser.cpp
-        DEFINES_FILE ${Interpreter_SOURCE_DIR}/interpreter/parser.hh
+        ${Compiler_SOURCE_DIR}/compiler/parser.y
+        ${Compiler_SOURCE_DIR}/compiler/parser.cpp
+        DEFINES_FILE ${Compiler_SOURCE_DIR}/compiler/parser.hh
 )
 
 FIND_PACKAGE(FLEX REQUIRED)
 FLEX_TARGET(
         Scanner
-        ${Interpreter_SOURCE_DIR}/interpreter/scanner.l
-        ${Interpreter_SOURCE_DIR}/interpreter/scanner.cpp
+        ${Compiler_SOURCE_DIR}/compiler/scanner.l
+        ${Compiler_SOURCE_DIR}/compiler/scanner.cpp
 )
 
 ADD_FLEX_BISON_DEPENDENCY(Scanner Parser)
 
 add_executable(
-        Interpreter
+        Compiler
         main.cpp
-        interpreter/driver.cpp
-        interpreter/classes/expressions/NumeralExpression.cpp
-        interpreter/classes/expressions/ArithmeticalExpression.cpp
-        interpreter/classes/expressions/LogicalExpression.cpp
-        interpreter/classes/expressions/VariableExpression.cpp
-        interpreter/classes/expressions/LengthExpression.cpp
-        interpreter/classes/expressions/ArrayAccessExpression.cpp
-        interpreter/classes/expressions/NewVariableExpression.cpp
-        interpreter/classes/expressions/NewArrayExpression.cpp
-        interpreter/classes/expressions/MethodInvocation.cpp
-        interpreter/classes/expressions/MethodExpression.cpp
-        interpreter/classes/Type.cpp
-        interpreter/classes/ArrayType.cpp
-        interpreter/classes/expressions/This.cpp
-        interpreter/classes/Lvalue.cpp
-        interpreter/classes/statements/VariableDeclaration.cpp
-        interpreter/classes/statements/ListOfStatements.cpp
-        interpreter/classes/statements/AssignmentStatement.cpp
-        interpreter/classes/statements/AssertStatement.cpp
-        interpreter/classes/statements/ReturnStatement.cpp
-        interpreter/classes/statements/PrintStatement.cpp
-        interpreter/classes/statements/WhileStatement.cpp
-        interpreter/classes/statements/IfStatement.cpp
-        interpreter/classes/statements/MethodDeclaration.cpp
-        interpreter/classes/Formals.cpp
-        interpreter/classes/statements/ClassDeclaration.cpp
-        interpreter/classes/Program.cpp
-        interpreter/classes/statements/MainClass.cpp
+        compiler/driver.cpp
+        compiler/classes/expressions/NumeralExpression.cpp
+        compiler/classes/expressions/ArithmeticalExpression.cpp
+        compiler/classes/expressions/LogicalExpression.cpp
+        compiler/classes/expressions/VariableExpression.cpp
+        compiler/classes/expressions/LengthExpression.cpp
+        compiler/classes/expressions/ArrayAccessExpression.cpp
+        compiler/classes/expressions/NewVariableExpression.cpp
+        compiler/classes/expressions/NewArrayExpression.cpp
+        compiler/classes/expressions/MethodInvocation.cpp
+        compiler/classes/expressions/MethodExpression.cpp
+        compiler/classes/Type.cpp
+        compiler/classes/ArrayType.cpp
+        compiler/classes/expressions/This.cpp
+        compiler/classes/Lvalue.cpp
+        compiler/classes/statements/VariableDeclaration.cpp
+        compiler/classes/statements/ListOfStatements.cpp
+        compiler/classes/statements/AssignmentStatement.cpp
+        compiler/classes/statements/AssertStatement.cpp
+        compiler/classes/statements/ReturnStatement.cpp
+        compiler/classes/statements/PrintStatement.cpp
+        compiler/classes/statements/WhileStatement.cpp
+        compiler/classes/statements/IfStatement.cpp
+        compiler/classes/statements/MethodDeclaration.cpp
+        compiler/classes/Formals.cpp
+        compiler/classes/statements/ClassDeclaration.cpp
+        compiler/classes/Program.cpp
+        compiler/classes/statements/MainClass.cpp
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
-        interpreter/visitors/SymbolTreeVisitor.cpp
+        compiler/visitors/SymbolTreeVisitor.cpp
 )
 
 target_include_directories(
-        Interpreter PRIVATE ${Interpreter_SOURCE_DIR}
+        Compiler PRIVATE ${Interpreter_SOURCE_DIR}
 )

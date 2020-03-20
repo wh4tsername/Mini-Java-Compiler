@@ -5,22 +5,22 @@ cmake-build-debug/
 
 other/
 
-interpreter/stack.hh
+compiler/stack.hh
 
-interpreter/scanner.cpp
+compiler/scanner.cpp
 
-interpreter/position.hh
+compiler/position.hh
 
-interpreter/parser.tab.h
+compiler/parser.tab.h
 
-interpreter/parser.tab.c
+compiler/parser.tab.c
 
-interpreter/parser.output
+compiler/parser.output
 
-interpreter/parser.hh
+compiler/parser.hh
 
-interpreter/parser.cpp
+compiler/parser.cpp
 
-interpreter/location.hh
+compiler/location.hh
 
-interpreter/lex.yy.cc
+compiler/lex.yy.cc
