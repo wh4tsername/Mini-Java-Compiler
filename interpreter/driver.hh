@@ -7,6 +7,7 @@
 #include "parser.hh"
 
 #include "classes/Program.h"
+#include "visitors/SymbolTreeVisitor.h"
 
 class Driver {
  public:
@@ -17,6 +18,8 @@ class Driver {
 
   void ScanBegin();
   void ScanEnd();
+
+  void Exec();
 
 //  void PrintTree(const std::string& filename);
 

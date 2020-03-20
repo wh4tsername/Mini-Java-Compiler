@@ -8,3 +8,7 @@ void Program::Run() {
   class_declarations_->Run();
   main_class_->Run();
 }
+
+void Program::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

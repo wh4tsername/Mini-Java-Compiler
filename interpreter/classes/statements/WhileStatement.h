@@ -9,6 +9,8 @@ class WhileStatement : public Statement {
 
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Expression* expression_;
   Statement* statement_;

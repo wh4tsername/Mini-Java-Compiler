@@ -9,6 +9,8 @@ class NewArrayExpression : public Expression {
 
   int Count() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Type* type_name_;
   Expression* index_expression_;

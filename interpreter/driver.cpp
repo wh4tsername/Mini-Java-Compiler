@@ -15,8 +15,6 @@ int Driver::Parse(const std::string& file) {
   int return_code = parser_();
   std::cout << "parser " << return_code << std::endl;
 
-//  program_->Run();
-
   ScanEnd();
 
   return return_code;
@@ -30,6 +28,13 @@ void Driver::ScanBegin() {
     std::cout << file_ << std::endl;
     scanner_.yyrestart(&stream_);
   }
+}
+
+void Driver::Exec() {
+  SymbolTreeVisitor visitor;
+  visitor.Visit(program_);
+
+  std::cout << "symbol_tree_built" << std::endl;
 }
 
 void Driver::ScanEnd()

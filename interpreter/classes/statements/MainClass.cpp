@@ -6,3 +6,7 @@ MainClass::MainClass(std::string main_class_name,
       list_of_statements_(list_of_statements) {}
 
 void MainClass::Run() { list_of_statements_->Run(); }
+
+void MainClass::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

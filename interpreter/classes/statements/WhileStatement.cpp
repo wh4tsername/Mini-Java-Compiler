@@ -8,3 +8,7 @@ void WhileStatement::Run() {
     statement_->Run();
   }
 }
+
+void WhileStatement::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

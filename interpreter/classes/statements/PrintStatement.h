@@ -9,6 +9,8 @@ class PrintStatement : public Statement {
 
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Expression* expression_;
 };

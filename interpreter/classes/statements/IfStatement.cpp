@@ -13,3 +13,7 @@ void IfStatement::Run() {
     else_statement_->Run();
   }
 }
+
+void IfStatement::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

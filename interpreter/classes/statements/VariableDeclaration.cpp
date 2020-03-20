@@ -6,3 +6,7 @@ VariableDeclaration::VariableDeclaration(Type* type, std::string variable_name)
 int VariableDeclaration::Count() { return 0; }
 
 void VariableDeclaration::Run() {}
+
+void VariableDeclaration::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

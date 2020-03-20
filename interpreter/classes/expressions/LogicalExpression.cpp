@@ -40,3 +40,7 @@ int LogicalExpression::Count() {
 
   exit(RUNTIME_ERROR);
 }
+
+void LogicalExpression::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

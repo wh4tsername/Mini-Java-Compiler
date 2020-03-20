@@ -5,3 +5,7 @@ NewArrayExpression::NewArrayExpression(Type* type_name,
     : type_name_(type_name), index_expression_(index_expression) {}
 
 int NewArrayExpression::Count() { return 0; }
+
+void NewArrayExpression::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

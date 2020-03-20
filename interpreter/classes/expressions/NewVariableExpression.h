@@ -9,6 +9,8 @@ class NewVariableExpression : public Expression {
 
   int Count() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Type* variable_type_;
 };

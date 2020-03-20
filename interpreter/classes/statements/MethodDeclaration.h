@@ -13,6 +13,8 @@ class MethodDeclaration : public Statement {
 
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Type* type_;
   Formals* formals_;

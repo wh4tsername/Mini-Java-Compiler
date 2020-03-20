@@ -43,3 +43,7 @@ int ArithmeticalExpression::Count() {
 
   exit(RUNTIME_ERROR);
 }
+
+void ArithmeticalExpression::Accept(Visitor *visitor) {
+  visitor->Visit(this);
+}

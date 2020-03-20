@@ -10,6 +10,8 @@ class AssignmentStatement : public Statement {
 
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Lvalue* lvalue_;
   Expression* expression_;

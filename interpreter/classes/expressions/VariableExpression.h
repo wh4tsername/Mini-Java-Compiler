@@ -10,6 +10,8 @@ class VariableExpression : public Expression {
 
   int Count() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   std::string variable_name_;
 };

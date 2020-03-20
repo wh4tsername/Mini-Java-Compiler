@@ -11,6 +11,8 @@ class MainClass : public Statement {
 
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   std::string main_class_name_;
   ListOfStatements* list_of_statements_;

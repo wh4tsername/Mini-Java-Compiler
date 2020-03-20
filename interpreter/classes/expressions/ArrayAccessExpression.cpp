@@ -5,3 +5,7 @@ ArrayAccessExpression::ArrayAccessExpression(Expression* main_expression,
     : main_expression_(main_expression), index_expression_(index_expression) {}
 
 int ArrayAccessExpression::Count() { return 0; }
+
+void ArrayAccessExpression::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

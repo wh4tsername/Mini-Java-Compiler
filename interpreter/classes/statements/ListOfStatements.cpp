@@ -9,3 +9,7 @@ void ListOfStatements::Run() {
     statement->Run();
   }
 }
+
+void ListOfStatements::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

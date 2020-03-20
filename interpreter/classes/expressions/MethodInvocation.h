@@ -15,6 +15,8 @@ class MethodInvocation : public Expression, public Statement {
 
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Expression* call_from_;
   std::string method_name_;

@@ -10,3 +10,7 @@ MethodInvocation::MethodInvocation(Expression* call_from,
 int MethodInvocation::Count() { return 0; }
 
 void MethodInvocation::Run() {}
+
+void MethodInvocation::Accept(Visitor* visitor) {
+  visitor->Visit(this);
+}

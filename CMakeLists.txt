@@ -59,6 +59,7 @@ add_executable(
         interpreter/classes/statements/MainClass.cpp
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
+        interpreter/visitors/SymbolTreeVisitor.cpp
 )
 
 target_include_directories(

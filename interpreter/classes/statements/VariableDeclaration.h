@@ -11,6 +11,8 @@ class VariableDeclaration : public Statement, public Expression {
   int Count() final;
   void Run() final;
 
+  void Accept(Visitor* visitor) override;
+
  private:
   Type* type_;
   std::string variable_name_;

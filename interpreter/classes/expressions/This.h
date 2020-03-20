@@ -7,4 +7,6 @@ class This : public Expression {
   This() = default;
 
   int Count() final;
+
+  void Accept(Visitor* visitor) override;
 };
