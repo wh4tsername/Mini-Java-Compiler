@@ -187,7 +187,7 @@ statements:
     | %empty {$$ = new ListOfStatements();}
 
 statement:
-    "assert" "(" expression ")" {$$ = new AssertStatement($3);}
+    "assert" "(" expression ")" ";" {$$ = new AssertStatement($3);}
     | local_variable_declaration {$$ = $1;}
     | "if"  "(" expression ")" statement %prec NO_ELSE {$$ = new IfStatement($3, $5, NULL);}
     | "if"  "(" expression ")" statement "else" statement {$$ = new IfStatement($3, $5, $7);}

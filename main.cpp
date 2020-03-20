@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     } else if (argv[i] == std::string("-s")) {
       driver.trace_scanning_ = true;
     } else if (!driver.Parse(argv[i])) {
-      std::cout << "success" << std::endl;
+      std::cout << "parsing_success\n";
     } else {
       result = 1;
     }

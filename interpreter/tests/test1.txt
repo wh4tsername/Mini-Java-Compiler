@@ -1,25 +1,17 @@
-1
-*****
-MODULE a;
-IMPORT;
-VAR c: BOOL;
-    b: BOOL;
-    d: BOOL;
-    e1: INTEGER;
-    e2: INTEGER;
-BEGIN
+class Factorial {
+  public static void main () {
+    System.out.println (new Fac ().ComputeFac (10));
+  }
+}
 
-b := TRUE;
-c := FALSE;
-e1 := 0;
-
-IF (b OR c)
-THEN
-e1 := e1 + 1;
-ELSE
-e1 := e1 - 1;
-END;
-
-PRINT e1;
-
-END a.
+class Fac {
+  public int ComputeFac (int num) {
+    assert (num > -1);
+    int num_aux;
+    if (num == 0)
+      num_aux = 1;
+    else
+      num_aux = num * this.ComputeFac (num-1);
+    return num_aux;
+  }
+}
