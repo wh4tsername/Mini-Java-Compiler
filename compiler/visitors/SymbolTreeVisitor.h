@@ -1,9 +1,15 @@
 #pragma once
 
 #include "Visitor.h"
+#include "../symbol_table/ScopeLayer.h"
+#include "../symbol_table/ScopeLayerTree.h"
 
 class SymbolTreeVisitor : public Visitor {
  public:
+  SymbolTreeVisitor();
+  ~SymbolTreeVisitor() = default;
+  ScopeLayer* GetRoot();
+
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
   void Visit(LogicalExpression* expression) override;
@@ -31,4 +37,9 @@ class SymbolTreeVisitor : public Visitor {
   void Visit(MethodDeclaration* method_declaration) override;
   void Visit(MainClass* main_class) override;
   void Visit(ClassDeclaration* class_declaration) override;
+  void Visit(ScopeListOfStatements* scope_list_of_statements) override;
+
+ private:
+  ScopeLayerTree tree_;
+  ScopeLayer* current_layer_;
 };

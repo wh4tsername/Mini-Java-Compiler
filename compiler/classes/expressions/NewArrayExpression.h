@@ -7,8 +7,6 @@ class NewArrayExpression : public Expression {
  public:
   explicit NewArrayExpression(Type* type_name, Expression* index_expression);
 
-  int Count() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

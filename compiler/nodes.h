@@ -27,3 +27,5 @@
 #include "classes/statements/ClassDeclaration.h"
 #include "classes/Program.h"
 #include "classes/statements/MainClass.h"
+
+#include "classes/ScopeListOfStatements.h"

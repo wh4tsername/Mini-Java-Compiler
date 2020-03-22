@@ -1,5 +1,11 @@
 #include "SymbolTreeVisitor.h"
 
+SymbolTreeVisitor::SymbolTreeVisitor() : tree_(new ScopeLayer) {
+  current_layer_ = tree_.GetRoot();
+}
+
+ScopeLayer* SymbolTreeVisitor::GetRoot() { return current_layer_; }
+
 void SymbolTreeVisitor::Visit(ArrayAccessExpression* expression) {}
 void SymbolTreeVisitor::Visit(ArithmeticalExpression* expression) {}
 void SymbolTreeVisitor::Visit(LogicalExpression* expression) {}
@@ -27,3 +33,5 @@ void SymbolTreeVisitor::Visit(AssertStatement* statement) {}
 void SymbolTreeVisitor::Visit(MethodDeclaration* method_declaration) {}
 void SymbolTreeVisitor::Visit(MainClass* main_class) {}
 void SymbolTreeVisitor::Visit(ClassDeclaration* class_declaration) {}
+void SymbolTreeVisitor::Visit(ScopeListOfStatements* scope_list_of_statements) {
+}

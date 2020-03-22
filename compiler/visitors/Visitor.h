@@ -31,4 +31,5 @@ class Visitor {
   virtual void Visit(MethodDeclaration* method_declaration) = 0;
   virtual void Visit(MainClass* main_class) = 0;
   virtual void Visit(ClassDeclaration* class_declaration) = 0;
+  virtual void Visit(ScopeListOfStatements* scope_list_of_statements) = 0;
 };

@@ -29,3 +29,5 @@ class Program;
 class Expression;
 class Statement;
 class MainClass;
+
+class ScopeListOfStatements;

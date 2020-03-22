@@ -11,10 +11,6 @@ class MethodInvocation : public Expression, public Statement {
   explicit MethodInvocation(Expression* call_from, std::string method_name,
                             MethodExpression* arguments_list);
 
-  int Count() final;
-
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

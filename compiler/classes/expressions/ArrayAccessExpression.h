@@ -7,8 +7,6 @@ class ArrayAccessExpression : public Expression {
   explicit ArrayAccessExpression(Expression* main_expression,
                                  Expression* index_expression);
 
-  int Count() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

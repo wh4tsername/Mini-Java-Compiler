@@ -10,8 +10,6 @@ class ClassDeclaration : public Statement {
   explicit ClassDeclaration(std::string class_name,
                             ListOfStatements* declarations);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

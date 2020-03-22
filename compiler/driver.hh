@@ -8,6 +8,8 @@
 
 #include "classes/Program.h"
 #include "visitors/SymbolTreeVisitor.h"
+#include "symbol_table/ScopeLayer.h"
+#include "visitors/Executor.h"
 
 class Driver {
  public:
@@ -20,8 +22,6 @@ class Driver {
   void ScanEnd();
 
   void Exec();
-
-//  void PrintTree(const std::string& filename);
 
   bool trace_scanning_;
   yy::location location_;

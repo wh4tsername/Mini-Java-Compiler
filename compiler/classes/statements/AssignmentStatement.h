@@ -8,8 +8,6 @@ class AssignmentStatement : public Statement {
  public:
   explicit AssignmentStatement(Lvalue* lvalue, Expression* expression);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

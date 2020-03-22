@@ -9,8 +9,6 @@ class LengthExpression : public Expression {
  public:
   explicit LengthExpression(Expression* expression);
 
-  int Count() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

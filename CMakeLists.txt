@@ -26,9 +26,9 @@ FLEX_TARGET(
 
 ADD_FLEX_BISON_DEPENDENCY(Scanner Parser)
 
-add_executable(
-        Compiler
-        main.cpp
+set(
+        SOURCES
+
         compiler/driver.cpp
         compiler/classes/expressions/NumeralExpression.cpp
         compiler/classes/expressions/ArithmeticalExpression.cpp
@@ -57,9 +57,24 @@ add_executable(
         compiler/classes/statements/ClassDeclaration.cpp
         compiler/classes/Program.cpp
         compiler/classes/statements/MainClass.cpp
+        compiler/visitors/Executor.cpp
+        compiler/visitors/SymbolTreeVisitor.cpp
+        compiler/visitors/TemplateVisitor.cpp
+        compiler/objects/Object.cpp
+        compiler/objects/Integer.cpp
+        compiler/objects/UninitObject.cpp
+        compiler/symbol_table/ScopeLayer.cpp
+        compiler/symbol_table/ScopeLayerTree.cpp
+        compiler/symbol_table/Symbol.cpp
+        compiler/classes/ScopeListOfStatements.cpp
+)
+
+add_executable(
+        Compiler
+        main.cpp
+        ${SOURCES}
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
-        compiler/visitors/SymbolTreeVisitor.cpp
 )
 
 target_include_directories(

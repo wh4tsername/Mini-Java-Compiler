@@ -9,8 +9,6 @@ class MainClass : public Statement {
  public:
   MainClass(std::string main_class_name, ListOfStatements* list_of_statements);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

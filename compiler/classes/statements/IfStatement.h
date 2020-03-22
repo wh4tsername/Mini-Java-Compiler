@@ -8,8 +8,6 @@ class IfStatement : public Statement {
   explicit IfStatement(Expression* expression, Statement* if_statement,
                        Statement* else_statement);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

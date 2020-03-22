@@ -196,7 +196,7 @@ statement:
     | lvalue "=" expression ";" {$$ = new AssignmentStatement($1, $3);}
     | "return" expression ";" {$$ = new ReturnStatement($2);}
     | method_invocation ";" {$$ = $1;}
-    | "{" statements "}" {$$ = $2;}
+    | "{" statements "}" {$$ = new ScopeListOfStatements($2);}
 
 local_variable_declaration:
     variable_declaration {$$ = $1;}

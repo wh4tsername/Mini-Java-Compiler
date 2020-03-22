@@ -8,8 +8,6 @@ class ListOfStatements : public Statement {
  public:
   void AddStatement(Statement* statement);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

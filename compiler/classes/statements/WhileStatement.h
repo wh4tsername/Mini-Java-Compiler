@@ -7,8 +7,6 @@ class WhileStatement : public Statement {
  public:
   explicit WhileStatement(Expression* expression, Statement* statement);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

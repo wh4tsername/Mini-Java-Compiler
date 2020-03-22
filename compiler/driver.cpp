@@ -35,14 +35,12 @@ void Driver::Exec() {
   visitor.Visit(program_);
 
   std::cout << "symbol_tree_built" << std::endl;
+
+  Executor executor(visitor.GetRoot());
+  executor.Exec();
 }
 
 void Driver::ScanEnd()
 {
   stream_.close();
 }
-
-//Driver::PrintTree(const std::string& filename) {
-//  PrintVisitor visitor;
-//  visitor.Visit(program_);
-//}

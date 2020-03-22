@@ -11,8 +11,6 @@ class MethodDeclaration : public Statement {
   explicit MethodDeclaration(Type* type, Formals* formals,
                              ListOfStatements* list_of_statements);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:

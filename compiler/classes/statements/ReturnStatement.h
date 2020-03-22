@@ -7,8 +7,6 @@ class ReturnStatement : public Statement {
  public:
   explicit ReturnStatement(Expression* expression);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
 
  private:
