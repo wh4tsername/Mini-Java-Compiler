@@ -1,16 +1,19 @@
 #include "driver.hh"
 #include "parser.hh"
 
-Driver::Driver() :
-    trace_parsing_(false),
-    trace_scanning_(false),
-    scanner_(*this), parser_(scanner_, *this) {
-}
+Driver::Driver()
+    : program_(nullptr),
+      trace_parsing_(false),
+      trace_scanning_(false),
+      scanner_(*this),
+      parser_(scanner_, *this) {}
 
 int Driver::Parse(const std::string& file) {
   file_ = file;
   location_.initialize(&file_);
+
   ScanBegin();
+
   parser_.set_debug_level(trace_parsing_);
   int return_code = parser_();
   std::cout << "parser " << return_code << std::endl;
@@ -40,7 +43,11 @@ void Driver::Exec() {
   executor.Exec();
 }
 
-void Driver::ScanEnd()
-{
-  stream_.close();
+void Driver::PrintTree(const std::string& filename) {
+  PrintTreeVisitor visitor(filename);
+  visitor.Visit(program_);
+
+  std::cout << "tree_printed" << std::endl;
 }
+
+void Driver::ScanEnd() { stream_.close(); }

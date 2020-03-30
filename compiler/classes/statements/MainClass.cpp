@@ -1,10 +1,10 @@
 #include "MainClass.h"
 
 MainClass::MainClass(std::string main_class_name,
-                     ListOfStatements* list_of_statements)
+                     ListOfStatements* main_statements,
+                     ListOfStatements* declarations)
     : main_class_name_(std::move(main_class_name)),
-      list_of_statements_(list_of_statements) {}
+      main_statements_(main_statements),
+      declarations_(declarations) {}
 
-void MainClass::Accept(Visitor* visitor) {
-  visitor->Visit(this);
-}
+void MainClass::Accept(Visitor* visitor) { visitor->Visit(this); }

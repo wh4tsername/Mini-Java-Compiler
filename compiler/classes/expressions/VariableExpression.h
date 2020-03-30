@@ -10,6 +10,5 @@ class VariableExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   std::string variable_name_;
 };

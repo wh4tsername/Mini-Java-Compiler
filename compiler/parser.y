@@ -142,7 +142,7 @@ class_declarations:
     | %empty {$$ = new ListOfStatements();}
 
 main_class:
-    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" {$$ = new MainClass($2, $11);}
+    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" declarations "}" {$$ = new MainClass($2, $11, $13);}
 
 class_declaration:
     "class" "identifier" "{" declarations "}" {$$ = new ClassDeclaration($2, $4);}
@@ -156,8 +156,8 @@ declaration:
     | method_declaration {$$ = $1;}
 
 method_declaration:
-    "public" type "identifier" "(" ")" "{" statements "}" {$$ = new MethodDeclaration($2, NULL, $7);}
-    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = new MethodDeclaration($2, $5, $8);}
+    "public" type "identifier" "(" ")" "{" statements "}" {$$ = new MethodDeclaration($3, $2, NULL, $7);}
+    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = new MethodDeclaration($3, $2, $5, $8);}
 
 variable_declaration:
     type "identifier" ";" {$$ = new VariableDeclaration($1, $2);}

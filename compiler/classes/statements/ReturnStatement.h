@@ -9,6 +9,5 @@ class ReturnStatement : public Statement {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Expression* expression_;
 };

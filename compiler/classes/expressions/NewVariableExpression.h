@@ -9,6 +9,5 @@ class NewVariableExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Type* variable_type_;
 };

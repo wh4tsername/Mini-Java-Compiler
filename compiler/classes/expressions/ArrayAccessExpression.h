@@ -9,7 +9,6 @@ class ArrayAccessExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Expression* main_expression_;
   Expression* index_expression_;
 };

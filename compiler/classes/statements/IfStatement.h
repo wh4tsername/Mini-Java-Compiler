@@ -10,7 +10,6 @@ class IfStatement : public Statement {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Expression* expression_;
   Statement* if_statement_;
   Statement* else_statement_;

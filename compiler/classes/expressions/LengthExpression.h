@@ -11,6 +11,5 @@ class LengthExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Expression* expression_;
 };

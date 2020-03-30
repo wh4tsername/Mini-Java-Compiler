@@ -10,7 +10,6 @@ class Program : public Node {
 
   void Accept(Visitor* visitor) override;
 
- private:
   MainClass* main_class_;
   ListOfStatements* class_declarations_;
 };

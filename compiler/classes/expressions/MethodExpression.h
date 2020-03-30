@@ -13,6 +13,5 @@ class MethodExpression : public Node {
 
   void Accept(Visitor* visitor) override;
 
- private:
   std::vector<Expression*> list_of_expressions_;
 };

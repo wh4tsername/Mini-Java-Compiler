@@ -8,6 +8,5 @@ class NumeralExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   int value_;
 };

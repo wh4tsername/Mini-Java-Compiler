@@ -13,7 +13,6 @@ class MethodInvocation : public Expression, public Statement {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Expression* call_from_;
   std::string method_name_;
   MethodExpression* arguments_list_;

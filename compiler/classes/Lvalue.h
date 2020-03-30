@@ -9,6 +9,5 @@ class Lvalue : public Node {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Expression* lvalue_;
 };

@@ -57,6 +57,7 @@ set(
         compiler/classes/statements/ClassDeclaration.cpp
         compiler/classes/Program.cpp
         compiler/classes/statements/MainClass.cpp
+        compiler/visitors/PrintTreeVisitor.cpp
         compiler/visitors/Executor.cpp
         compiler/visitors/SymbolTreeVisitor.cpp
         compiler/visitors/TemplateVisitor.cpp

@@ -5,11 +5,10 @@
 
 class NewArrayExpression : public Expression {
  public:
-  explicit NewArrayExpression(Type* type_name, Expression* index_expression);
+  explicit NewArrayExpression(Type* type_name, Expression* length);
 
   void Accept(Visitor* visitor) override;
 
- private:
   Type* type_name_;
-  Expression* index_expression_;
+  Expression* length_;
 };

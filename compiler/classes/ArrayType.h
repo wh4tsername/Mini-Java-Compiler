@@ -7,6 +7,4 @@ class ArrayType : public Type {
   explicit ArrayType(Type *type);
 
   void Accept(Visitor* visitor) override;
-
- private:
 };

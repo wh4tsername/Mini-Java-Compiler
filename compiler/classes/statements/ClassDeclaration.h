@@ -12,7 +12,6 @@ class ClassDeclaration : public Statement {
 
   void Accept(Visitor* visitor) override;
 
- private:
   std::string class_name_;
   ListOfStatements* declarations_;
 };

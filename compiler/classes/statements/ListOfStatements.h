@@ -10,6 +10,5 @@ class ListOfStatements : public Statement {
 
   void Accept(Visitor* visitor) override;
 
- private:
   std::vector<Statement*> list_of_statements_;
 };

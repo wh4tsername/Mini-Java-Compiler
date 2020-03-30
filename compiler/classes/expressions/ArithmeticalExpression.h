@@ -13,7 +13,6 @@ class ArithmeticalExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   std::string operation_;
   Expression* lhs_;
   Expression* rhs_;

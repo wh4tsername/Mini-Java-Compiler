@@ -10,7 +10,6 @@ class AssignmentStatement : public Statement {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Lvalue* lvalue_;
   Expression* expression_;
 };

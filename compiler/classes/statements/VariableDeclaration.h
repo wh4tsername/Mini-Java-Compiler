@@ -10,7 +10,6 @@ class VariableDeclaration : public Statement, public Expression {
 
   void Accept(Visitor* visitor) override;
 
- private:
   Type* type_;
   std::string variable_name_;
 };
