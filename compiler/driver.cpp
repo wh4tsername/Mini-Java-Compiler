@@ -34,13 +34,31 @@ void Driver::ScanBegin() {
 }
 
 void Driver::Exec() {
-  SymbolTreeVisitor visitor;
-  visitor.Visit(program_);
+  SymbolTreeVisitor symbol_visitor;
+  symbol_visitor.Visit(program_);
 
   std::cout << "symbol_tree_built" << std::endl;
 
-  Executor executor(visitor.GetRoot());
-  executor.Exec();
+  auto root = symbol_visitor.GetRoot();
+
+  auto functions = symbol_visitor.GetFunctions();
+
+  FunctionStorage& storage = FunctionStorage::GetInstance();
+  for (auto pair : functions) {
+    storage.Set(pair.first, pair.second);
+  }
+
+  MethodDeclaration* main_function = storage.Get(Symbol("main"));
+
+  std::shared_ptr<Function> function_type =
+      std::dynamic_pointer_cast<Function>(root.Get(Symbol("main")));
+
+  FunctionProcessingVisitor func_visitor(root.GetFunctionScope(Symbol("main")),
+                                         function_type);
+  func_visitor.SetTree(&root);
+  func_visitor.Visit(main_function);
+  // TODO(@wh4tsername) exec somehow
+  // TODO(@wh4tsername) delete root
 }
 
 void Driver::PrintTree(const std::string& filename) {

@@ -1,0 +1,12 @@
+class Main {
+  public static void main() {
+    int a;
+    a = new int[10];
+    a_ = 1;
+    a[0] = a_;
+
+    System.out.println(a[0]);
+  }
+
+  int a_;
+}

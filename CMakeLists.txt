@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 
+set(CMAKE_CXX_STANDARD_REQUIRED 17)
+
 set(BISON_EXECUTABLE /usr/local/bin/bison)
 
 project(Compiler)
@@ -58,16 +60,21 @@ set(
         compiler/classes/Program.cpp
         compiler/classes/statements/MainClass.cpp
         compiler/visitors/PrintTreeVisitor.cpp
-        compiler/visitors/Executor.cpp
+        compiler/visitors/FunctionProcessingVisitor.cpp
         compiler/visitors/SymbolTreeVisitor.cpp
         compiler/visitors/TemplateVisitor.cpp
         compiler/objects/Object.cpp
         compiler/objects/Integer.cpp
         compiler/objects/UninitObject.cpp
+        compiler/objects/Function.cpp
+        compiler/objects/Void.cpp
         compiler/symbol_table/ScopeLayer.cpp
         compiler/symbol_table/ScopeLayerTree.cpp
         compiler/symbol_table/Symbol.cpp
         compiler/classes/ScopeListOfStatements.cpp
+        compiler/function_processing/Frame.cpp
+        compiler/function_processing/FunctionStorage.cpp
+        compiler/function_processing/FunctionTable.cpp
 )
 
 add_executable(

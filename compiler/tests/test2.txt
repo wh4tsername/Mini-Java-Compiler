@@ -1,6 +1,6 @@
 class Factorial {
   public static void main() {
-    System.out.println(new Fac().ComputeFac(10));
+    new Fac().Print(new Fac().ComputeFac(10));
   }
 }
 
@@ -13,5 +13,9 @@ class Fac {
     else
       num_aux = num * this.ComputeFac(num-1);
     return num_aux;
+  }
+
+  public void Print(int arg) {
+    System.out.println(arg);
   }
 }

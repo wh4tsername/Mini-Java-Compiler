@@ -1,47 +1,30 @@
 Program: 
-	Main class: Factorial
+	Main class: Main
 		Main: 
 			Statements: 
-				Print: 
-					Method invocation: ComputeFac
-					(arguments): 
+				Variable declaration: a -> int
+				Assignment: 
+					Lvalue: 
+						Variable: a
+					New array allocation: (type): int (length): 
 						Number: 10
+				Assignment: 
+					Lvalue: 
+						Variable: a_
+					Number: 1
+				Assignment: 
+					Lvalue: 
+						Array access: 
+						(called from): 
+							Variable: a
+						(index): 
+							Number: 0
+					Variable: a_
+				Print: 
+					Array access: 
 					(called from): 
-						New var allocation: Fac
-	Statements: 
-		Class: Fac
-			Statements: 
-				Method declaration: ComputeFac, (return type): int, (arguments): 
-				num -> int
-					Statements: 
-						Assert: 
-							Logical expression: (operation): >
-								Variable: num
-								Arithmetical expression: (operation): @
-									Number: 1
-						Variable declaration: num_aux -> int
-						If statement: 
-						Expression: 
-							Logical expression: (operation): ==
-								Variable: num
-								Number: 0
-						If: 
-							Assignment: 
-								Lvalue: 
-									Variable: num_aux
-								Number: 1
-						Else: 
-							Assignment: 
-								Lvalue: 
-									Variable: num_aux
-								Arithmetical expression: (operation): *
-									Variable: num
-									Method invocation: ComputeFac
-									(arguments): 
-										Arithmetical expression: (operation): -
-											Variable: num
-											Number: 1
-									(called from): 
-										This: 
-						Return: 
-							Variable: num_aux
+						Variable: a
+					(index): 
+						Number: 0
+		Statements: 
+			Variable declaration: a_ -> int

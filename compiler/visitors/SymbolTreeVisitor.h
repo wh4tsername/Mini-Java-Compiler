@@ -1,14 +1,16 @@
 #pragma once
 
-#include "Visitor.h"
+#include "../objects/Function.h"
 #include "../symbol_table/ScopeLayer.h"
 #include "../symbol_table/ScopeLayerTree.h"
+#include "Visitor.h"
 
 class SymbolTreeVisitor : public Visitor {
  public:
   SymbolTreeVisitor();
   ~SymbolTreeVisitor() = default;
-  ScopeLayer* GetRoot();
+  ScopeLayerTree GetRoot();
+  std::unordered_map<Symbol, MethodDeclaration*> GetFunctions();
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -42,4 +44,5 @@ class SymbolTreeVisitor : public Visitor {
  private:
   ScopeLayerTree tree_;
   ScopeLayer* current_layer_;
+  std::unordered_map<Symbol, MethodDeclaration*> functions_;
 };

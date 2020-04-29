@@ -1,10 +1,13 @@
 #include "SymbolTreeVisitor.h"
 
 SymbolTreeVisitor::SymbolTreeVisitor() : tree_(new ScopeLayer) {
-  current_layer_ = tree_.GetRoot();
+  current_layer_ = tree_.root_;
 }
 
-ScopeLayer* SymbolTreeVisitor::GetRoot() { return current_layer_; }
+ScopeLayerTree SymbolTreeVisitor::GetRoot() { return tree_; }
+std::unordered_map<Symbol, MethodDeclaration*> SymbolTreeVisitor::GetFunctions() {
+  return functions_;
+}
 
 void SymbolTreeVisitor::Visit(ArrayAccessExpression* expression) {}
 void SymbolTreeVisitor::Visit(ArithmeticalExpression* expression) {}

@@ -9,8 +9,10 @@
 #include "classes/Program.h"
 #include "visitors/SymbolTreeVisitor.h"
 #include "symbol_table/ScopeLayer.h"
-#include "visitors/Executor.h"
+#include "visitors/FunctionProcessingVisitor.h"
 #include "visitors/PrintTreeVisitor.h"
+#include "function_processing/FunctionStorage.h"
+#include "objects/Function.h"
 
 class Driver {
  public:

@@ -72,7 +72,7 @@ void PrintTreeVisitor::Visit(NewArrayExpression* expression) {
   PrintTabs();
   stream_ << "New array allocation: "
           << "(type): " << expression->type_name_->type_name_
-          << "(length): " << std::endl;
+          << " (length): " << std::endl;
 
   ++number_of_tabs_;
   expression->length_->Accept(this);

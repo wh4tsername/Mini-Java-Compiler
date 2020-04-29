@@ -2,14 +2,20 @@
 
 #include <stack>
 
-#include "TemplateVisitor.h"
+#include "../function_processing/Frame.h"
+#include "../function_processing/FunctionTable.h"
+#include "../objects/Function.h"
 #include "../symbol_table/ScopeLayer.h"
+#include "../symbol_table/ScopeLayerTree.h"
+#include "TemplateVisitor.h"
 
-class Executor : public TemplateVisitor<int> {
+class FunctionProcessingVisitor : public TemplateVisitor<int> {
  public:
-  explicit Executor(ScopeLayer* root);
+  explicit FunctionProcessingVisitor(ScopeLayer* function_scope,
+                                     std::shared_ptr<Function> function);
 
-  void Exec();
+  void SetTree(ScopeLayerTree* tree);
+  Frame& GetFrame();
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -41,6 +47,11 @@ class Executor : public TemplateVisitor<int> {
   void Visit(ScopeListOfStatements* scope_list_of_statements) override;
 
  private:
+  ScopeLayer* root_layer_;
   ScopeLayer* current_layer_;
-  std::stack<size_t> offsets_;
+  std::stack<int> offsets_;
+  Frame frame_;
+  FunctionTable table_;
+  ScopeLayerTree* tree_;
+  bool returned_ = false;
 };

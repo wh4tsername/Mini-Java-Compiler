@@ -12,8 +12,8 @@ int main(int argc, char** argv) {
       driver.trace_scanning_ = true;
     } else if (!driver.Parse(argv[i])) {
       driver.PrintTree("../compiler/tests/tree_output.txt");
-//      driver.Exec();
-//      std::cout << "executed_success\n";
+      driver.Exec();
+      std::cout << "executed_success\n";
     } else {
       result = 1;
     }
