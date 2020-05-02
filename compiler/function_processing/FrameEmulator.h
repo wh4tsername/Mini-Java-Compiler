@@ -5,9 +5,9 @@
 
 #include "../objects/Function.h"
 
-class Frame {
+class FrameEmulator {
  public:
-  explicit Frame(std::shared_ptr<Function> function);
+  explicit FrameEmulator(std::shared_ptr<Function> function);
   void SetParameters(const std::vector<int>& values);
 
   size_t AllocVariable();
@@ -19,7 +19,7 @@ class Frame {
 
   void Set(int index, int value);
 
-  void SetParentFrame(Frame* frame);
+  void SetParentFrame(FrameEmulator* frame);
 
   int GetReturnValue() const;
 
@@ -36,5 +36,5 @@ class Frame {
 
   void SetReturnValue(int value);
 
-  Frame* parent_ = nullptr;
+  FrameEmulator* parent_ = nullptr;
 };

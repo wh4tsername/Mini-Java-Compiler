@@ -1,9 +1,11 @@
 #pragma once
 
 #include <stack>
+#include <cassert>
 
-#include "../function_processing/Frame.h"
+#include "../function_processing/FrameEmulator.h"
 #include "../function_processing/FunctionTable.h"
+#include "../function_processing/FunctionStorage.h"
 #include "../objects/Function.h"
 #include "../symbol_table/ScopeLayer.h"
 #include "../symbol_table/ScopeLayerTree.h"
@@ -15,7 +17,8 @@ class FunctionProcessingVisitor : public TemplateVisitor<int> {
                                      std::shared_ptr<Function> function);
 
   void SetTree(ScopeLayerTree* tree);
-  Frame& GetFrame();
+  void SetParams(const std::vector<int>& params);
+  FrameEmulator& GetFrame();
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -50,7 +53,7 @@ class FunctionProcessingVisitor : public TemplateVisitor<int> {
   ScopeLayer* root_layer_;
   ScopeLayer* current_layer_;
   std::stack<int> offsets_;
-  Frame frame_;
+  FrameEmulator frame_;
   FunctionTable table_;
   ScopeLayerTree* tree_;
   bool returned_ = false;

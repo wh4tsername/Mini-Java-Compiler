@@ -3,6 +3,7 @@
 #include "../objects/Function.h"
 #include "../symbol_table/ScopeLayer.h"
 #include "../symbol_table/ScopeLayerTree.h"
+#include "../nodes.h"
 #include "Visitor.h"
 
 class SymbolTreeVisitor : public Visitor {

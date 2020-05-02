@@ -1,12 +1,12 @@
-#include "Frame.h"
+#include "FrameEmulator.h"
 
-Frame::Frame(std::shared_ptr<Function> function) {
+FrameEmulator::FrameEmulator(std::shared_ptr<Function> function) {
   parameters_.resize(function->arguments_.size());
 
   AllocScope();
 }
 
-void Frame::SetParameters(const std::vector<int> &values) {
+void FrameEmulator::SetParameters(const std::vector<int> &values) {
   if (parameters_.size() != values.size()) {
     throw std::runtime_error("Parameters mismatch");
   }
@@ -14,11 +14,11 @@ void Frame::SetParameters(const std::vector<int> &values) {
   parameters_ = values;
 }
 
-void Frame::AllocScope() {
+void FrameEmulator::AllocScope() {
   offsets_.push(variables_.size());
 }
 
-void Frame::DeallocScope() {
+void FrameEmulator::DeallocScope() {
   size_t new_size = offsets_.top();
   offsets_.pop();
 
@@ -27,14 +27,14 @@ void Frame::DeallocScope() {
   variables_.resize(new_size);
 }
 
-size_t Frame::AllocVariable() {
+size_t FrameEmulator::AllocVariable() {
   size_t index = variables_.size();
   variables_.push_back(0);
 
   return index;
 }
 
-int Frame::Get(int index) {
+int FrameEmulator::Get(int index) {
   if (index >= 0) {
     return variables_.at(index);
   } else {
@@ -42,7 +42,7 @@ int Frame::Get(int index) {
   }
 }
 
-void Frame::Set(int index, int value) {
+void FrameEmulator::Set(int index, int value) {
   if (index >= 0) {
     variables_.at(index) = value;
   } else {
@@ -50,22 +50,22 @@ void Frame::Set(int index, int value) {
   }
 }
 
-void Frame::SetReturnValue(int value) {
+void FrameEmulator::SetReturnValue(int value) {
   return_value_ = value;
 }
 
-void Frame::SetParentFrame(Frame *frame) {
+void FrameEmulator::SetParentFrame(FrameEmulator *frame) {
   parent_ = frame;
 }
 
-void Frame::SetParentReturnValue(int value) {
+void FrameEmulator::SetParentReturnValue(int value) {
   parent_->return_value_ = value;
 }
 
-bool Frame::HasParent() {
+bool FrameEmulator::HasParent() {
   return parent_ != nullptr;
 }
 
-int Frame::GetReturnValue() const {
+int FrameEmulator::GetReturnValue() const {
   return return_value_;
 }

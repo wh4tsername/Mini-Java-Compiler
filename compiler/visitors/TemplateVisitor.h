@@ -10,5 +10,4 @@ class TemplateVisitor : public Visitor {
   T Accept(Node* node);
  protected:
   T tos_value_;
-
 };

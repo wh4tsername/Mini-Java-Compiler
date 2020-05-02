@@ -1,0 +1,7 @@
+class DoNothing {
+    public static void main() {
+        this.do_smth();
+    }
+
+    public int do_smth() {}
+}

@@ -7,9 +7,9 @@
 
 class LengthExpression : public Expression {
  public:
-  explicit LengthExpression(Expression* expression);
+  explicit LengthExpression(std::string variable_name);
 
   void Accept(Visitor* visitor) override;
 
-  Expression* expression_;
+  std::string variable_name_;
 };

@@ -29,9 +29,8 @@ FLEX_TARGET(
 ADD_FLEX_BISON_DEPENDENCY(Scanner Parser)
 
 set(
-        SOURCES
+        NODES
 
-        compiler/driver.cpp
         compiler/classes/expressions/NumeralExpression.cpp
         compiler/classes/expressions/ArithmeticalExpression.cpp
         compiler/classes/expressions/LogicalExpression.cpp
@@ -59,20 +58,38 @@ set(
         compiler/classes/statements/ClassDeclaration.cpp
         compiler/classes/Program.cpp
         compiler/classes/statements/MainClass.cpp
+        compiler/classes/ScopeListOfStatements.cpp
+)
+
+set(
+        VISITORS
+
         compiler/visitors/PrintTreeVisitor.cpp
         compiler/visitors/FunctionProcessingVisitor.cpp
         compiler/visitors/SymbolTreeVisitor.cpp
         compiler/visitors/TemplateVisitor.cpp
+)
+
+set(
+        OBJECTS
+
         compiler/objects/Object.cpp
         compiler/objects/Integer.cpp
         compiler/objects/UninitObject.cpp
         compiler/objects/Function.cpp
         compiler/objects/Void.cpp
+)
+
+set(
+        DRIVERS
+
+        compiler/driver.cpp
+
         compiler/symbol_table/ScopeLayer.cpp
         compiler/symbol_table/ScopeLayerTree.cpp
         compiler/symbol_table/Symbol.cpp
-        compiler/classes/ScopeListOfStatements.cpp
-        compiler/function_processing/Frame.cpp
+
+        compiler/function_processing/FrameEmulator.cpp
         compiler/function_processing/FunctionStorage.cpp
         compiler/function_processing/FunctionTable.cpp
 )
@@ -80,7 +97,10 @@ set(
 add_executable(
         Compiler
         main.cpp
-        ${SOURCES}
+        ${DRIVERS}
+        ${NODES}
+        ${VISITORS}
+        ${OBJECTS}
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )

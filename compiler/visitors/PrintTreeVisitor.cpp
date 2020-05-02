@@ -16,10 +16,7 @@ void PrintTreeVisitor::Visit(ArrayAccessExpression* expression) {
   stream_ << "Array access: " << std::endl;
 
   PrintTabs();
-  stream_ << "(called from): " << std::endl;
-  ++number_of_tabs_;
-  expression->main_expression_->Accept(this);
-  --number_of_tabs_;
+  stream_ << "(called from): " << expression->array_indent_ << std::endl;
 
   PrintTabs();
   stream_ << "(index): " << std::endl;
@@ -64,7 +61,8 @@ void PrintTreeVisitor::Visit(LengthExpression* expression) {
           << "(called from): " << std::endl;
 
   ++number_of_tabs_;
-  expression->expression_->Accept(this);
+  PrintTabs();
+  stream_ << expression->variable_name_ << std::endl;
   --number_of_tabs_;
 }
 
@@ -105,7 +103,7 @@ void PrintTreeVisitor::Visit(MethodInvocation* method_invocation) {
   stream_ << "Method invocation: " << method_invocation->method_name_
           << std::endl;
 
-  if (!method_invocation->arguments_list_->list_of_expressions_.empty()) {
+  if (method_invocation->arguments_list_ != nullptr) {
     PrintTabs();
     stream_ << "(arguments): " << std::endl;
 
@@ -145,9 +143,16 @@ void PrintTreeVisitor::Visit(Lvalue* lvalue) {
   PrintTabs();
   stream_ << "Lvalue: " << std::endl;
 
-  ++number_of_tabs_;
-  lvalue->lvalue_->Accept(this);
-  --number_of_tabs_;
+  if (lvalue->is_array_) {
+    ++number_of_tabs_;
+    lvalue->array_access_expression_->Accept(this);
+    --number_of_tabs_;
+  } else {
+    ++number_of_tabs_;
+    PrintTabs();
+    stream_ << lvalue->variable_name_ << std::endl;
+    --number_of_tabs_;
+  }
 }
 
 void PrintTreeVisitor::Visit(Type* type) {
@@ -259,7 +264,7 @@ void PrintTreeVisitor::Visit(MethodDeclaration* method_declaration) {
           << ", (return type): " << method_declaration->type_->type_name_
           << ", (arguments): " << std::endl;
 
-  if (!method_declaration->formals_->formals_.empty()) {
+  if (method_declaration->formals_ != nullptr) {
     PrintTabs();
     for (auto&& formal : method_declaration->formals_->formals_) {
       stream_ << formal.second << " -> " << formal.first->type_name_;
@@ -288,7 +293,7 @@ void PrintTreeVisitor::Visit(MainClass* main_class) {
   stream_ << "Main: " << std::endl;
 
   ++number_of_tabs_;
-  main_class->main_statements_->Accept(this);
+  main_class->main_->Accept(this);
   --number_of_tabs_;
 
   --number_of_tabs_;

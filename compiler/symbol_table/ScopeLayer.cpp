@@ -37,8 +37,10 @@ void ScopeLayer::DeclareFunction(const Symbol& symbol,
   // TODO(@wh4tsername) Type checking
 
   std::vector<std::string> args;
-  for (const auto& parameter : function->formals_->formals_) {
-    args.emplace_back(parameter.second);
+  if (function->formals_ != nullptr) {
+    for (const auto &parameter : function->formals_->formals_) {
+      args.emplace_back(parameter.second);
+    }
   }
 
   values_[symbol] = std::make_shared<Function>(args);

@@ -44,7 +44,7 @@ void Driver::Exec() {
   auto functions = symbol_visitor.GetFunctions();
 
   FunctionStorage& storage = FunctionStorage::GetInstance();
-  for (auto pair : functions) {
+  for (const auto& pair : functions) {
     storage.Set(pair.first, pair.second);
   }
 

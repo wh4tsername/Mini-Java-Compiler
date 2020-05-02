@@ -64,7 +64,7 @@
 
     RETURN "return"
 
-    LENGTH "length"
+    LENGTH ".length"
 
     NEW "new"
     THIS "this"
@@ -131,6 +131,7 @@
 %nterm <ClassDeclaration*> class_declaration
 %nterm <MainClass*> main_class
 %nterm <Program*> program
+%nterm <MethodDeclaration*> main_method
 
 %%
 %start program;
@@ -142,7 +143,10 @@ class_declarations:
     | %empty {$$ = new ListOfStatements();}
 
 main_class:
-    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" declarations "}" {$$ = new MainClass($2, $11, $13);}
+    "class" "identifier" "{" main_method declarations "}" {$$ = new MainClass($2, $4, $5);}
+
+main_method:
+    "public" "static" "void" "main" "(" ")" "{" statements "}" {$$ = new MethodDeclaration(std::string("main"), new Type("void"), NULL, $8); }
 
 class_declaration:
     "class" "identifier" "{" declarations "}" {$$ = new ClassDeclaration($2, $4);}
@@ -210,19 +214,20 @@ method_expression:
     | expression {$$ = new MethodExpression($1);}
 
 lvalue:
-    expression {$$ = new Lvalue($1);}
+    "identifier" {$$ = new Lvalue($1, NULL, false);}
+    | array_access {$$ = new Lvalue("", $1, true);}
 
 expression:
     "identifier" {$$ = new VariableExpression($1);}
     | "number" {$$ = new NumeralExpression($1);}
-    | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", $2, NULL);}
+    | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", NULL, $2);}
     | expression "+" expression {$$ = new ArithmeticalExpression("+", $1, $3);}
     | expression "-" expression {$$ = new ArithmeticalExpression("-", $1, $3);}
     | expression "*" expression {$$ = new ArithmeticalExpression("*", $1, $3);}
     | expression "/" expression {$$ = new ArithmeticalExpression("/", $1, $3);}
     | expression "%" expression {$$ = new ArithmeticalExpression("%", $1, $3);}
     | "(" expression ")" {$$ = $2;}
-    | expression "." "length" {$$ = new LengthExpression($1);}
+    | "identifier" ".length" {$$ = new LengthExpression($1);}
     | array_access {$$ = $1;}
     | "new" simple_type "[" expression "]" {$$ = new NewArrayExpression($2, $4);}
     | "new" type_identifier "(" ")" {$$ = new NewVariableExpression($2);}
@@ -231,7 +236,7 @@ expression:
     | method_invocation {$$ = $1;}
 
 array_access:
-    expression "[" expression "]" {$$ = new ArrayAccessExpression($1, $3);}
+    "identifier" "[" expression "]" {$$ = new ArrayAccessExpression($1, $3);}
 
 logical_expression:
     expression "&&" expression {$$ = new LogicalExpression("&&", $1, $3);}
@@ -242,7 +247,7 @@ logical_expression:
     | expression ">=" expression {$$ = new LogicalExpression(">=", $1, $3);}
     | expression "==" expression {$$ = new LogicalExpression("==", $1, $3);}
     | expression "!=" expression {$$ = new LogicalExpression("!=", $1, $3);}
-    | "!" expression %prec NOT {$$ = new LogicalExpression("!", $2, NULL);}
+    | "!" expression %prec NOT {$$ = new LogicalExpression("!", NULL, $2);}
     | "true" {$$ = new LogicalExpression("true", NULL, NULL);}
     | "false" {$$ = new LogicalExpression("false", NULL, NULL);}
 %%
