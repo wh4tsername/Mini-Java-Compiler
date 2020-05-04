@@ -11,9 +11,9 @@ class Visitor {
   virtual void Visit(NewArrayExpression* expression) = 0;
   virtual void Visit(NewVariableExpression* expression) = 0;
   virtual void Visit(NumeralExpression* expression) = 0;
-  virtual void Visit(This* this_expression) = 0;
   virtual void Visit(VariableExpression* expression) = 0;
   virtual void Visit(MethodInvocation* method_invocation) = 0;
+  virtual void Visit(FieldAccess* field_access) = 0;
   virtual void Visit(VariableDeclaration* variable_declaration) = 0;
   virtual void Visit(MethodExpression* method_expression) = 0;
   virtual void Visit(Formals* formals) = 0;
@@ -32,4 +32,11 @@ class Visitor {
   virtual void Visit(MainClass* main_class) = 0;
   virtual void Visit(ClassDeclaration* class_declaration) = 0;
   virtual void Visit(ScopeListOfStatements* scope_list_of_statements) = 0;
+
+  virtual void PreVisit(Program* program) = 0;
+  virtual void PreVisit(MainClass* main_class) = 0;
+  virtual void PreVisit(ClassDeclaration* class_declaration) = 0;
+  virtual void PreVisit(ListOfStatements* list_of_statements) = 0;
+  virtual void PreVisit(VariableDeclaration* variable_declaration) = 0;
+  virtual void PreVisit(MethodDeclaration* method_declaration) = 0;
 };

@@ -7,3 +7,7 @@ void ListOfStatements::AddStatement(Statement* statement) {
 void ListOfStatements::Accept(Visitor* visitor) {
   visitor->Visit(this);
 }
+
+void ListOfStatements::PreAccept(Visitor* visitor) {
+  visitor->PreVisit(this);
+}

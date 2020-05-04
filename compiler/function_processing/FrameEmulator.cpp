@@ -1,6 +1,6 @@
 #include "FrameEmulator.h"
 
-FrameEmulator::FrameEmulator(std::shared_ptr<Function> function) {
+FrameEmulator::FrameEmulator(std::shared_ptr<Method> function) {
   parameters_.resize(function->arguments_.size());
 
   AllocScope();

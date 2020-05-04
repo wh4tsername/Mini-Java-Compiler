@@ -9,6 +9,7 @@ class Symbol {
 
   std::string GetName() const;
 
+  Symbol() = default;
   explicit Symbol(std::string name);
   Symbol(const Symbol& other) = default;
 

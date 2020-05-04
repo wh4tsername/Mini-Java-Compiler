@@ -32,5 +32,4 @@ class ScopeLayerTree {
  private:
   std::ofstream stream_;
   std::unordered_map<Symbol, ScopeLayer*> layer_mapping_;
-
 };

@@ -8,12 +8,12 @@
 
 class MethodInvocation : public Expression, public Statement {
  public:
-  explicit MethodInvocation(Expression* call_from, std::string method_name,
+  explicit MethodInvocation(std::string call_from, std::string method_name,
                             MethodExpression* arguments_list);
 
   void Accept(Visitor* visitor) override;
 
-  Expression* call_from_;
+  std::string call_from_;
   std::string method_name_;
   MethodExpression* arguments_list_;
 };

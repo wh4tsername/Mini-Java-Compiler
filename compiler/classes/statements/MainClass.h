@@ -11,6 +11,7 @@ class MainClass : public Statement {
             ListOfStatements* declarations);
 
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor) override;
 
   std::string main_class_name_;
   MethodDeclaration* main_;

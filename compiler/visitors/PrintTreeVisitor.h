@@ -18,9 +18,9 @@ class PrintTreeVisitor : public Visitor {
   void Visit(NewArrayExpression* expression) override;
   void Visit(NewVariableExpression* expression) override;
   void Visit(NumeralExpression* expression) override;
-  void Visit(This* this_expression) override;
   void Visit(VariableExpression* expression) override;
   void Visit(MethodInvocation* method_invocation) override;
+  void Visit(FieldAccess* field_access) override;
   void Visit(VariableDeclaration* variable_declaration) override;
   void Visit(MethodExpression* method_expression) override;
   void Visit(Formals* formals) override;
@@ -39,6 +39,13 @@ class PrintTreeVisitor : public Visitor {
   void Visit(MainClass* main_class) override;
   void Visit(ClassDeclaration* class_declaration) override;
   void Visit(ScopeListOfStatements* scope_list_of_statements) override;
+
+  void PreVisit(Program* program) override;
+  void PreVisit(MainClass* main_class) override;
+  void PreVisit(ClassDeclaration* class_declaration) override;
+  void PreVisit(ListOfStatements* list_of_statements) override;
+  void PreVisit(VariableDeclaration* variable_declaration) override;
+  void PreVisit(MethodDeclaration* method_declaration) override;
 
  private:
   void PrintTabs();

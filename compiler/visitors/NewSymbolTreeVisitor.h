@@ -1,17 +1,18 @@
 #pragma once
 
-#include "../objects/Method.h"
-#include "../symbol_table/ScopeLayer.h"
-#include "../symbol_table/ScopeLayerTree.h"
+#include <unordered_map>
+
 #include "../nodes.h"
+#include "../objects/Method.h"
+#include "../symbol_table/NewScopeLayer.h"
+#include "../symbol_table/NewScopeLayerTree.h"
+#include "../symbol_table/Symbol.h"
 #include "Visitor.h"
 
-class SymbolTreeVisitor : public Visitor {
+class NewSymbolTreeVisitor : public Visitor {
  public:
-  SymbolTreeVisitor();
-  ~SymbolTreeVisitor() = default;
-  ScopeLayerTree GetRoot();
-  std::unordered_map<Symbol, MethodDeclaration*> GetFunctions();
+  NewSymbolTreeVisitor();
+  ~NewSymbolTreeVisitor() = default;
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -42,8 +43,19 @@ class SymbolTreeVisitor : public Visitor {
   void Visit(ClassDeclaration* class_declaration) override;
   void Visit(ScopeListOfStatements* scope_list_of_statements) override;
 
+  void PreVisit(Program* program) override;
+  void PreVisit(MainClass* main_class) override;
+  void PreVisit(ClassDeclaration* class_declaration) override;
+  void PreVisit(ListOfStatements* list_of_statements) override;
+  void PreVisit(VariableDeclaration* variable_declaration) override;
+  void PreVisit(MethodDeclaration* method_declaration) override;
+
  private:
-  ScopeLayerTree tree_;
-  ScopeLayer* current_layer_;
-  std::unordered_map<Symbol, MethodDeclaration*> functions_;
+  NewScopeLayerTree tree_;
+  NewScopeLayer* current_layer_;
+
+  MainClass* main_class_;
+  std::unordered_map<Symbol, ClassDeclaration*> classes_;
+
+  Symbol class_symbol_;
 };

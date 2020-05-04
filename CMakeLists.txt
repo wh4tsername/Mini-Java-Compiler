@@ -41,9 +41,9 @@ set(
         compiler/classes/expressions/NewArrayExpression.cpp
         compiler/classes/expressions/MethodInvocation.cpp
         compiler/classes/expressions/MethodExpression.cpp
+        compiler/classes/expressions/FieldAccess.cpp
         compiler/classes/Type.cpp
         compiler/classes/ArrayType.cpp
-        compiler/classes/expressions/This.cpp
         compiler/classes/Lvalue.cpp
         compiler/classes/statements/VariableDeclaration.cpp
         compiler/classes/statements/ListOfStatements.cpp
@@ -68,6 +68,8 @@ set(
         compiler/visitors/FunctionProcessingVisitor.cpp
         compiler/visitors/SymbolTreeVisitor.cpp
         compiler/visitors/TemplateVisitor.cpp
+
+        compiler/visitors/NewSymbolTreeVisitor.cpp
 )
 
 set(
@@ -76,7 +78,7 @@ set(
         compiler/objects/Object.cpp
         compiler/objects/Integer.cpp
         compiler/objects/UninitObject.cpp
-        compiler/objects/Function.cpp
+        compiler/objects/Method.cpp
         compiler/objects/Void.cpp
 )
 
@@ -85,9 +87,10 @@ set(
 
         compiler/driver.cpp
 
-        compiler/symbol_table/ScopeLayer.cpp
-        compiler/symbol_table/ScopeLayerTree.cpp
         compiler/symbol_table/Symbol.cpp
+
+        compiler/symbol_table/NewScopeLayer.cpp
+        compiler/symbol_table/NewScopeLayerTree.cpp
 
         compiler/function_processing/FrameEmulator.cpp
         compiler/function_processing/FunctionStorage.cpp

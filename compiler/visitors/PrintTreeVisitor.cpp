@@ -88,11 +88,6 @@ void PrintTreeVisitor::Visit(NumeralExpression* expression) {
   stream_ << "Number: " << expression->value_ << std::endl;
 }
 
-void PrintTreeVisitor::Visit(This* this_expression) {
-  PrintTabs();
-  stream_ << "This: " << std::endl;
-}
-
 void PrintTreeVisitor::Visit(VariableExpression* expression) {
   PrintTabs();
   stream_ << "Variable: " << expression->variable_name_ << std::endl;
@@ -119,10 +114,7 @@ void PrintTreeVisitor::Visit(MethodInvocation* method_invocation) {
   }
 
   PrintTabs();
-  stream_ << "(called from): " << std::endl;
-  ++number_of_tabs_;
-  method_invocation->call_from_->Accept(this);
-  --number_of_tabs_;
+  stream_ << "(called from): " << method_invocation->call_from_ << std::endl;
 }
 
 void PrintTreeVisitor::Visit(VariableDeclaration* variable_declaration) {
@@ -143,15 +135,21 @@ void PrintTreeVisitor::Visit(Lvalue* lvalue) {
   PrintTabs();
   stream_ << "Lvalue: " << std::endl;
 
-  if (lvalue->is_array_) {
+  if (lvalue->code_ == Lvalue::CODE::ARR) {
     ++number_of_tabs_;
     lvalue->array_access_expression_->Accept(this);
     --number_of_tabs_;
-  } else {
+  } else if (lvalue->code_ == Lvalue::CODE::VAR) {
     ++number_of_tabs_;
     PrintTabs();
     stream_ << lvalue->variable_name_ << std::endl;
     --number_of_tabs_;
+  } else if (lvalue->code_ == Lvalue::CODE::FIELD) {
+    ++number_of_tabs_;
+    lvalue->field_access_->Accept(this);
+    --number_of_tabs_;
+  } else {
+    throw std::runtime_error("Incorrect lvalue code!");
   }
 }
 
@@ -314,5 +312,22 @@ void PrintTreeVisitor::Visit(ClassDeclaration* class_declaration) {
 
 void PrintTreeVisitor::Visit(ScopeListOfStatements* scope_list_of_statements) {
   PrintTabs();
-  stream_ << "[!]" << std::endl;
+  stream_ << "[new scope]" << std::endl;
+
+  scope_list_of_statements->list_of_statements_->Accept(this);
 }
+
+void PrintTreeVisitor::Visit(FieldAccess* field_access) {
+  PrintTabs();
+  stream_ << "FieldAccess: " << std::endl;
+
+  PrintTabs();
+  stream_ << field_access->field_name_ << std::endl;
+}
+
+void PrintTreeVisitor::PreVisit(Program* program) {}
+void PrintTreeVisitor::PreVisit(MainClass* main_class) {}
+void PrintTreeVisitor::PreVisit(ClassDeclaration* class_declaration) {}
+void PrintTreeVisitor::PreVisit(ListOfStatements* list_of_statements) {}
+void PrintTreeVisitor::PreVisit(VariableDeclaration* variable_declaration) {}
+void PrintTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {}

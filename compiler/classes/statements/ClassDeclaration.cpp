@@ -7,3 +7,7 @@ ClassDeclaration::ClassDeclaration(std::string class_name,
 void ClassDeclaration::Accept(Visitor* visitor) {
   visitor->Visit(this);
 }
+
+void ClassDeclaration::PreAccept(Visitor* visitor) {
+  visitor->PreVisit(this);
+}

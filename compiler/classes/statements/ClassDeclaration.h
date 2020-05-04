@@ -11,6 +11,7 @@ class ClassDeclaration : public Statement {
                             ListOfStatements* declarations);
 
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor) override;
 
   std::string class_name_;
   ListOfStatements* declarations_;

@@ -1,8 +1,8 @@
 class Cat {
   public static void main() {
-    sun_ = 0;
+    sun_ = -1;
 
-    this.play_with_sun(1);
+    this.play_with_sun(2);
   }
 
   int sun_;

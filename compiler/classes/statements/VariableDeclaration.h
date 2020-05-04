@@ -9,6 +9,7 @@ class VariableDeclaration : public Statement, public Expression {
   explicit VariableDeclaration(Type* type, std::string variable_name);
 
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor) override;
 
   Type* type_;
   std::string variable_name_;

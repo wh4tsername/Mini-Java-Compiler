@@ -9,6 +9,7 @@ class Program : public Node {
   Program(MainClass* main_class, ListOfStatements* class_declarations);
 
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor);
 
   MainClass* main_class_;
   ListOfStatements* class_declarations_;

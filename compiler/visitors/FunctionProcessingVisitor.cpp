@@ -3,7 +3,7 @@
 // @TODO Multiple classes impl
 
 FunctionProcessingVisitor::FunctionProcessingVisitor(
-    ScopeLayer* function_scope, std::shared_ptr<Function> function)
+    ScopeLayer* function_scope, std::shared_ptr<Method> function)
     : root_layer_(function_scope), frame_(std::move(function)), tree_(nullptr) {
   current_layer_ = root_layer_;
   offsets_.push(0);
@@ -82,10 +82,6 @@ void FunctionProcessingVisitor::Visit(NumeralExpression* expression) {
   tos_value_ = expression->value_;
 }
 
-void FunctionProcessingVisitor::Visit(This* this_expression) {
-  // @TODO, but to test firstly
-}
-
 void FunctionProcessingVisitor::Visit(VariableExpression* expression) {
   int index = table_.Get(Symbol(expression->variable_name_));
   tos_value_ = frame_.Get(index);
@@ -97,8 +93,8 @@ void FunctionProcessingVisitor::Visit(MethodInvocation* method_invocation) {
   auto function_type =
       current_layer_->Get(Symbol(method_invocation->method_name_));
 
-  std::shared_ptr<Function> func_converted =
-      std::dynamic_pointer_cast<Function>(function_type);
+  std::shared_ptr<Method> func_converted =
+      std::dynamic_pointer_cast<Method>(function_type);
 
   if (func_converted == nullptr) {
     throw std::runtime_error("Function not defined");
@@ -118,6 +114,7 @@ void FunctionProcessingVisitor::Visit(MethodInvocation* method_invocation) {
       func_converted);
 
   new_visitor.SetParams(params);
+  new_visitor.SetTree(tree_);
 
   new_visitor.GetFrame().SetParentFrame(&frame_);
   new_visitor.Visit(FunctionStorage::GetInstance().Get(
@@ -169,18 +166,18 @@ void FunctionProcessingVisitor::Visit(WhileStatement* statement) {
 void FunctionProcessingVisitor::Visit(IfStatement* statement) {
   int expression_res = Accept(statement->expression_);
   if (expression_res == 1) {
-    current_layer_ = current_layer_->GetChild(offsets_.top());
-    offsets_.push(0);
-    frame_.AllocScope();
-    table_.BeginScope();
+//    current_layer_ = current_layer_->GetChild(offsets_.top());
+//    offsets_.push(0);
+//    frame_.AllocScope();
+//    table_.BeginScope();
     statement->if_statement_->Accept(this);
-    offsets_.pop();
-    size_t index = offsets_.top();
-    offsets_.pop();
-    offsets_.push(index + 2);
-    current_layer_ = current_layer_->GetParent();
-    frame_.DeallocScope();
-    table_.EndScope();
+//    offsets_.pop();
+//    size_t index = offsets_.top();
+//    offsets_.pop();
+//    offsets_.push(index + 2);
+//    current_layer_ = current_layer_->GetParent();
+//    frame_.DeallocScope();
+//    table_.EndScope();
   } else {
     int value = offsets_.top();
 
@@ -216,15 +213,17 @@ void FunctionProcessingVisitor::Visit(PrintStatement* statement) {
 
 void FunctionProcessingVisitor::Visit(AssignmentStatement* statement) {
   int value = Accept(statement->expression_);
-  int index;
-  if (statement->lvalue_->is_array_) {
-    // @TODO actual array access :)
-    index = table_.Get(
-        Symbol(statement->lvalue_->array_access_expression_->array_indent_));
+  int index = 0;
+  if (statement->lvalue_->code_ == Lvalue::CODE::ARR) {
+    // TODO actual array access :)
+  } else if (statement->lvalue_->code_ == Lvalue::CODE::VAR) {
+    const Symbol &symbol = Symbol(statement->lvalue_->variable_name_);
+    index = table_.Get(symbol);
     frame_.Set(index, value);
+  } else if (statement->lvalue_->code_ == Lvalue::CODE::FIELD) {
+    // TODO
   } else {
-    index = table_.Get(Symbol(statement->lvalue_->variable_name_));
-    frame_.Set(index, value);
+    throw std::runtime_error("Incorrect lvalue code!");
   }
 }
 
@@ -233,6 +232,8 @@ void FunctionProcessingVisitor::Visit(AssertStatement* statement) {
 }
 
 void FunctionProcessingVisitor::Visit(MethodDeclaration* method_declaration) {
+  current_layer_->SetFields(current_layer_->GetParent()->GetFields());
+
   if (method_declaration->formals_) {
     method_declaration->formals_->Accept(this);
   }
@@ -251,6 +252,8 @@ void FunctionProcessingVisitor::Visit(
 
   current_layer_ = current_layer_->GetChild(offsets_.top());
 
+  current_layer_->SetFields(current_layer_->GetParent()->GetFields());
+
   offsets_.push(0);
   frame_.AllocScope();
   table_.BeginScope();
@@ -265,4 +268,8 @@ void FunctionProcessingVisitor::Visit(
   current_layer_ = current_layer_->GetParent();
   frame_.DeallocScope();
   table_.EndScope();
+}
+
+void FunctionProcessingVisitor::Visit(FieldAccess* field_access) {
+  // TODO field access
 }

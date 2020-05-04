@@ -11,6 +11,7 @@
     class Scanner;
     class Driver;
     #include "declarations.h"
+    #include "classes/statements/Statement.h"
 
     #ifdef YYDEBUG
        yydebug = 1;
@@ -132,6 +133,7 @@
 %nterm <MainClass*> main_class
 %nterm <Program*> program
 %nterm <MethodDeclaration*> main_method
+%nterm <FieldAccess*> field_access
 
 %%
 %start program;
@@ -206,16 +208,19 @@ local_variable_declaration:
     variable_declaration {$$ = $1;}
 
 method_invocation:
-    expression "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation($1, $3, $5);}
-    | expression "." "identifier" "(" ")" {$$ = new MethodInvocation($1, $3, NULL);}
+    "identifier" "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation($1, $3, $5);}
+    | "this" "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation("this", $3, $5);}
+    | "identifier" "." "identifier" "(" ")" {$$ = new MethodInvocation($1, $3, NULL);}
+    | "this" "." "identifier" "(" ")" {$$ = new MethodInvocation("this", $3, NULL);}
 
 method_expression:
     method_expression "," expression {$1->AddExpression($3); $$ = $1;}
     | expression {$$ = new MethodExpression($1);}
 
 lvalue:
-    "identifier" {$$ = new Lvalue($1, NULL, false);}
-    | array_access {$$ = new Lvalue("", $1, true);}
+    "identifier" {$$ = new Lvalue($1, NULL, NULL, 0);}
+    | array_access {$$ = new Lvalue("", $1, NULL, 1);}
+    | field_access {$$ = new Lvalue("", NULL, $1, 2);}
 
 expression:
     "identifier" {$$ = new VariableExpression($1);}
@@ -231,9 +236,12 @@ expression:
     | array_access {$$ = $1;}
     | "new" simple_type "[" expression "]" {$$ = new NewArrayExpression($2, $4);}
     | "new" type_identifier "(" ")" {$$ = new NewVariableExpression($2);}
-    | "this" {$$ = new This();}
+    | field_access {$$ = $1;}
     | logical_expression {$$ = $1;}
     | method_invocation {$$ = $1;}
+
+field_access:
+    "this" "." "identifier" {$$ = new FieldAccess($3);}
 
 array_access:
     "identifier" "[" expression "]" {$$ = new ArrayAccessExpression($1, $3);}

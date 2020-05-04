@@ -7,3 +7,7 @@ Program::Program(MainClass* main_class,
 void Program::Accept(Visitor* visitor) {
   visitor->Visit(this);
 }
+
+void Program::PreAccept(Visitor* visitor) {
+  visitor->PreVisit(this);
+}

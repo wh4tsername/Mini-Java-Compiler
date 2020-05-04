@@ -6,7 +6,7 @@
 #include "../function_processing/FrameEmulator.h"
 #include "../function_processing/FunctionTable.h"
 #include "../function_processing/FunctionStorage.h"
-#include "../objects/Function.h"
+#include "../objects/Method.h"
 #include "../symbol_table/ScopeLayer.h"
 #include "../symbol_table/ScopeLayerTree.h"
 #include "TemplateVisitor.h"
@@ -14,7 +14,7 @@
 class FunctionProcessingVisitor : public TemplateVisitor<int> {
  public:
   explicit FunctionProcessingVisitor(ScopeLayer* function_scope,
-                                     std::shared_ptr<Function> function);
+                                     std::shared_ptr<Method> function);
 
   void SetTree(ScopeLayerTree* tree);
   void SetParams(const std::vector<int>& params);
@@ -27,9 +27,9 @@ class FunctionProcessingVisitor : public TemplateVisitor<int> {
   void Visit(NewArrayExpression* expression) override;
   void Visit(NewVariableExpression* expression) override;
   void Visit(NumeralExpression* expression) override;
-  void Visit(This* this_expression) override;
   void Visit(VariableExpression* expression) override;
   void Visit(MethodInvocation* method_invocation) override;
+  void Visit(FieldAccess* field_access) override;
   void Visit(VariableDeclaration* variable_declaration) override;
   void Visit(MethodExpression* method_expression) override;
   void Visit(Formals* formals) override;

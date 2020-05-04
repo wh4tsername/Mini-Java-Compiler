@@ -45,14 +45,12 @@ void SymbolTreeVisitor::Visit(NewVariableExpression* expression) {}
 
 void SymbolTreeVisitor::Visit(NumeralExpression* expression) {}
 
-void SymbolTreeVisitor::Visit(This* this_expression) {}
-
 void SymbolTreeVisitor::Visit(VariableExpression* expression) {
   current_layer_->Get(Symbol(expression->variable_name_));
 }
 
 void SymbolTreeVisitor::Visit(MethodInvocation* method_invocation) {
-  method_invocation->call_from_->Accept(this);
+  // TODO check if exists
 
   if (method_invocation->arguments_list_ != nullptr) {
     method_invocation->arguments_list_->Accept(this);
@@ -76,10 +74,14 @@ void SymbolTreeVisitor::Visit(Formals* formals) {
 }
 
 void SymbolTreeVisitor::Visit(Lvalue* lvalue) {
-  if (lvalue->is_array_) {
+  if (lvalue->code_ == Lvalue::CODE::ARR) {
     lvalue->array_access_expression_->Accept(this);
-  } else {
+  } else if (lvalue->code_ == Lvalue::CODE::VAR) {
     current_layer_->Get(Symbol(lvalue->variable_name_));
+  } else if (lvalue->code_ == Lvalue::CODE::FIELD) {
+    lvalue->field_access_->Accept(this);
+  } else {
+    throw std::runtime_error("Incorrect lvalue code!");
   }
 }
 
@@ -169,4 +171,8 @@ void SymbolTreeVisitor::Visit(ScopeListOfStatements* scope_list_of_statements) {
   current_layer_ = new_layer;
   scope_list_of_statements->list_of_statements_->Accept(this);
   current_layer_ = current_layer_->GetParent();
+}
+
+void SymbolTreeVisitor::Visit(FieldAccess* field_access) {
+  // TODO
 }

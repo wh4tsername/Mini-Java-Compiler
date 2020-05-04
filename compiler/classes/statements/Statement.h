@@ -1,5 +1,13 @@
 #pragma once
 
-#include "../../visitors/Node.h"
+#include <stdexcept>
 
-class Statement : public Node {};
+#include "../../visitors/Node.h"
+#include "../../visitors/Visitor.h"
+
+class Statement : public Node {
+ public:
+  virtual void PreAccept(Visitor* visitor) {
+    throw std::runtime_error("Wrong node PreAccepted!");
+  }
+};

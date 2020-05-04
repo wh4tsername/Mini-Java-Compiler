@@ -1,6 +1,6 @@
 #include "ScopeLayer.h"
 
-#include "../objects/Function.h"
+#include "../objects/Method.h"
 #include "../objects/Integer.h"
 #include "../objects/UninitObject.h"
 
@@ -25,7 +25,11 @@ void ScopeLayer::DeclareVariable(const Symbol& symbol) {
 
   values_[symbol] = std::make_shared<Integer>(0);
   offsets_[symbol] = symbols_.size();
-  symbols_.push_back(symbol);
+  symbols_.emplace_back(symbol);
+
+  if (parent_ == nullptr) {
+    fields_.emplace_back(symbol);
+  }
 }
 
 void ScopeLayer::DeclareFunction(const Symbol& symbol,
@@ -38,12 +42,12 @@ void ScopeLayer::DeclareFunction(const Symbol& symbol,
 
   std::vector<std::string> args;
   if (function->formals_ != nullptr) {
-    for (const auto &parameter : function->formals_->formals_) {
+    for (const auto& parameter : function->formals_->formals_) {
       args.emplace_back(parameter.second);
     }
   }
 
-  values_[symbol] = std::make_shared<Function>(args);
+  values_[symbol] = std::make_shared<Method>(args);
 }
 
 void ScopeLayer::Put(const Symbol& symbol, std::shared_ptr<Object> value) {
@@ -101,4 +105,17 @@ void ScopeLayer::PrintLayer(std::ostream& stream, int num_tabs) const {
   for (ScopeLayer* layer : children_) {
     layer->PrintLayer(stream, num_tabs + 1);
   }
+}
+
+const std::unordered_map<Symbol, std::shared_ptr<Object>>&
+ScopeLayer::GetValues() const {
+  return values_;
+}
+
+const std::vector<Symbol>& ScopeLayer::GetFields() const {
+  return fields_;
+}
+
+void ScopeLayer::SetFields(const std::vector<Symbol> &fields) {
+  fields_ = fields;
 }

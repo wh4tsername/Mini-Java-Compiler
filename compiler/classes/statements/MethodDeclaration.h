@@ -13,6 +13,7 @@ class MethodDeclaration : public Statement {
                              ListOfStatements* list_of_statements);
 
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor) override;
 
   Type* type_;
   Formals* formals_;

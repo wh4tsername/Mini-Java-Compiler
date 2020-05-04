@@ -9,3 +9,7 @@ MethodDeclaration::MethodDeclaration(std::string method_name, Type* type,
       list_of_statements_(list_of_statements) {}
 
 void MethodDeclaration::Accept(Visitor* visitor) { visitor->Visit(this); }
+
+void MethodDeclaration::PreAccept(Visitor* visitor) {
+  visitor->PreVisit(this);
+}

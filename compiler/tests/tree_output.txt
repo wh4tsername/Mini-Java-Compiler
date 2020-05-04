@@ -1,49 +1,73 @@
 Program: 
-	Main class: Factorial
+	Main class: Main
 		Main: 
 			Method declaration: main, (return type): void, (arguments): 
 			no arguments
 				Statements: 
-					Print: 
-						Method invocation: ComputeFac
-						(arguments): 
-							Number: 10
-						(called from): 
-							New var allocation: Fac
+					Variable declaration: a -> A
+					Assignment: 
+						Lvalue: 
+							a
+						New var allocation: A
+					Method invocation: init
+					no arguments
+					(called from): a
+					If statement: 
+					Expression: 
+						Logical expression: (operation): ==
+							Method invocation: calc
+							(arguments): 
+								Number: 3
+							(called from): a
+							Number: 2
+					If: 
+						[new scope]
+						Statements: 
+							Variable declaration: x -> int
+							Assignment: 
+								Lvalue: 
+									x
+								Number: 20
+							Print: 
+								Variable: x
 	Statements: 
-		Class: Fac
+		Class: A
 			Statements: 
-				Method declaration: ComputeFac, (return type): int, (arguments): 
-				num -> int
+				Variable declaration: x -> int
+				Method declaration: init, (return type): void, (arguments): 
+				no arguments
 					Statements: 
-						Assert: 
-							Logical expression: (operation): >
-								Variable: num
-								Arithmetical expression: (operation): @
-									Number: 1
-						Variable declaration: num_aux -> int
+						Assignment: 
+							Lvalue: 
+								FieldAccess: 
+								x
+							Number: 3
+				Method declaration: calc, (return type): int, (arguments): 
+				y -> int
+					Statements: 
+						Variable declaration: x -> int
+						Assignment: 
+							Lvalue: 
+								x
+							Arithmetical expression: (operation): @
+								Number: 1
 						If statement: 
 						Expression: 
 							Logical expression: (operation): ==
-								Variable: num
-								Number: 0
+								Variable: y
+								Number: 3
 						If: 
-							Assignment: 
-								Lvalue: 
-									num_aux
-								Number: 1
+							[new scope]
+							Statements: 
+								Return: 
+									Arithmetical expression: (operation): +
+										Variable: x
+										Variable: y
 						Else: 
-							Assignment: 
-								Lvalue: 
-									num_aux
-								Arithmetical expression: (operation): *
-									Variable: num
-									Method invocation: ComputeFac
-									(arguments): 
-										Arithmetical expression: (operation): -
-											Variable: num
-											Number: 1
-									(called from): 
-										This: 
-						Return: 
-							Variable: num_aux
+							[new scope]
+							Statements: 
+								Return: 
+									Arithmetical expression: (operation): +
+										FieldAccess: 
+										x
+										Variable: y

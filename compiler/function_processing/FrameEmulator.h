@@ -3,11 +3,11 @@
 #include <memory>
 #include <stack>
 
-#include "../objects/Function.h"
+#include "../objects/Method.h"
 
 class FrameEmulator {
  public:
-  explicit FrameEmulator(std::shared_ptr<Function> function);
+  explicit FrameEmulator(std::shared_ptr<Method> function);
   void SetParameters(const std::vector<int>& values);
 
   size_t AllocVariable();

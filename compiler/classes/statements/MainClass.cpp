@@ -8,3 +8,7 @@ MainClass::MainClass(std::string main_class_name,
       declarations_(declarations) {}
 
 void MainClass::Accept(Visitor* visitor) { visitor->Visit(this); }
+
+void MainClass::PreAccept(Visitor* visitor) {
+  visitor->PreVisit(this);
+}

@@ -28,10 +28,15 @@ class ScopeLayer {
 
   void PrintLayer(std::ostream& stream, int num_tabs) const;
 
+  const std::unordered_map<Symbol, std::shared_ptr<Object>>& GetValues() const;
+  const std::vector<Symbol>& GetFields() const;
+  void SetFields(const std::vector<Symbol>& fields);
+
  private:
   std::unordered_map<Symbol, std::shared_ptr<Object>> values_;
   std::unordered_map<Symbol, size_t> offsets_;
   std::vector<Symbol> symbols_;
+  std::vector<Symbol> fields_;
   std::string name_;
   ScopeLayer* parent_;
   std::vector<ScopeLayer*> children_;
