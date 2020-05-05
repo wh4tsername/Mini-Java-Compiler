@@ -1,0 +1,13 @@
+class Main {
+    public static void main() {
+        Wrap[] x;
+        x = new Wrap[10];
+        if (true) {
+            Wrap[] y;
+            y = new Wrap[12];
+            x = y;
+        }
+    }
+}
+
+class Wrap {}

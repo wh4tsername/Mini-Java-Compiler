@@ -158,7 +158,19 @@ void NewSymbolTreeVisitor::Visit(VariableDeclaration* variable_declaration) {
 }
 
 void NewSymbolTreeVisitor::Visit(VariableExpression* expression) {
-  current_layer_->GetVariableLayer(Symbol(expression->variable_name_));
+  // can be arr or var
+  const Symbol& symbol = Symbol(expression->variable_name_);
+  NewScopeLayer* current = current_layer_;
+
+  while (!current->HasArray(symbol) && !current->HasVariable(symbol) &&
+         current->parent_->parent_ != nullptr) {
+    current = current->parent_;
+  }
+
+  if (!current->HasArray(symbol) && !current->HasVariable(symbol)) {
+    throw std::runtime_error("Variable or array " + symbol.GetName() +
+                             " is not declared");
+  }
 }
 
 void NewSymbolTreeVisitor::Visit(NewArrayExpression* expression) {

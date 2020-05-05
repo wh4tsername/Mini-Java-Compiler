@@ -221,7 +221,15 @@ void TypeCheckingVisitor::Visit(AssignmentStatement* statement) {
 
 void TypeCheckingVisitor::Visit(Lvalue* lvalue) {
   if (lvalue->code_ == lvalue->VAR) {
-    tos_value_ = current_layer_->symbol_types_[Symbol(lvalue->variable_name_)];
+    const Symbol& symbol = Symbol(lvalue->variable_name_);
+    NewScopeLayer* current = current_layer_;
+
+    while (!current->HasArray(symbol) && !current->HasVariable(symbol) &&
+        current->parent_->parent_ != nullptr) {
+      current = current->parent_;
+    }
+
+    tos_value_ = current->symbol_types_[Symbol(lvalue->variable_name_)];
   } else if (lvalue->code_ == lvalue->ARR) {
     tos_value_ = Accept(lvalue->array_access_expression_);
   } else if (lvalue->code_ == lvalue->FIELD) {
@@ -261,10 +269,16 @@ void TypeCheckingVisitor::Visit(VariableDeclaration* variable_declaration) {
 }
 
 void TypeCheckingVisitor::Visit(VariableExpression* expression) {
-  NewScopeLayer* layer =
-      current_layer_->GetVariableLayer(Symbol(expression->variable_name_));
+  // can be arr or var
+  const Symbol& symbol = Symbol(expression->variable_name_);
+  NewScopeLayer* current = current_layer_;
 
-  tos_value_ = layer->symbol_types_[Symbol(expression->variable_name_)];
+  while (!current->HasArray(symbol) && !current->HasVariable(symbol) &&
+      current->parent_->parent_ != nullptr) {
+    current = current->parent_;
+  }
+
+  tos_value_ = current->symbol_types_[Symbol(expression->variable_name_)];
 }
 
 void TypeCheckingVisitor::Visit(NumeralExpression* expression) {

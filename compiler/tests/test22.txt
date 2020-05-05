@@ -1,0 +1,30 @@
+class Main {
+    public static void main() {
+        Wrap[] x;
+        x = new Wrap[10];
+        if (true) {
+            Wrap2[] y;
+            y = new Wrap2[12];
+
+            Wrap2 u;
+            u = y[0];
+
+            x = u.foo();
+        }
+    }
+}
+
+class Wrap2 {
+    public Wrap[] foo() {
+        {
+            Wrap[] z;
+            z = new Wrap[10];
+            if (false) {
+            } else {
+                return z;
+            }
+        }
+    }
+}
+
+class Wrap {}
