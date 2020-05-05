@@ -1,0 +1,15 @@
+class Main {
+  public static void main() {
+    int a;
+    a = 1;
+    if (a == 1) {
+        this.sun_ = 3;
+    } else {
+        assert(false);
+    }
+
+    System.out.println(this.sun_);
+  }
+
+  int sun_;
+}

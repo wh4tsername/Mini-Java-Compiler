@@ -1,0 +1,9 @@
+class DoNothingRecursively {
+    public static void main() {
+        this.do_smth();
+    }
+
+    public int do_smth() {
+        this.do_smth();
+    }
+}

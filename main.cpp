@@ -1,5 +1,5 @@
 #include <iostream>
-#include <compiler/driver.hh>
+#include "compiler/driver.hh"
 
 int main(int argc, char** argv) {
   int result = 0;
@@ -11,8 +11,9 @@ int main(int argc, char** argv) {
     } else if (argv[i] == std::string("-s")) {
       driver.trace_scanning_ = true;
     } else if (!driver.Parse(argv[i])) {
+      driver.PrintTree("../compiler/tests/tree_output.txt");
       driver.Exec();
-      std::cout << "executed_success\n";
+      std::cout << "executed_successfully\n";
     } else {
       result = 1;
     }

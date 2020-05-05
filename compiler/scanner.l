@@ -62,7 +62,7 @@ BLANK  [ \t\r]
 
 "return"   return yy::parser::make_RETURN (loc);
 
-"length"   return yy::parser::make_LENGTH (loc);
+".length"   return yy::parser::make_LENGTH (loc);
 
 "new"      return yy::parser::make_NEW    (loc);
 "this"     return yy::parser::make_THIS   (loc);

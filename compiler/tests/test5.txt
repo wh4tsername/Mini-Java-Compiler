@@ -1,0 +1,10 @@
+class ArrayAccessChecker {
+    public static void main() {
+        arr = new boolean[10];
+        arr[0] = 1;
+        arr[1] = -arr[0];
+        assert(0);
+    }
+
+     boolean[] arr;
+}

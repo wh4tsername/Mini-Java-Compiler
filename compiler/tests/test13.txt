@@ -1,0 +1,31 @@
+class Main {
+    public static void main() {
+        A a;
+        a = new A();
+        a.init();
+        if (a.calc(3) == 2) {
+            int x;
+            x = 20;
+            System.out.println(x);
+        }
+    }
+}
+
+class A {
+    int[] x;
+    int x;
+
+    public void init() {
+        this.x = 3;
+    }
+
+    public int calc(int y) {
+        int x;
+        x = -1;
+        if (y == 3) {
+            return x + y;
+        } else {
+            return this.x + y;
+        }
+    }
+}

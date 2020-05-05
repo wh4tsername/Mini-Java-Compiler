@@ -1,0 +1,18 @@
+class Leader {
+    public static void main() {
+        Warrior1 w1;
+        Warrior2 w2;
+
+        w1.attack(w2);
+    }
+}
+
+class Warrior1 {
+    public void attack(Warrior2 w2) {
+        w2.die();
+    }
+}
+
+class Warrior2 {
+    public void die() {}
+}

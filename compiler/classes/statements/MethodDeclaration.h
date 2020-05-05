@@ -8,15 +8,15 @@
 
 class MethodDeclaration : public Statement {
  public:
-  explicit MethodDeclaration(Type* type, Formals* formals,
+  explicit MethodDeclaration(std::string method_name, Type* type,
+                             Formals* formals,
                              ListOfStatements* list_of_statements);
 
-  void Run() final;
-
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor) override;
 
- private:
   Type* type_;
   Formals* formals_;
   ListOfStatements* list_of_statements_;
+  std::string method_name_;
 };

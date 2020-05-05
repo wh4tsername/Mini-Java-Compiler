@@ -1,17 +1,15 @@
 #pragma once
 
+#include <string>
 #include "Expression.h"
 
 class ArrayAccessExpression : public Expression {
  public:
-  explicit ArrayAccessExpression(Expression* main_expression,
+  explicit ArrayAccessExpression(std::string array_indent,
                                  Expression* index_expression);
-
-  int Count() final;
 
   void Accept(Visitor* visitor) override;
 
- private:
-  Expression* main_expression_;
+  std::string array_indent_;
   Expression* index_expression_;
 };

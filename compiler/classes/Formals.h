@@ -12,6 +12,5 @@ class Formals : public Node {
 
   void Accept(Visitor* visitor) override;
 
- private:
   std::vector<std::pair<Type*, std::string>> formals_;
 };

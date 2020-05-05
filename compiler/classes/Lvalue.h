@@ -1,14 +1,27 @@
 #pragma once
 
-#include "expressions/Expression.h"
+#include <string>
+
 #include "../visitors/Node.h"
+#include "expressions/Expression.h"
 
 class Lvalue : public Node {
  public:
-  explicit Lvalue(Expression* expression);
+  enum CODE {
+    VAR = 0,
+    ARR,
+    FIELD
+  };
+
+  explicit Lvalue(std::string variable_name,
+                  ArrayAccessExpression* array_access_expression,
+                  FieldAccess* field_access,
+                  int code);
 
   void Accept(Visitor* visitor) override;
 
- private:
-  Expression* lvalue_;
+  std::string variable_name_;
+  ArrayAccessExpression* array_access_expression_;
+  FieldAccess* field_access_;
+  int code_;
 };

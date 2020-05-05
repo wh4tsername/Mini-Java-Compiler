@@ -11,6 +11,7 @@
     class Scanner;
     class Driver;
     #include "declarations.h"
+    #include "classes/statements/Statement.h"
 
     #ifdef YYDEBUG
        yydebug = 1;
@@ -64,7 +65,7 @@
 
     RETURN "return"
 
-    LENGTH "length"
+    LENGTH ".length"
 
     NEW "new"
     THIS "this"
@@ -131,6 +132,8 @@
 %nterm <ClassDeclaration*> class_declaration
 %nterm <MainClass*> main_class
 %nterm <Program*> program
+%nterm <MethodDeclaration*> main_method
+%nterm <FieldAccess*> field_access
 
 %%
 %start program;
@@ -142,7 +145,10 @@ class_declarations:
     | %empty {$$ = new ListOfStatements();}
 
 main_class:
-    "class" "identifier" "{" "public" "static" "void" "main" "(" ")" "{" statements "}" "}" {$$ = new MainClass($2, $11);}
+    "class" "identifier" "{" main_method declarations "}" {$$ = new MainClass($2, $4, $5);}
+
+main_method:
+    "public" "static" "void" "main" "(" ")" "{" statements "}" {$$ = new MethodDeclaration(std::string("main"), new Type("void"), NULL, $8); }
 
 class_declaration:
     "class" "identifier" "{" declarations "}" {$$ = new ClassDeclaration($2, $4);}
@@ -156,8 +162,8 @@ declaration:
     | method_declaration {$$ = $1;}
 
 method_declaration:
-    "public" type "identifier" "(" ")" "{" statements "}" {$$ = new MethodDeclaration($2, NULL, $7);}
-    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = new MethodDeclaration($2, $5, $8);}
+    "public" type "identifier" "(" ")" "{" statements "}" {$$ = new MethodDeclaration($3, $2, NULL, $7);}
+    | "public" type "identifier" "(" formals ")" "{" statements "}" {$$ = new MethodDeclaration($3, $2, $5, $8);}
 
 variable_declaration:
     type "identifier" ";" {$$ = new VariableDeclaration($1, $2);}
@@ -172,7 +178,7 @@ type:
 
 simple_type:
     "int" {$$ = new Type("int");}
-    | "boolean" {$$ = new Type("bool");}
+    | "boolean" {$$ = new Type("boolean");}
     | "void" {$$ = new Type("void");}
     | type_identifier {$$ = $1;}
 
@@ -196,42 +202,49 @@ statement:
     | lvalue "=" expression ";" {$$ = new AssignmentStatement($1, $3);}
     | "return" expression ";" {$$ = new ReturnStatement($2);}
     | method_invocation ";" {$$ = $1;}
-    | "{" statements "}" {$$ = $2;}
+    | "{" statements "}" {$$ = new ScopeListOfStatements($2);}
 
 local_variable_declaration:
     variable_declaration {$$ = $1;}
 
 method_invocation:
-    expression "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation($1, $3, $5);}
-    | expression "." "identifier" "(" ")" {$$ = new MethodInvocation($1, $3, NULL);}
+    "identifier" "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation($1, $3, $5);}
+    | "this" "." "identifier" "(" method_expression ")" {$$ = new MethodInvocation("this", $3, $5);}
+    | "identifier" "." "identifier" "(" ")" {$$ = new MethodInvocation($1, $3, NULL);}
+    | "this" "." "identifier" "(" ")" {$$ = new MethodInvocation("this", $3, NULL);}
 
 method_expression:
     method_expression "," expression {$1->AddExpression($3); $$ = $1;}
     | expression {$$ = new MethodExpression($1);}
 
 lvalue:
-    expression {$$ = new Lvalue($1);}
+    "identifier" {$$ = new Lvalue($1, NULL, NULL, 0);}
+    | array_access {$$ = new Lvalue("", $1, NULL, 1);}
+    | field_access {$$ = new Lvalue("", NULL, $1, 2);}
 
 expression:
     "identifier" {$$ = new VariableExpression($1);}
     | "number" {$$ = new NumeralExpression($1);}
-    | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", $2, NULL);}
+    | "-" expression %prec UMINUS {$$ = new ArithmeticalExpression("@", NULL, $2);}
     | expression "+" expression {$$ = new ArithmeticalExpression("+", $1, $3);}
     | expression "-" expression {$$ = new ArithmeticalExpression("-", $1, $3);}
     | expression "*" expression {$$ = new ArithmeticalExpression("*", $1, $3);}
     | expression "/" expression {$$ = new ArithmeticalExpression("/", $1, $3);}
     | expression "%" expression {$$ = new ArithmeticalExpression("%", $1, $3);}
     | "(" expression ")" {$$ = $2;}
-    | expression "." "length" {$$ = new LengthExpression($1);}
+    | "identifier" ".length" {$$ = new LengthExpression($1);}
     | array_access {$$ = $1;}
     | "new" simple_type "[" expression "]" {$$ = new NewArrayExpression($2, $4);}
     | "new" type_identifier "(" ")" {$$ = new NewVariableExpression($2);}
-    | "this" {$$ = new This();}
+    | field_access {$$ = $1;}
     | logical_expression {$$ = $1;}
     | method_invocation {$$ = $1;}
 
+field_access:
+    "this" "." "identifier" {$$ = new FieldAccess($3);}
+
 array_access:
-    expression "[" expression "]" {$$ = new ArrayAccessExpression($1, $3);}
+    "identifier" "[" expression "]" {$$ = new ArrayAccessExpression($1, $3);}
 
 logical_expression:
     expression "&&" expression {$$ = new LogicalExpression("&&", $1, $3);}
@@ -242,7 +255,7 @@ logical_expression:
     | expression ">=" expression {$$ = new LogicalExpression(">=", $1, $3);}
     | expression "==" expression {$$ = new LogicalExpression("==", $1, $3);}
     | expression "!=" expression {$$ = new LogicalExpression("!=", $1, $3);}
-    | "!" expression %prec NOT {$$ = new LogicalExpression("!", $2, NULL);}
+    | "!" expression %prec NOT {$$ = new LogicalExpression("!", NULL, $2);}
     | "true" {$$ = new LogicalExpression("true", NULL, NULL);}
     | "false" {$$ = new LogicalExpression("false", NULL, NULL);}
 %%

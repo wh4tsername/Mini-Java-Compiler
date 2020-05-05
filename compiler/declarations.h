@@ -10,9 +10,9 @@ class NewVariableExpression;
 class NewArrayExpression;
 class MethodInvocation;
 class MethodExpression;
+class FieldAccess;
 class Type;
 class ArrayType;
-class This;
 class Lvalue;
 class VariableDeclaration;
 class ListOfStatements;
@@ -29,3 +29,5 @@ class Program;
 class Expression;
 class Statement;
 class MainClass;
+
+class ScopeListOfStatements;

@@ -7,10 +7,7 @@ class NewVariableExpression : public Expression {
  public:
   explicit NewVariableExpression(Type* variable_type);
 
-  int Count() final;
-
   void Accept(Visitor* visitor) override;
 
- private:
   Type* variable_type_;
 };

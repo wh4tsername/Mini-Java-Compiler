@@ -7,13 +7,13 @@
 
 class MainClass : public Statement {
  public:
-  MainClass(std::string main_class_name, ListOfStatements* list_of_statements);
-
-  void Run() final;
+  MainClass(std::string main_class_name, MethodDeclaration* main,
+            ListOfStatements* declarations);
 
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor) override;
 
- private:
   std::string main_class_name_;
-  ListOfStatements* list_of_statements_;
+  MethodDeclaration* main_;
+  ListOfStatements* declarations_;
 };

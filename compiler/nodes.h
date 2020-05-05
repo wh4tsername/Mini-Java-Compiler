@@ -10,9 +10,9 @@
 #include "classes/expressions/NewArrayExpression.h"
 #include "classes/expressions/MethodInvocation.h"
 #include "classes/expressions/MethodExpression.h"
+#include "classes/expressions/FieldAccess.h"
 #include "classes/Type.h"
 #include "classes/ArrayType.h"
-#include "classes/expressions/This.h"
 #include "classes/Lvalue.h"
 #include "classes/statements/VariableDeclaration.h"
 #include "classes/statements/ListOfStatements.h"
@@ -27,3 +27,5 @@
 #include "classes/statements/ClassDeclaration.h"
 #include "classes/Program.h"
 #include "classes/statements/MainClass.h"
+
+#include "classes/ScopeListOfStatements.h"

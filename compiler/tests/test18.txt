@@ -1,0 +1,13 @@
+class Main {
+  public static void main() {
+    Returner r;
+    r = new Returner();
+    r.foo();
+  }
+
+  int a_;
+}
+
+class Returner {
+    public bool foo() {}
+}

@@ -7,7 +7,13 @@
 #include "parser.hh"
 
 #include "classes/Program.h"
-#include "visitors/SymbolTreeVisitor.h"
+#include "visitors/NewSymbolTreeVisitor.h"
+#include "symbol_table/NewScopeLayer.h"
+#include "visitors/TypeCheckingVisitor.h"
+#include "visitors/FunctionProcessingVisitor.h"
+#include "visitors/PrintTreeVisitor.h"
+#include "function_processing/FunctionStorage.h"
+#include "objects/Method.h"
 
 class Driver {
  public:
@@ -21,7 +27,7 @@ class Driver {
 
   void Exec();
 
-//  void PrintTree(const std::string& filename);
+  void PrintTree(const std::string& filename);
 
   bool trace_scanning_;
   yy::location location_;

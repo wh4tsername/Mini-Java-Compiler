@@ -8,11 +8,9 @@ class Program : public Node {
  public:
   Program(MainClass* main_class, ListOfStatements* class_declarations);
 
-  void Run();
-
   void Accept(Visitor* visitor) override;
+  void PreAccept(Visitor* visitor);
 
- private:
   MainClass* main_class_;
   ListOfStatements* class_declarations_;
 };

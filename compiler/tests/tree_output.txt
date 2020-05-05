@@ -1,0 +1,14 @@
+Program: 
+	Main class: Main
+		Main: 
+			Method declaration: main, (return type): void, (arguments): 
+			no arguments
+				Statements: 
+					Variable declaration: a -> bool[]
+					Print: 
+						Array access: 
+						(called from): a
+						(index): 
+							Number: 0
+		Statements: 
+			Variable declaration: a_ -> int
