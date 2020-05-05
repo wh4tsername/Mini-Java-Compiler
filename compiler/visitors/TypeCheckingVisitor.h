@@ -8,10 +8,13 @@
 #include "../symbol_table/NewScopeLayer.h"
 #include "../symbol_table/NewScopeLayerTree.h"
 #include "../symbol_table/Symbol.h"
-#include "Visitor.h"
+#include "TemplateVisitor.h"
 
-class TypeCheckingVisitor : public Visitor {
+class TypeCheckingVisitor : public TemplateVisitor<int> {
  public:
+  explicit TypeCheckingVisitor(NewScopeLayerTree& tree);
+  ~TypeCheckingVisitor() = default;
+
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
   void Visit(LogicalExpression* expression) override;
@@ -47,4 +50,19 @@ class TypeCheckingVisitor : public Visitor {
   void PreVisit(ListOfStatements* list_of_statements) override;
   void PreVisit(VariableDeclaration* variable_declaration) override;
   void PreVisit(MethodDeclaration* method_declaration) override;
+
+ private:
+  void TraverseToChildByClassSymbol(const Symbol& symbol);
+  void TraverseToChildByMethodSymbol(const Symbol& symbol);
+  void TraverseToChildByIndex();
+
+  bool HasType(const std::string& type);
+
+  std::string UserTypeResolving(const Symbol& symbol);
+
+  std::unordered_map<std::string, int> type_system_;
+  int type_count_;
+
+  NewScopeLayerTree tree_;
+  NewScopeLayer* current_layer_;
 };

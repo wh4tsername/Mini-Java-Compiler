@@ -4,70 +4,11 @@ Program:
 			Method declaration: main, (return type): void, (arguments): 
 			no arguments
 				Statements: 
-					Variable declaration: a -> A
-					Assignment: 
-						Lvalue: 
-							a
-						New var allocation: A
-					Method invocation: init
-					no arguments
-					(called from): a
-					If statement: 
-					Expression: 
-						Logical expression: (operation): ==
-							Method invocation: calc
-							(arguments): 
-								Number: 3
-							(called from): a
-							Number: 2
-					If: 
-						[new scope]
-						Statements: 
-							Variable declaration: x -> int
-							Assignment: 
-								Lvalue: 
-									x
-								Number: 20
-							Print: 
-								Variable: x
-	Statements: 
-		Class: A
-			Statements: 
-				Variable declaration: x -> int
-				Method declaration: init, (return type): void, (arguments): 
-				no arguments
-					Statements: 
-						Assignment: 
-							Lvalue: 
-								FieldAccess: 
-								x
-							Number: 3
-				Method declaration: calc, (return type): int, (arguments): 
-				y -> int
-					Statements: 
-						Variable declaration: x -> int
-						Assignment: 
-							Lvalue: 
-								x
-							Arithmetical expression: (operation): @
-								Number: 1
-						If statement: 
-						Expression: 
-							Logical expression: (operation): ==
-								Variable: y
-								Number: 3
-						If: 
-							[new scope]
-							Statements: 
-								Return: 
-									Arithmetical expression: (operation): +
-										Variable: x
-										Variable: y
-						Else: 
-							[new scope]
-							Statements: 
-								Return: 
-									Arithmetical expression: (operation): +
-										FieldAccess: 
-										x
-										Variable: y
+					Variable declaration: a -> bool[]
+					Print: 
+						Array access: 
+						(called from): a
+						(index): 
+							Number: 0
+		Statements: 
+			Variable declaration: a_ -> int

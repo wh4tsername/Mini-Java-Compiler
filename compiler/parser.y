@@ -178,7 +178,7 @@ type:
 
 simple_type:
     "int" {$$ = new Type("int");}
-    | "boolean" {$$ = new Type("bool");}
+    | "boolean" {$$ = new Type("boolean");}
     | "void" {$$ = new Type("void");}
     | type_identifier {$$ = $1;}
 

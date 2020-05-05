@@ -52,11 +52,11 @@ class NewSymbolTreeVisitor : public Visitor {
   void PreVisit(VariableDeclaration* variable_declaration) override;
   void PreVisit(MethodDeclaration* method_declaration) override;
 
+  NewScopeLayerTree& GetTree();
+
  private:
   std::string UserTypeResolving(const Symbol& symbol);
 
   NewScopeLayerTree tree_;
   NewScopeLayer* current_layer_;
-
-  std::unordered_set<Symbol> classes_;
 };

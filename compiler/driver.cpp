@@ -39,7 +39,12 @@ void Driver::Exec() {
 
   std::cout << "symbol_tree_built" << std::endl;
 
-//  TypeCheckingVisitor type_visitor;
+  auto scope_tree_root = symbol_visitor.GetTree();
+
+  TypeCheckingVisitor type_visitor(scope_tree_root);
+  type_visitor.Visit(program_);
+
+  std::cout << "type_checking_done" << std::endl;
 
 //  auto root = symbol_visitor.GetRoot();
 //

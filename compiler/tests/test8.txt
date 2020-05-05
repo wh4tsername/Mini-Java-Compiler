@@ -5,7 +5,7 @@ class Main {
     if (a == 1) {
         this.sun_ = 3;
     } else {
-        assert(0);
+        assert(false);
     }
 
     System.out.println(this.sun_);

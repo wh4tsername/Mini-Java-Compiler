@@ -4,6 +4,10 @@ NewSymbolTreeVisitor::NewSymbolTreeVisitor() : tree_(new NewScopeLayer) {
   current_layer_ = tree_.root_;
 }
 
+NewScopeLayerTree& NewSymbolTreeVisitor::GetTree() { return tree_; }
+
+////////////////////////////////////////////////////////////////////////////////
+
 void NewSymbolTreeVisitor::Visit(Program* program) {
   PreVisit(program);
 
@@ -22,16 +26,11 @@ void NewSymbolTreeVisitor::Visit(ListOfStatements* list_of_statements) {
 
 void NewSymbolTreeVisitor::Visit(ClassDeclaration* class_declaration) {
   current_layer_->class_symbol_ = Symbol(class_declaration->class_name_);
-  // check if class decl and decl it
-  if (classes_.find(Symbol(class_declaration->class_name_)) != classes_.end()) {
-    throw std::runtime_error("Class has been already declared!");
-  }
-  classes_.insert(Symbol(class_declaration->class_name_));
-
+  // PreVisiting checks if class is already declared
   // new scope
   current_layer_ =
       new NewScopeLayer(current_layer_, class_declaration->class_name_,
-                        current_layer_->class_symbol_);
+                        current_layer_->class_symbol_, Symbol());
 
   class_declaration->declarations_->Accept(this);
 
@@ -40,16 +39,11 @@ void NewSymbolTreeVisitor::Visit(ClassDeclaration* class_declaration) {
 
 void NewSymbolTreeVisitor::Visit(MainClass* main_class) {
   current_layer_->class_symbol_ = Symbol(main_class->main_class_name_);
-  // check if class decl and decl it
-  if (classes_.find(Symbol(main_class->main_class_name_)) != classes_.end()) {
-    throw std::runtime_error("Main class has been already declared!");
-  }
-  classes_.insert(Symbol(main_class->main_class_name_));
-
+  // PreVisiting checks if class is already declared
   // new scope
   current_layer_ =
       new NewScopeLayer(current_layer_, main_class->main_class_name_,
-                        current_layer_->class_symbol_);
+                        current_layer_->class_symbol_, Symbol());
 
   if (main_class->declarations_) {
     main_class->declarations_->Accept(this);
@@ -65,7 +59,8 @@ void NewSymbolTreeVisitor::Visit(MethodDeclaration* method_declaration) {
 
   // new scope
   current_layer_ = new NewScopeLayer(current_layer_, symbol.GetName(),
-                                     current_layer_->class_symbol_);
+                                     current_layer_->class_symbol_,
+                                     Symbol(method_declaration->method_name_));
 
   if (method_declaration->formals_) {
     method_declaration->formals_->Accept(this);
@@ -87,17 +82,18 @@ void NewSymbolTreeVisitor::Visit(Formals* formals) {
     }
 
     // pre type checking to resolve class methods and fields
-    if (type_name != "int" && type_name != "bool" && type_name != "int[]" &&
-        type_name != "bool[]") {
+    if (type_name != "int" && type_name != "boolean" && type_name != "int[]" &&
+        type_name != "boolean[]") {
       if (type_name.back() != ']') {
-        current_layer_->user_type_system[Symbol(formal.second)] = type_name;
+        current_layer_->user_type_system_[Symbol(formal.second)] = type_name;
       } else {
         std::string new_type_name;
 
         std::copy(type_name.begin(), type_name.end() - 2,
                   new_type_name.begin());
 
-        current_layer_->user_type_system[Symbol(formal.second)] = new_type_name;
+        current_layer_->user_type_system_[Symbol(formal.second)] =
+            new_type_name;
       }
     }
   }
@@ -107,7 +103,7 @@ void NewSymbolTreeVisitor::Visit(
     ScopeListOfStatements* scope_list_of_statements) {
   current_layer_ = new NewScopeLayer(
       current_layer_, "new scope " + current_layer_->class_symbol_.GetName(),
-      current_layer_->class_symbol_);
+      current_layer_->class_symbol_, current_layer_->method_symbol_);
 
   scope_list_of_statements->list_of_statements_->Accept(this);
 
@@ -143,11 +139,11 @@ void NewSymbolTreeVisitor::Visit(VariableDeclaration* variable_declaration) {
   }
 
   // pre type checking to resolve class methods and fields
-  if (type_name != "int" && type_name != "bool" && type_name != "int[]" &&
-      type_name != "bool[]") {
+  if (type_name != "int" && type_name != "boolean" && type_name != "int[]" &&
+      type_name != "boolean[]") {
     if (type_name.back() != ']') {
       current_layer_
-          ->user_type_system[Symbol(variable_declaration->variable_name_)] =
+          ->user_type_system_[Symbol(variable_declaration->variable_name_)] =
           type_name;
     } else {
       std::string new_type_name;
@@ -155,14 +151,14 @@ void NewSymbolTreeVisitor::Visit(VariableDeclaration* variable_declaration) {
       std::copy(type_name.begin(), type_name.end() - 2, new_type_name.begin());
 
       current_layer_
-          ->user_type_system[Symbol(variable_declaration->variable_name_)] =
+          ->user_type_system_[Symbol(variable_declaration->variable_name_)] =
           new_type_name;
     }
   }
 }
 
 void NewSymbolTreeVisitor::Visit(VariableExpression* expression) {
-  current_layer_->GetVariable(Symbol(expression->variable_name_));
+  current_layer_->GetVariableLayer(Symbol(expression->variable_name_));
 }
 
 void NewSymbolTreeVisitor::Visit(NewArrayExpression* expression) {
@@ -170,11 +166,11 @@ void NewSymbolTreeVisitor::Visit(NewArrayExpression* expression) {
 }
 
 void NewSymbolTreeVisitor::Visit(LengthExpression* expression) {
-  current_layer_->GetVariable(Symbol(expression->variable_name_));
+  current_layer_->GetVariableLayer(Symbol(expression->variable_name_));
 }
 
 void NewSymbolTreeVisitor::Visit(ArrayAccessExpression* expression) {
-  current_layer_->GetArray(Symbol(expression->array_indent_));
+  current_layer_->GetArrayLayer(Symbol(expression->array_indent_));
 
   expression->index_expression_->Accept(this);
 }
@@ -203,8 +199,8 @@ std::string NewSymbolTreeVisitor::UserTypeResolving(const Symbol& symbol) {
   NewScopeLayer* local_current = current_layer_;
 
   while (local_current->parent_ != nullptr &&
-         local_current->user_type_system.find(symbol) ==
-             local_current->user_type_system.end()) {
+         local_current->user_type_system_.find(symbol) ==
+             local_current->user_type_system_.end()) {
     local_current = local_current->parent_;
   }
 
@@ -212,7 +208,7 @@ std::string NewSymbolTreeVisitor::UserTypeResolving(const Symbol& symbol) {
     throw std::runtime_error("Invalid method invocation from non user type");
   }
 
-  return local_current->user_type_system[symbol];
+  return local_current->user_type_system_[symbol];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +220,7 @@ void NewSymbolTreeVisitor::Visit(MethodInvocation* method_invocation) {
   } else {
     const Symbol& symbol = Symbol(method_invocation->call_from_);
 
-    current_layer_->GetVariable(symbol);
+    current_layer_->GetVariableLayer(symbol);
 
     class_name = Symbol(UserTypeResolving(symbol));
   }
@@ -362,7 +358,8 @@ void NewSymbolTreeVisitor::PreVisit(VariableDeclaration* variable_declaration) {
 
     std::get<0>(
         tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
-        std::make_shared<UninitObject>();
+        std::make_pair(variable_declaration->type_->type_name_,
+                       std::make_shared<UninitObject>());
   } else {
     if (std::get<2>(tree_.class_symbols_table_[current_layer_->class_symbol_])
             .find(symbol) !=
@@ -375,7 +372,8 @@ void NewSymbolTreeVisitor::PreVisit(VariableDeclaration* variable_declaration) {
 
     std::get<2>(
         tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
-        std::vector<std::shared_ptr<Object>>();
+        std::make_pair(variable_declaration->type_->type_name_,
+                       std::vector<std::shared_ptr<Object>>());
   }
 
   if (tree_.class_members_table_[current_layer_->class_symbol_].find(symbol) !=
@@ -403,15 +401,17 @@ void NewSymbolTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {
     num_args = method_declaration->formals_->formals_.size();
   }
 
-  std::vector<std::string> args(num_args);
+  std::vector<std::pair<std::string, std::string>> args(num_args);
   for (int i = 0; i < num_args; ++i) {
-    args[i] = method_declaration->formals_->formals_[i].second;
+    args[i].first = method_declaration->formals_->formals_[i].first->type_name_;
+    args[i].second = method_declaration->formals_->formals_[i].second;
   }
 
   std::get<1>(
       tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
       std::make_shared<Method>(std::move(args),
-                               current_layer_->class_symbol_.GetName());
+                               current_layer_->class_symbol_.GetName(),
+                               method_declaration->type_->type_name_);
 
   if (tree_.class_members_table_[current_layer_->class_symbol_].find(symbol) !=
       tree_.class_members_table_[current_layer_->class_symbol_].end()) {

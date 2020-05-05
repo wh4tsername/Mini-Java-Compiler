@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     } else if (!driver.Parse(argv[i])) {
       driver.PrintTree("../compiler/tests/tree_output.txt");
       driver.Exec();
-      std::cout << "executed_success\n";
+      std::cout << "executed_successfully\n";
     } else {
       result = 1;
     }
