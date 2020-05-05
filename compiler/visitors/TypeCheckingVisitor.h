@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <unordered_map>
-#include <unordered_set>
 
 #include "../nodes.h"
 #include "../objects/Method.h"
@@ -11,11 +10,8 @@
 #include "../symbol_table/Symbol.h"
 #include "Visitor.h"
 
-class NewSymbolTreeVisitor : public Visitor {
+class TypeCheckingVisitor : public Visitor {
  public:
-  NewSymbolTreeVisitor();
-  ~NewSymbolTreeVisitor() = default;
-
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
   void Visit(LogicalExpression* expression) override;
@@ -51,12 +47,4 @@ class NewSymbolTreeVisitor : public Visitor {
   void PreVisit(ListOfStatements* list_of_statements) override;
   void PreVisit(VariableDeclaration* variable_declaration) override;
   void PreVisit(MethodDeclaration* method_declaration) override;
-
- private:
-  std::string UserTypeResolving(const Symbol& symbol);
-
-  NewScopeLayerTree tree_;
-  NewScopeLayer* current_layer_;
-
-  std::unordered_set<Symbol> classes_;
 };

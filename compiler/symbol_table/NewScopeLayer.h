@@ -1,21 +1,23 @@
 #pragma once
 
 #include <iostream>
-#include <utility>
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
+#include <unordered_set>
+#include <utility>
 
-#include "../objects/Method.h"
-#include "../objects/Integer.h"
-#include "../objects/UninitObject.h"
 #include "../classes/Type.h"
+#include "../objects/Integer.h"
+#include "../objects/Method.h"
+#include "../objects/UninitObject.h"
 #include "Symbol.h"
 
 class NewScopeLayer {
  public:
   NewScopeLayer();
-  NewScopeLayer(NewScopeLayer* parent, std::string name);
+  NewScopeLayer(NewScopeLayer* parent, std::string name,
+                const Symbol& class_symbol);
 
   void AddChild(NewScopeLayer* child);
 
@@ -30,6 +32,8 @@ class NewScopeLayer {
   std::string name_;
   NewScopeLayer* parent_;
   std::vector<NewScopeLayer*> children_;
+
+  Symbol class_symbol_;
 
   std::unordered_map<Symbol, std::shared_ptr<Object>> variables_;
   std::unordered_map<Symbol, std::vector<std::shared_ptr<Object>>> arrays_;

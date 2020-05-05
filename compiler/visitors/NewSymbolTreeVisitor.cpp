@@ -1,9 +1,6 @@
 #include "NewSymbolTreeVisitor.h"
 
-// TODO check duplicates of var names for var and array
-
-NewSymbolTreeVisitor::NewSymbolTreeVisitor()
-    : tree_(new NewScopeLayer), main_class_(nullptr) {
+NewSymbolTreeVisitor::NewSymbolTreeVisitor() : tree_(new NewScopeLayer) {
   current_layer_ = tree_.root_;
 }
 
@@ -24,16 +21,17 @@ void NewSymbolTreeVisitor::Visit(ListOfStatements* list_of_statements) {
 }
 
 void NewSymbolTreeVisitor::Visit(ClassDeclaration* class_declaration) {
-  class_symbol_ = Symbol(class_declaration->class_name_);
+  current_layer_->class_symbol_ = Symbol(class_declaration->class_name_);
   // check if class decl and decl it
   if (classes_.find(Symbol(class_declaration->class_name_)) != classes_.end()) {
     throw std::runtime_error("Class has been already declared!");
   }
-  classes_[Symbol(class_declaration->class_name_)] = class_declaration;
+  classes_.insert(Symbol(class_declaration->class_name_));
 
   // new scope
   current_layer_ =
-      new NewScopeLayer(current_layer_, class_declaration->class_name_);
+      new NewScopeLayer(current_layer_, class_declaration->class_name_,
+                        current_layer_->class_symbol_);
 
   class_declaration->declarations_->Accept(this);
 
@@ -41,16 +39,17 @@ void NewSymbolTreeVisitor::Visit(ClassDeclaration* class_declaration) {
 }
 
 void NewSymbolTreeVisitor::Visit(MainClass* main_class) {
-  class_symbol_ = Symbol(main_class->main_class_name_);
+  current_layer_->class_symbol_ = Symbol(main_class->main_class_name_);
   // check if class decl and decl it
   if (classes_.find(Symbol(main_class->main_class_name_)) != classes_.end()) {
     throw std::runtime_error("Main class has been already declared!");
   }
-  main_class_ = main_class;
+  classes_.insert(Symbol(main_class->main_class_name_));
 
   // new scope
   current_layer_ =
-      new NewScopeLayer(current_layer_, main_class->main_class_name_);
+      new NewScopeLayer(current_layer_, main_class->main_class_name_,
+                        current_layer_->class_symbol_);
 
   if (main_class->declarations_) {
     main_class->declarations_->Accept(this);
@@ -63,16 +62,10 @@ void NewSymbolTreeVisitor::Visit(MainClass* main_class) {
 
 void NewSymbolTreeVisitor::Visit(MethodDeclaration* method_declaration) {
   Symbol symbol(method_declaration->method_name_);
-  // check
-  //  if (std::get<1>(tree_.class_symbols_table_[class_symbol_]).find(symbol) !=
-  //      std::get<1>(tree_.class_symbols_table_[class_symbol_]).end()) {
-  //    throw std::runtime_error("In class " + class_symbol_.GetName() +
-  //                             " variable " + symbol.GetName() +
-  //                             " has been already declared!");
-  //  }
 
   // new scope
-  current_layer_ = new NewScopeLayer(current_layer_, symbol.GetName());
+  current_layer_ = new NewScopeLayer(current_layer_, symbol.GetName(),
+                                     current_layer_->class_symbol_);
 
   if (method_declaration->formals_) {
     method_declaration->formals_->Accept(this);
@@ -112,8 +105,9 @@ void NewSymbolTreeVisitor::Visit(Formals* formals) {
 
 void NewSymbolTreeVisitor::Visit(
     ScopeListOfStatements* scope_list_of_statements) {
-  current_layer_ =
-      new NewScopeLayer(current_layer_, "new scope " + class_symbol_.GetName());
+  current_layer_ = new NewScopeLayer(
+      current_layer_, "new scope " + current_layer_->class_symbol_.GetName(),
+      current_layer_->class_symbol_);
 
   scope_list_of_statements->list_of_statements_->Accept(this);
 
@@ -226,7 +220,7 @@ std::string NewSymbolTreeVisitor::UserTypeResolving(const Symbol& symbol) {
 void NewSymbolTreeVisitor::Visit(MethodInvocation* method_invocation) {
   Symbol class_name;
   if (method_invocation->call_from_ == "this") {
-    class_name = class_symbol_;
+    class_name = current_layer_->class_symbol_;
   } else {
     const Symbol& symbol = Symbol(method_invocation->call_from_);
 
@@ -247,12 +241,14 @@ void NewSymbolTreeVisitor::Visit(MethodInvocation* method_invocation) {
 }
 
 void NewSymbolTreeVisitor::Visit(FieldAccess* field_access) {
-  if (std::get<0>(tree_.class_symbols_table_[class_symbol_])
+  if (std::get<0>(tree_.class_symbols_table_[current_layer_->class_symbol_])
               .find(Symbol(field_access->field_name_)) ==
-          std::get<0>(tree_.class_symbols_table_[class_symbol_]).end() &&
-      std::get<2>(tree_.class_symbols_table_[class_symbol_])
+          std::get<0>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+              .end() &&
+      std::get<2>(tree_.class_symbols_table_[current_layer_->class_symbol_])
               .find(Symbol(field_access->field_name_)) ==
-          std::get<2>(tree_.class_symbols_table_[class_symbol_]).end()) {
+          std::get<2>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+              .end()) {
     throw std::runtime_error("Invalid field access");
   }
 }
@@ -319,10 +315,11 @@ void NewSymbolTreeVisitor::PreVisit(Program* program) {
 }
 
 void NewSymbolTreeVisitor::PreVisit(MainClass* main_class) {
-  class_symbol_ = Symbol(main_class->main_class_name_);
-  if (tree_.class_symbols_table_.find(class_symbol_) !=
+  current_layer_->class_symbol_ = Symbol(main_class->main_class_name_);
+  if (tree_.class_symbols_table_.find(current_layer_->class_symbol_) !=
       tree_.class_symbols_table_.end()) {
-    throw std::runtime_error("Main class " + class_symbol_.GetName() +
+    throw std::runtime_error("Main class " +
+                             current_layer_->class_symbol_.GetName() +
                              " has been already declared!");
   }
 
@@ -334,10 +331,11 @@ void NewSymbolTreeVisitor::PreVisit(MainClass* main_class) {
 }
 
 void NewSymbolTreeVisitor::PreVisit(ClassDeclaration* class_declaration) {
-  class_symbol_ = Symbol(class_declaration->class_name_);
-  if (tree_.class_symbols_table_.find(class_symbol_) !=
+  current_layer_->class_symbol_ = Symbol(class_declaration->class_name_);
+  if (tree_.class_symbols_table_.find(current_layer_->class_symbol_) !=
       tree_.class_symbols_table_.end()) {
-    throw std::runtime_error("Class " + class_symbol_.GetName() +
+    throw std::runtime_error("Class " +
+                             current_layer_->class_symbol_.GetName() +
                              " has been already declared!");
   }
 
@@ -353,35 +351,51 @@ void NewSymbolTreeVisitor::PreVisit(ListOfStatements* list_of_statements) {
 void NewSymbolTreeVisitor::PreVisit(VariableDeclaration* variable_declaration) {
   Symbol symbol(variable_declaration->variable_name_);
   if (variable_declaration->type_->type_name_.back() != ']') {
-    if (std::get<0>(tree_.class_symbols_table_[class_symbol_]).find(symbol) !=
-        std::get<0>(tree_.class_symbols_table_[class_symbol_]).end()) {
-      throw std::runtime_error("In class " + class_symbol_.GetName() +
-                               " variable " + symbol.GetName() +
-                               " has been already declared!");
+    if (std::get<0>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+            .find(symbol) !=
+        std::get<0>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+            .end()) {
+      throw std::runtime_error(
+          "In class " + current_layer_->class_symbol_.GetName() + " variable " +
+          symbol.GetName() + " has been already declared!");
     }
 
-    std::get<0>(tree_.class_symbols_table_[class_symbol_])[symbol] =
+    std::get<0>(
+        tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
         std::make_shared<UninitObject>();
   } else {
-    if (std::get<2>(tree_.class_symbols_table_[class_symbol_]).find(symbol) !=
-        std::get<2>(tree_.class_symbols_table_[class_symbol_]).end()) {
-      throw std::runtime_error("In class " + class_symbol_.GetName() +
-                               " array " + symbol.GetName() +
-                               " has been already declared!");
+    if (std::get<2>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+            .find(symbol) !=
+        std::get<2>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+            .end()) {
+      throw std::runtime_error(
+          "In class " + current_layer_->class_symbol_.GetName() + " array " +
+          symbol.GetName() + " has been already declared!");
     }
 
-    std::get<2>(tree_.class_symbols_table_[class_symbol_])[symbol] =
+    std::get<2>(
+        tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
         std::vector<std::shared_ptr<Object>>();
   }
+
+  if (tree_.class_members_table_[current_layer_->class_symbol_].find(symbol) !=
+      tree_.class_members_table_[current_layer_->class_symbol_].end()) {
+    throw std::runtime_error("In class " +
+                             current_layer_->class_symbol_.GetName() +
+                             " member duplicate: " + symbol.GetName());
+  }
+  tree_.class_members_table_[current_layer_->class_symbol_].insert(symbol);
 }
 
 void NewSymbolTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {
   Symbol symbol(method_declaration->method_name_);
-  if (std::get<1>(tree_.class_symbols_table_[class_symbol_]).find(symbol) !=
-      std::get<1>(tree_.class_symbols_table_[class_symbol_]).end()) {
-    throw std::runtime_error("In class " + class_symbol_.GetName() +
-                             " method " + symbol.GetName() +
-                             " has been already declared!");
+  if (std::get<1>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+          .find(symbol) !=
+      std::get<1>(tree_.class_symbols_table_[current_layer_->class_symbol_])
+          .end()) {
+    throw std::runtime_error(
+        "In class " + current_layer_->class_symbol_.GetName() + " method " +
+        symbol.GetName() + " has been already declared!");
   }
 
   size_t num_args = 0;
@@ -394,6 +408,16 @@ void NewSymbolTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {
     args[i] = method_declaration->formals_->formals_[i].second;
   }
 
-  std::get<1>(tree_.class_symbols_table_[class_symbol_])[symbol] =
-      std::make_shared<Method>(std::move(args), class_symbol_.GetName());
+  std::get<1>(
+      tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
+      std::make_shared<Method>(std::move(args),
+                               current_layer_->class_symbol_.GetName());
+
+  if (tree_.class_members_table_[current_layer_->class_symbol_].find(symbol) !=
+      tree_.class_members_table_[current_layer_->class_symbol_].end()) {
+    throw std::runtime_error("In class " +
+                             current_layer_->class_symbol_.GetName() +
+                             " member duplicate: " + symbol.GetName());
+  }
+  tree_.class_members_table_[current_layer_->class_symbol_].insert(symbol);
 }

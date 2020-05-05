@@ -9,15 +9,21 @@
 
 class NewScopeLayerTree {
  public:
-  using table_t = std::unordered_map<
+  // 0 - var field
+  // 1 - method
+  // 2 - arr field
+  using symbol_table_t = std::unordered_map<
       Symbol, std::tuple<std::unordered_map<Symbol, std::shared_ptr<Object>>,
                          std::unordered_map<Symbol, std::shared_ptr<Method>>,
                          std::unordered_map<
                              Symbol, std::vector<std::shared_ptr<Object>>>>>;
 
+  using member_table_t = std::unordered_map<Symbol, std::unordered_set<Symbol>>;
+
   explicit NewScopeLayerTree(NewScopeLayer* layer);
 
   NewScopeLayer* root_;
 
-  table_t class_symbols_table_;
+  symbol_table_t class_symbols_table_;
+  member_table_t class_members_table_;
 };
