@@ -1,6 +1,8 @@
 class Factorial {
   public static void main() {
-    new Fac().Print(new Fac().ComputeFac(10));
+    Fac fac;
+    fac = new Fac();
+    fac.Print(fac.ComputeFac(10));
   }
 }
 

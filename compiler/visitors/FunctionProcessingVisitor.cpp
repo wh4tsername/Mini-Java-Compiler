@@ -273,3 +273,12 @@ void FunctionProcessingVisitor::Visit(
 void FunctionProcessingVisitor::Visit(FieldAccess* field_access) {
   // TODO field access
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+void PreVisit(Program* program) {}
+void PreVisit(MainClass* main_class) {}
+void PreVisit(ClassDeclaration* class_declaration) {}
+void PreVisit(ListOfStatements* list_of_statements) {}
+void PreVisit(VariableDeclaration* variable_declaration) {}
+void PreVisit(MethodDeclaration* method_declaration) {}

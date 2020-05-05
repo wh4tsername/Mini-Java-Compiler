@@ -65,8 +65,8 @@ set(
         VISITORS
 
         compiler/visitors/PrintTreeVisitor.cpp
-        compiler/visitors/FunctionProcessingVisitor.cpp
-        compiler/visitors/SymbolTreeVisitor.cpp
+#        compiler/visitors/FunctionProcessingVisitor.cpp
+#        compiler/visitors/SymbolTreeVisitor.cpp
         compiler/visitors/TemplateVisitor.cpp
 
         compiler/visitors/NewSymbolTreeVisitor.cpp

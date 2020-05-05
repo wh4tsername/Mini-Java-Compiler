@@ -3,12 +3,12 @@ class Main {
     int a;
     a = 1;
     if (a == 1) {
-        sun_ = 3;
+        this.sun_ = 3;
     } else {
         assert(0);
     }
 
-    System.out.println(sun_);
+    System.out.println(this.sun_);
   }
 
   int sun_;

@@ -33,4 +33,7 @@ class NewScopeLayer {
 
   std::unordered_map<Symbol, std::shared_ptr<Object>> variables_;
   std::unordered_map<Symbol, std::vector<std::shared_ptr<Object>>> arrays_;
+
+  // pre type checking
+  std::unordered_map<Symbol, std::string> user_type_system;
 };

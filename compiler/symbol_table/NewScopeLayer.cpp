@@ -1,6 +1,6 @@
 #include "NewScopeLayer.h"
 
-NewScopeLayer::NewScopeLayer() : parent_(nullptr), name_("GLOBAL") {}
+NewScopeLayer::NewScopeLayer() : parent_(nullptr), name_("__GLOBAL__") {}
 
 NewScopeLayer::NewScopeLayer(NewScopeLayer* parent, std::string name)
     : parent_(parent), name_(std::move(name)) {
@@ -18,16 +18,16 @@ bool NewScopeLayer::HasVariable(const Symbol& symbol) {
 std::shared_ptr<Object> NewScopeLayer::GetVariable(const Symbol& symbol) {
   NewScopeLayer* current = this;
 
-  while (!current->HasVariable(symbol) && current->parent_ == nullptr) {
+  while (!current->HasVariable(symbol) && current->parent_->parent_ != nullptr) {
     current = current->parent_;
   }
 
-  if (current->parent_ == nullptr) {
-    throw std::runtime_error("Variable " + symbol.GetName() +
-                             " is not declared");
+  if (current->HasVariable(symbol)) {
+    return current->variables_[symbol];
   }
 
-  return current->variables_[symbol];
+  throw std::runtime_error("Variable " + symbol.GetName() +
+                           " is not declared");
 }
 
 bool NewScopeLayer::HasArray(const Symbol& symbol) {
@@ -38,15 +38,15 @@ std::vector<std::shared_ptr<Object>>& NewScopeLayer::GetArray(
     const Symbol& symbol) {
   NewScopeLayer* current = this;
 
-  while (!current->HasArray(symbol) && current->parent_ == nullptr) {
+  while (!current->HasArray(symbol) && current->parent_->parent_ != nullptr) {
     current = current->parent_;
   }
 
-  if (current->parent_ == nullptr) {
-    throw std::runtime_error("Array " + symbol.GetName() + " is not declared");
+  if (current->HasArray(symbol)) {
+    return current->arrays_[symbol];
   }
 
-  return current->arrays_[symbol];
+  throw std::runtime_error("Array " + symbol.GetName() + " is not declared");
 }
 
 void NewScopeLayer::DeclareVariable(Type* type, const Symbol& symbol) {

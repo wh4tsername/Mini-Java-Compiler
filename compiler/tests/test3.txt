@@ -1,9 +1,9 @@
 class Main {
   public static void main() {
-    int a;
+    int[] a;
     a = new int[10];
-    a_ = 1;
-    a[0] = a_;
+    this.a_ = 1;
+    a[0] = this.a_;
 
     System.out.println(a[0]);
   }

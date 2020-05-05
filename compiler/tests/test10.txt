@@ -1,18 +1,18 @@
 class Cat {
   public static void main() {
-    sun_ = -1;
+    this.sun_ = -1;
 
     this.play_with_sun(2);
   }
 
   public int finish_playing() {
-    System.out.println(sun_);
+    System.out.println(this.sun_);
   }
 
   int sun_;
 
   public void play_with_sun(int a) {
-    sun_ = sun_ + a;
+    this.sun_ = this.sun_ + a;
     this.finish_playing();
   }
 }

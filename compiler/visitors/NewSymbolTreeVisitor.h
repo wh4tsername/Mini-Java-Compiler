@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <unordered_map>
 
 #include "../nodes.h"
@@ -51,10 +52,12 @@ class NewSymbolTreeVisitor : public Visitor {
   void PreVisit(MethodDeclaration* method_declaration) override;
 
  private:
+  std::string UserTypeResolving(const Symbol& symbol);
+
   NewScopeLayerTree tree_;
   NewScopeLayer* current_layer_;
 
-  MainClass* main_class_;
+  MainClass* main_class_{};
   std::unordered_map<Symbol, ClassDeclaration*> classes_;
 
   Symbol class_symbol_;

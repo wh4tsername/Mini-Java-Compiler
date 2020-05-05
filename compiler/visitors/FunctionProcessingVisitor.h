@@ -49,6 +49,13 @@ class FunctionProcessingVisitor : public TemplateVisitor<int> {
   void Visit(ClassDeclaration* class_declaration) override;
   void Visit(ScopeListOfStatements* scope_list_of_statements) override;
 
+  void PreVisit(Program* program) override;
+  void PreVisit(MainClass* main_class) override;
+  void PreVisit(ClassDeclaration* class_declaration) override;
+  void PreVisit(ListOfStatements* list_of_statements) override;
+  void PreVisit(VariableDeclaration* variable_declaration) override;
+  void PreVisit(MethodDeclaration* method_declaration) override;
+
  private:
   ScopeLayer* root_layer_;
   ScopeLayer* current_layer_;
