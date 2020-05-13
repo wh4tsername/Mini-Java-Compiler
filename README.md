@@ -6,3 +6,6 @@ Mini-Java Compiler written on C++ using bison and flex
 
 ## build
     CMakeLists.txt
+
+## tests launch
+    tests -> CMake targets
