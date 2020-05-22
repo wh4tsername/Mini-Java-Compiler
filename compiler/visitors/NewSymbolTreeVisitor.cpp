@@ -68,6 +68,10 @@ void NewSymbolTreeVisitor::Visit(MethodDeclaration* method_declaration) {
 
   method_declaration->list_of_statements_->Accept(this);
 
+  Symbol class_method_symbol = Symbol(current_layer_->class_symbol_.GetName() +
+                                      "$" + method_declaration->method_name_);
+  tree_.layer_mapping_[class_method_symbol] = current_layer_;
+
   current_layer_ = current_layer_->parent_;
 }
 
@@ -432,4 +436,8 @@ void NewSymbolTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {
                              " member duplicate: " + symbol.GetName());
   }
   tree_.class_members_table_[current_layer_->class_symbol_].insert(symbol);
+
+  Symbol class_method_symbol = Symbol(current_layer_->class_symbol_.GetName() +
+                                      "$" + method_declaration->method_name_);
+  tree_.methods_[class_method_symbol] = method_declaration;
 }

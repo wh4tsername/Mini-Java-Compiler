@@ -22,10 +22,16 @@ class NewScopeLayerTree {
 
   using member_table_t = std::unordered_map<Symbol, std::unordered_set<Symbol>>;
 
+  using methods_t = std::unordered_map<Symbol, MethodDeclaration*>;
+
+  using layer_mapping_t = std::unordered_map<Symbol, NewScopeLayer*>;
+
   explicit NewScopeLayerTree(NewScopeLayer* layer);
 
   NewScopeLayer* root_;
 
   symbol_table_t class_symbols_table_;
   member_table_t class_members_table_;
+  methods_t methods_;
+  layer_mapping_t layer_mapping_;
 };

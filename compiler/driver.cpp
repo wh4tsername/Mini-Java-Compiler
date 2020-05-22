@@ -34,37 +34,41 @@ void Driver::ScanBegin() {
 }
 
 void Driver::Exec() {
+  std::string main_class_name = program_->main_class_->main_class_name_;
+
   NewSymbolTreeVisitor symbol_visitor;
   symbol_visitor.Visit(program_);
 
   std::cout << "symbol_tree_built" << std::endl;
 
-  auto scope_tree_root = symbol_visitor.GetTree();
+  NewScopeLayerTree scope_tree = symbol_visitor.GetTree();
 
-  TypeCheckingVisitor type_visitor(scope_tree_root);
+  TypeCheckingVisitor type_visitor(&scope_tree);
   type_visitor.Visit(program_);
 
   std::cout << "type_checking_done" << std::endl;
 
-//  auto root = symbol_visitor.GetRoot();
-//
-//  auto functions = symbol_visitor.GetFunctions();
-//
-//  FunctionStorage& storage = FunctionStorage::GetInstance();
-//  for (const auto& pair : functions) {
-//    storage.Set(pair.first, pair.second);
-//  }
-//
-//  MethodDeclaration* main_function = storage.Get(Symbol("main"));
-//
-//  std::shared_ptr<Method> function_type =
-//      std::dynamic_pointer_cast<Method>(root.Get(Symbol("main")));
-//
-//  FunctionProcessingVisitor func_visitor(root.GetFunctionScope(Symbol("main")),
-//                                         function_type);
-//  func_visitor.SetTree(&root);
-//  func_visitor.Visit(main_function);
-  // TODO(@wh4tsername) delete root
+  FunctionStorage& storage = FunctionStorage::GetInstance();
+  for (auto&& pair : scope_tree.methods_) {
+    storage.Set(pair.first, pair.second);
+  }
+
+  Symbol class_method_symbol(main_class_name + "$main");
+  MethodDeclaration* main = storage.Get(class_method_symbol);
+
+  auto main_func_ptr = std::make_shared<Method>(
+      std::vector<std::pair<std::string, std::string>>(), main_class_name,
+      "void");
+
+  NewFunctionProcessingVisitor func_visitor(
+      &scope_tree, scope_tree.layer_mapping_[class_method_symbol],
+      std::move(main_func_ptr));
+
+  func_visitor.Visit(main);
+
+  std::cout << "func_calls_done" << std::endl;
+
+  //  TODO(@wh4tsername) delete root
 }
 
 void Driver::PrintTree(const std::string& filename) {

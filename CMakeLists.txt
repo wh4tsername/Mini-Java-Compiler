@@ -70,6 +70,7 @@ set(
         compiler/visitors/TemplateVisitor.cpp
 
         compiler/visitors/NewSymbolTreeVisitor.cpp
+        compiler/visitors/NewFunctionProcessingVisitor.cpp
         compiler/visitors/TypeCheckingVisitor.cpp
 )
 
