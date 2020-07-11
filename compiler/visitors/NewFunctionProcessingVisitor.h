@@ -12,7 +12,7 @@ class NewFunctionProcessingVisitor : public TemplateVisitor<Value*> {
  public:
   explicit NewFunctionProcessingVisitor(
       NewScopeLayerTree* tree, NewScopeLayer* main_layer,
-      const std::shared_ptr<Method>& main_func_ptr, const Symbol& this_main);
+      const std::shared_ptr<Method>& main_func_ptr, VariableValue* this_main);
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -50,12 +50,14 @@ class NewFunctionProcessingVisitor : public TemplateVisitor<Value*> {
   void PreVisit(VariableDeclaration* variable_declaration) override;
   void PreVisit(MethodDeclaration* method_declaration) override;
 
+  FrameEmulator& GetFrame();
+
  private:
   void TraverseToChildByIndex();
 
   bool is_returned_;
 
-  Symbol this_;
+  VariableValue* this_;
 
   NewScopeLayerTree* tree_;
   NewScopeLayer* root_layer_;

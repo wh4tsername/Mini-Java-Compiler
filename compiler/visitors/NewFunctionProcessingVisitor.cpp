@@ -1,18 +1,14 @@
 #include "NewFunctionProcessingVisitor.h"
 
-#include "../classes/Type.h"
-
 NewFunctionProcessingVisitor::NewFunctionProcessingVisitor(
     NewScopeLayerTree* tree, NewScopeLayer* main_layer,
-    const std::shared_ptr<Method>& main_func_ptr, const Symbol& this_main)
+    const std::shared_ptr<Method>& main_func_ptr, VariableValue* this_main)
     : tree_(tree),
       root_layer_(main_layer),
       frame_(main_func_ptr),
-      is_returned_(false) {
+      is_returned_(false),
+      this_(this_main) {
   tree_->root_->PrepareTraversing();
-
-  // TODO wtf
-  this_ = this_main;
 
   current_layer_ = root_layer_;
   tos_value_ = new VariableValue(new PrimitiveSimpleObject(new Type("int")), 0);
@@ -20,10 +16,7 @@ NewFunctionProcessingVisitor::NewFunctionProcessingVisitor(
 
   std::vector<Value*> fields;
   int index = -1;
-
-  ClassStorage& storage = ClassStorage::GetInstance();
-
-  for (auto&& field : storage.GetFields(this_)) {
+  for (auto&& field : this_->GetFields()) {
     fields.emplace_back(field.second);
 
     table_.CreateVariable(field.first);
@@ -44,6 +37,8 @@ void NewFunctionProcessingVisitor::TraverseToChildByIndex() {
       current_layer_->children_[current_layer_->traverse_index - 1];
 }
 
+FrameEmulator& NewFunctionProcessingVisitor::GetFrame() { return frame_; }
+
 ////////////////////////////////////////////////////////////////////////////////
 
 void NewFunctionProcessingVisitor::Visit(AssertStatement* assert_statement) {
@@ -63,10 +58,14 @@ void NewFunctionProcessingVisitor::Visit(AssignmentStatement* statement) {
 
     dynamic_cast<ArrayValue*>(frame_.Get(index))
         ->SetAtIndex(value, array_index);
+  } else if (statement->lvalue_->code_ == Lvalue::CODE::FIELD) {
+    int index =
+        table_.Get(Symbol(statement->lvalue_->field_access_->field_name_));
+
+    frame_.Set(index, value);
   } else {
     int index = table_.Get(Symbol(statement->lvalue_->variable_name_));
 
-    // TODO fields?
     frame_.Set(index, value);
   }
 }
@@ -306,7 +305,31 @@ void NewFunctionProcessingVisitor::Visit(
 void NewFunctionProcessingVisitor::Visit(MethodInvocation* method_invocation) {
   std::cerr << method_invocation->method_name_ << " called!" << std::endl;
 
-  // TODO
+  auto methods = ClassStorage::GetInstance().GetMethods(
+      Symbol(method_invocation->call_from_));
+  if (methods.find(Symbol(method_invocation->method_name_)) == methods.end()) {
+    throw std::runtime_error("Can't call " + method_invocation->method_name_ +
+                             " from " + method_invocation->call_from_);
+  }
+
+  std::vector<Value*> params;
+  for (auto&& expr : method_invocation->arguments_list_->list_of_expressions_) {
+    params.emplace_back(Accept(expr));
+  }
+
+  auto method = methods[Symbol(method_invocation->method_name_)];
+
+  int index = table_.Get(Symbol(method_invocation->call_from_));
+  auto class_obj = dynamic_cast<VariableValue*>(frame_.Get(index));
+  NewFunctionProcessingVisitor new_visitor(
+      tree_,
+      tree_->layer_mapping_[Symbol(method_invocation->call_from_ + "$" +
+                                   method_invocation->method_name_)],
+      method, class_obj);
+
+  new_visitor.GetFrame().SetParentFrame(&frame_);
+  new_visitor.Visit(method->method_declaration_);
+  tos_value_ = frame_.GetReturnValue();
 }
 
 void NewFunctionProcessingVisitor::Visit(Formals* formals) {
@@ -333,14 +356,10 @@ void NewFunctionProcessingVisitor::Visit(PrintStatement* statement) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void NewFunctionProcessingVisitor::Visit(FieldAccess* field_access) {
-  // TODO
-}
-void NewFunctionProcessingVisitor::Visit(MethodExpression* method_expression) {
-  // TODO
-}
+void NewFunctionProcessingVisitor::Visit(MethodExpression* method_expression) {}
 
 void NewFunctionProcessingVisitor::Visit(Lvalue* lvalue) {}
+void NewFunctionProcessingVisitor::Visit(FieldAccess* field_access) {}
 
 void NewFunctionProcessingVisitor::Visit(Type* type) {}
 void NewFunctionProcessingVisitor::Visit(ArrayType* array_type) {}

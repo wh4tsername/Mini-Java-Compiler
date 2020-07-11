@@ -56,9 +56,10 @@ void Driver::Exec() {
   std::shared_ptr<Method> main_object = std::get<1>(
       scope_tree.class_symbols_table_[Symbol(main_class_name)])[Symbol("main")];
 
+  auto class_obj = new VariableValue(new PrimitiveSimpleObject(new Type(main_class_name)));
   NewFunctionProcessingVisitor func_visitor(
       &scope_tree, scope_tree.layer_mapping_[Symbol(main_class_name + "$main")],
-      main_object, Symbol(main_class_name));
+      main_object, class_obj);
 
   func_visitor.Visit(main_method);
 
