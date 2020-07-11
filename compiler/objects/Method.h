@@ -11,6 +11,8 @@ class Method : public Object {
   Method(const std::vector<std::pair<std::string, std::string>>& args,
          std::string owner_class, std::string return_type);
 
+  std::string GetTypename() override;
+
   std::string return_type_;
   std::string owner_class_;
   std::vector<Object*> arguments_;

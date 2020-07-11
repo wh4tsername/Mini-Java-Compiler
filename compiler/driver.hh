@@ -13,6 +13,7 @@
 //#include "visitors/FunctionProcessingVisitor.h"
 #include "visitors/PrintTreeVisitor.h"
 #include "function_processing/FunctionStorage.h"
+//#include "function_processing/ClassStorage.h"
 #include "objects/Method.h"
 #include "visitors/NewFunctionProcessingVisitor.h"
 

@@ -82,6 +82,10 @@ set(
         compiler/objects/UninitObject.cpp
         compiler/objects/Method.cpp
         compiler/objects/Void.cpp
+
+        compiler/objects/PrimitiveObject.cpp
+        compiler/objects/PrimitiveSimpleObject.cpp
+        compiler/objects/PrimitiveArrayObject.cpp
 )
 
 set(
@@ -97,6 +101,8 @@ set(
         compiler/function_processing/FrameEmulator.cpp
         compiler/function_processing/FunctionStorage.cpp
         compiler/function_processing/FunctionTable.cpp
+
+        compiler/function_processing/ClassStorage.cpp
 )
 
 add_executable(

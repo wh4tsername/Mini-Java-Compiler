@@ -1,54 +1,38 @@
 Program: 
-	Main class: Factorial
+	Main class: Cat
 		Main: 
 			Method declaration: main, (return type): void, (arguments): 
 			no arguments
 				Statements: 
-					Variable declaration: fac -> Fac
 					Assignment: 
 						Lvalue: 
-							fac
-						New var allocation: Fac
+							FieldAccess: 
+							sun_
+						Arithmetical expression: (operation): @
+							Number: 1
+					Method invocation: play_with_sun
+					(arguments): 
+						Number: 2
+					(called from): this
+		Statements: 
+			Method declaration: finish_playing, (return type): int, (arguments): 
+			no arguments
+				Statements: 
 					Print: 
-						Method invocation: ComputeFac
-						(arguments): 
-							Number: 10
-						(called from): fac
-	Statements: 
-		Class: Fac
-			Statements: 
-				Method declaration: ComputeFac, (return type): int, (arguments): 
-				num -> int
-					Statements: 
-						Assert: 
-							Logical expression: (operation): >
-								Variable: num
-								Arithmetical expression: (operation): @
-									Number: 1
-						Variable declaration: num_aux -> int
-						If statement: 
-						Expression: 
-							Logical expression: (operation): ==
-								Variable: num
-								Number: 0
-						If: 
-							[new scope]
-							Statements: 
-								Assignment: 
-									Lvalue: 
-										num_aux
-									Number: 1
-						Else: 
-							Assignment: 
-								Lvalue: 
-									num_aux
-								Arithmetical expression: (operation): *
-									Variable: num
-									Method invocation: ComputeFac
-									(arguments): 
-										Arithmetical expression: (operation): -
-											Variable: num
-											Number: 1
-									(called from): this
-						Return: 
-							Variable: num_aux
+						FieldAccess: 
+						sun_
+			Variable declaration: sun_ -> int
+			Method declaration: play_with_sun, (return type): void, (arguments): 
+			a -> int
+				Statements: 
+					Assignment: 
+						Lvalue: 
+							FieldAccess: 
+							sun_
+						Arithmetical expression: (operation): +
+							FieldAccess: 
+							sun_
+							Variable: a
+					Method invocation: finish_playing
+					no arguments
+					(called from): this

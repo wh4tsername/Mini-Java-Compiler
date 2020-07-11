@@ -48,23 +48,16 @@ void Driver::Exec() {
 
   std::cout << "type_checking_done" << std::endl;
 
-  FunctionStorage& storage = FunctionStorage::GetInstance();
-  for (auto&& pair : scope_tree.methods_) {
-    storage.Set(pair.first, pair.second);
-  }
+  auto main_method = scope_tree.methods_[Symbol(main_class_name + "$main")];
 
-  Symbol class_method_symbol(main_class_name + "$main");
-  MethodDeclaration* main = storage.Get(class_method_symbol);
-
-  auto main_func_ptr = std::make_shared<Method>(
-      std::vector<std::pair<std::string, std::string>>(), main_class_name,
-      "void");
+  std::shared_ptr<Method> main_object = std::get<1>(
+      scope_tree.class_symbols_table_[Symbol(main_class_name)])[Symbol("main")];
 
   NewFunctionProcessingVisitor func_visitor(
-      &scope_tree, scope_tree.layer_mapping_[class_method_symbol],
-      std::move(main_func_ptr));
+      &scope_tree, scope_tree.layer_mapping_[Symbol(main_class_name + "$main")],
+      main_object);
 
-  func_visitor.Visit(main);
+  func_visitor.Visit(main_method);
 
   std::cout << "func_calls_done" << std::endl;
 

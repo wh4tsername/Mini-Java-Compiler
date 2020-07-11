@@ -1,17 +1,36 @@
 #include "FrameEmulator.h"
 
-FrameEmulator::FrameEmulator(std::shared_ptr<Method> function) {
+FrameEmulator::FrameEmulator(const std::shared_ptr<Method>& function) {
   parameters_.resize(function->arguments_.size());
+  num_parameters = function->arguments_.size();
 
   AllocScope();
 }
 
-void FrameEmulator::SetParameters(const std::vector<int> &values) {
-  if (parameters_.size() != values.size()) {
-    throw std::runtime_error("Parameters mismatch");
+void FrameEmulator::SetParameters(const std::vector<Object*>& values) {
+  if (num_parameters != values.size()) {
+    throw std::runtime_error("Parameters number mismatch");
   }
 
-  parameters_ = values;
+  for (auto&& value : values) {
+    parameters_.emplace_back(value);
+  }
+}
+
+void FrameEmulator::SetFields(const std::vector<Object*>& values) {
+  num_fields = values.size();
+
+  for (auto&& value : values) {
+    parameters_.emplace_back(value);
+  }
+}
+
+size_t FrameEmulator::AllocVariable() {
+  // TODO(Arrays)
+  size_t index = variables_.size();
+  variables_.push_back(0);
+
+  return index;
 }
 
 void FrameEmulator::AllocScope() {
@@ -25,13 +44,6 @@ void FrameEmulator::DeallocScope() {
   // TODO(@wh4tsername) - Call destructors
 
   variables_.resize(new_size);
-}
-
-size_t FrameEmulator::AllocVariable() {
-  size_t index = variables_.size();
-  variables_.push_back(0);
-
-  return index;
 }
 
 int FrameEmulator::Get(int index) {
@@ -68,4 +80,8 @@ bool FrameEmulator::HasParent() {
 
 int FrameEmulator::GetReturnValue() const {
   return return_value_;
+}
+
+int FrameEmulator::GetFieldSize() const {
+  return num_fields;
 }

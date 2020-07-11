@@ -66,3 +66,11 @@ class TypeCheckingVisitor : public TemplateVisitor<int> {
   NewScopeLayerTree* tree_;
   NewScopeLayer* current_layer_;
 };
+
+//type_system_["int"] = 1;
+//type_system_["int[]"] = 2;
+//type_system_["boolean"] = 3;
+//type_system_["boolean[]"] = 4;
+
+//type_system_[class_declaration->class_name_] = type_count_;
+//type_system_[class_declaration->class_name_ + "[]"] = type_count_;

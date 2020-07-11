@@ -3,6 +3,7 @@
 #include <stack>
 
 #include "../function_processing/FrameEmulator.h"
+#include "../function_processing/FunctionTable.h"
 #include "../symbol_table/NewScopeLayerTree.h"
 #include "TemplateVisitor.h"
 
@@ -10,7 +11,7 @@ class NewFunctionProcessingVisitor : public TemplateVisitor<int> {
  public:
   explicit NewFunctionProcessingVisitor(
       NewScopeLayerTree* tree, NewScopeLayer* main_layer,
-      std::shared_ptr<Method>&& main_func_ptr);
+      const std::shared_ptr<Method>& main_func_ptr);
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -49,12 +50,15 @@ class NewFunctionProcessingVisitor : public TemplateVisitor<int> {
   void PreVisit(MethodDeclaration* method_declaration) override;
 
  private:
+  void TraverseToChildByIndex();
+
   bool is_returned_;
 
   NewScopeLayerTree* tree_;
   NewScopeLayer* root_layer_;
   NewScopeLayer* current_layer_;
 
+  FunctionTable table_;
   FrameEmulator frame_;
   std::stack<int> offsets_;
 };

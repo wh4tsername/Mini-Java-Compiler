@@ -7,8 +7,9 @@
 
 class FrameEmulator {
  public:
-  explicit FrameEmulator(std::shared_ptr<Method> function);
-  void SetParameters(const std::vector<int>& values);
+  explicit FrameEmulator(const std::shared_ptr<Method>& function);
+  void SetParameters(const std::vector<Object*>& values);
+  void SetFields(const std::vector<Object*>& values);
 
   size_t AllocVariable();
 
@@ -27,12 +28,17 @@ class FrameEmulator {
 
   bool HasParent();
 
+  int GetFieldSize() const;
+
  private:
   std::stack<int> offsets_;
-  std::vector<int> parameters_;
-  std::vector<int> variables_;
+  std::vector<Object*> parameters_;
+  std::vector<Object*> variables_;
 
-  int return_value_ = 0;
+  int num_parameters = 0;
+  int num_fields = 0;
+
+  Object* return_value_{};
 
   void SetReturnValue(int value);
 
