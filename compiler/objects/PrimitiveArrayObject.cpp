@@ -8,14 +8,14 @@ std::string PrimitiveArrayObject::GetTypename() {
   return simple_object_->GetTypename() + "[]";
 }
 
-bool PrimitiveArrayObject::IsArray() {
-  return true;
-}
+bool PrimitiveArrayObject::IsArray() { return true; }
 
-PrimitiveArrayObject::PrimitiveArrayObject(PrimitiveSimpleObject* primitive_simple_object) : simple_object_(primitive_simple_object) {}
+PrimitiveArrayObject::PrimitiveArrayObject(
+    PrimitiveSimpleObject* primitive_simple_object)
+    : simple_object_(primitive_simple_object) {}
 
 std::size_t PrimitiveArrayObject::GetSize() {
-  //TODO size of pointer
+  // TODO size of pointer
 
   return simple_object_->GetSize();
 }

@@ -6,12 +6,13 @@
 #include "../function_processing/FunctionTable.h"
 #include "../symbol_table/NewScopeLayerTree.h"
 #include "TemplateVisitor.h"
+#include "../objects/values/VariableValue.h"
 
-class NewFunctionProcessingVisitor : public TemplateVisitor<int> {
+class NewFunctionProcessingVisitor : public TemplateVisitor<Value*> {
  public:
   explicit NewFunctionProcessingVisitor(
       NewScopeLayerTree* tree, NewScopeLayer* main_layer,
-      const std::shared_ptr<Method>& main_func_ptr);
+      const std::shared_ptr<Method>& main_func_ptr, const Symbol& this_main);
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -53,6 +54,8 @@ class NewFunctionProcessingVisitor : public TemplateVisitor<int> {
   void TraverseToChildByIndex();
 
   bool is_returned_;
+
+  Symbol this_;
 
   NewScopeLayerTree* tree_;
   NewScopeLayer* root_layer_;

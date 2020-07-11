@@ -140,7 +140,7 @@ void TypeCheckingVisitor::Visit(ReturnStatement* statement) {
   const Symbol& class_symbol = current->class_symbol_;
   std::string return_type =
       std::get<1>(tree_->class_symbols_table_[class_symbol])[method_symbol]
-          ->return_type_;
+          ->return_value_type_->type_name_;
 
   if (!HasType(return_type)) {
     throw std::runtime_error("Unknown return value type");
@@ -185,19 +185,19 @@ void TypeCheckingVisitor::Visit(MethodInvocation* method_invocation) {
     for (size_t i = 0; i < args.size(); ++i) {
       int type_code = Accept(args[i]);
 
-      if (type_code != type_system_[method_obj->types_[i]]) {
+      if (type_code != type_system_[method_obj->args_types_[i]]) {
         throw std::runtime_error("Wrong argument type: " +
-                                 method_obj->argument_names_[i]);
+                                 method_obj->args_names_[i]);
       }
     }
   }
 
-  if (!HasType(method_obj->return_type_) &&
-      method_obj->return_type_ != "void") {
+  if (!HasType(method_obj->return_value_type_->type_name_) &&
+      method_obj->return_value_type_->type_name_ != "void") {
     throw std::runtime_error("Unknown return value type");
   }
 
-  tos_value_ = type_system_[method_obj->return_type_];
+  tos_value_ = type_system_[method_obj->return_value_type_->type_name_];
 }
 
 void TypeCheckingVisitor::Visit(FieldAccess* field_access) {
@@ -225,7 +225,7 @@ void TypeCheckingVisitor::Visit(Lvalue* lvalue) {
     NewScopeLayer* current = current_layer_;
 
     while (!current->HasArray(symbol) && !current->HasVariable(symbol) &&
-        current->parent_->parent_ != nullptr) {
+           current->parent_->parent_ != nullptr) {
       current = current->parent_;
     }
 
@@ -274,7 +274,7 @@ void TypeCheckingVisitor::Visit(VariableExpression* expression) {
   NewScopeLayer* current = current_layer_;
 
   while (!current->HasArray(symbol) && !current->HasVariable(symbol) &&
-      current->parent_->parent_ != nullptr) {
+         current->parent_->parent_ != nullptr) {
     current = current->parent_;
   }
 

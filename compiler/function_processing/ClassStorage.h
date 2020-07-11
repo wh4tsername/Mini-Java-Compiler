@@ -8,12 +8,15 @@
 #include "../objects/Method.h"
 #include "../objects/PrimitiveObject.h"
 #include "../symbol_table/Symbol.h"
+#include "../symbol_table/NewScopeLayerTree.h"
 
 class ClassStorage {
  public:
   static ClassStorage& GetInstance();
   ClassStorage(const ClassStorage& other) = delete;
   ClassStorage& operator=(const ClassStorage&) = delete;
+
+  void Fill(const NewScopeLayerTree& tree);
 
   void SetMethod(
       const Symbol& symbol,

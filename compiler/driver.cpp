@@ -48,6 +48,9 @@ void Driver::Exec() {
 
   std::cout << "type_checking_done" << std::endl;
 
+  ClassStorage& class_storage = ClassStorage::GetInstance();
+  class_storage.Fill(scope_tree);
+
   auto main_method = scope_tree.methods_[Symbol(main_class_name + "$main")];
 
   std::shared_ptr<Method> main_object = std::get<1>(
@@ -55,7 +58,7 @@ void Driver::Exec() {
 
   NewFunctionProcessingVisitor func_visitor(
       &scope_tree, scope_tree.layer_mapping_[Symbol(main_class_name + "$main")],
-      main_object);
+      main_object, Symbol(main_class_name));
 
   func_visitor.Visit(main_method);
 

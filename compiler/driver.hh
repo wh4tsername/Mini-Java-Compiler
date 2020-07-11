@@ -10,10 +10,9 @@
 #include "visitors/NewSymbolTreeVisitor.h"
 #include "symbol_table/NewScopeLayer.h"
 #include "visitors/TypeCheckingVisitor.h"
-//#include "visitors/FunctionProcessingVisitor.h"
 #include "visitors/PrintTreeVisitor.h"
 #include "function_processing/FunctionStorage.h"
-//#include "function_processing/ClassStorage.h"
+#include "function_processing/ClassStorage.h"
 #include "objects/Method.h"
 #include "visitors/NewFunctionProcessingVisitor.h"
 

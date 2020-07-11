@@ -8,7 +8,8 @@ NewScopeLayer::NewScopeLayer()
       traverse_index(0) {}
 
 NewScopeLayer::NewScopeLayer(NewScopeLayer* parent, std::string name,
-                             const Symbol& class_symbol, const Symbol& method_symbol)
+                             const Symbol& class_symbol,
+                             const Symbol& method_symbol)
     : parent_(parent),
       name_(std::move(name)),
       class_symbol_(class_symbol),
@@ -51,8 +52,7 @@ bool NewScopeLayer::HasArray(const Symbol& symbol) {
   return arrays_.find(symbol) != arrays_.end();
 }
 
-NewScopeLayer* NewScopeLayer::GetArrayLayer(
-    const Symbol& symbol) {
+NewScopeLayer* NewScopeLayer::GetArrayLayer(const Symbol& symbol) {
   NewScopeLayer* current = this;
 
   while (!current->HasArray(symbol) && current->parent_->parent_ != nullptr) {
@@ -78,8 +78,9 @@ void NewScopeLayer::DeclareVariable(Type* type, const Symbol& symbol) {
   }
 
   if (type->type_name_.back() != ']') {
-    variables_[symbol] = std::make_shared<UninitObject>();
+    variables_[symbol] = std::make_shared<PrimitiveSimpleObject>(type);
   } else {
-    arrays_[symbol] = std::vector<std::shared_ptr<Object>>();
+    arrays_[symbol] =
+        std::make_shared<PrimitiveArrayObject>(dynamic_cast<ArrayType*>(type));
   }
 }

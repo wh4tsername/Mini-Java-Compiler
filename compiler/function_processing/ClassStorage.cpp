@@ -1,5 +1,30 @@
 #include "ClassStorage.h"
 
+void ClassStorage::Fill(const NewScopeLayerTree& tree) {
+  for (auto&& class_obj : tree.class_symbols_table_) {
+    SetMethod(class_obj.first, std::get<1>(class_obj.second));
+
+    std::vector<Symbol> names;
+    std::unordered_map<Symbol, std::shared_ptr<PrimitiveObject>> fields;
+    for (auto&& el : std::get<0>(class_obj.second)) {
+      fields[el.first] = el.second.second;
+      names.emplace_back(el.first);
+    }
+    for (auto&& el : std::get<2>(class_obj.second)) {
+      fields[el.first] = el.second.second;
+      names.emplace_back(el.first);
+    }
+    SetField(class_obj.first, fields);
+    SetClassFieldsNames(class_obj.first, names);
+
+    names.clear();
+    for (auto&& el : std::get<1>(class_obj.second)) {
+      names.emplace_back(el.first);
+    }
+    SetClassMethodsNames(class_obj.first, names);
+  }
+}
+
 ClassStorage& ClassStorage::GetInstance() {
   static ClassStorage storage;
   return storage;

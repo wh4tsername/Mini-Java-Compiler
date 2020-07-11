@@ -8,10 +8,10 @@
 #include <utility>
 
 #include "../classes/Type.h"
-#include "../objects/Integer.h"
 #include "../objects/Method.h"
-#include "../objects/UninitObject.h"
 #include "Symbol.h"
+#include "../objects/PrimitiveSimpleObject.h"
+#include "../objects/PrimitiveArrayObject.h"
 
 class NewScopeLayer {
  public:
@@ -39,8 +39,8 @@ class NewScopeLayer {
 
   int traverse_index;
 
-  std::unordered_map<Symbol, std::shared_ptr<Object>> variables_;
-  std::unordered_map<Symbol, std::vector<std::shared_ptr<Object>>> arrays_;
+  std::unordered_map<Symbol, std::shared_ptr<PrimitiveObject>> variables_;
+  std::unordered_map<Symbol, std::shared_ptr<PrimitiveObject>> arrays_;
 
   // pre type checking
   std::unordered_map<Symbol, std::string> user_type_system_;

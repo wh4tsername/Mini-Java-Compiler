@@ -1,4 +1,5 @@
 #include "PrimitiveSimpleObject.h"
+#include "../function_processing/ClassStorage.h"
 
 PrimitiveSimpleObject::PrimitiveSimpleObject(Type* type) : type_(type) {
   is_class_ = !(type->type_name_ == "int" || type->type_name_ == "boolean");

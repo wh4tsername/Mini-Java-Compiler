@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PrimitiveObject.h"
-#include "../function_processing/ClassStorage.h"
 #include "../classes/Type.h"
 
 class PrimitiveSimpleObject : public PrimitiveObject {

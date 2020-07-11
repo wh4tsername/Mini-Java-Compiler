@@ -1,12 +1,25 @@
 #include "Method.h"
 
-Method::Method(const std::vector<std::pair<std::string, std::string>>& args,
-               std::string owner_class, std::string return_type)
-    : owner_class_(std::move(owner_class)),
-      return_type_(std::move(return_type)) {
-  for (const auto& pair : args) {
-    arguments_.emplace_back(new Integer(0));
-    types_.emplace_back(pair.first);
-    argument_names_.emplace_back(pair.second);
-  }
+Method::Method(MethodDeclaration* method_declaration)
+    : method_declaration_(method_declaration),
+      return_value_type_(method_declaration->type_) {}
+
+std::string Method::GetTypename() {
+  return "method, return type: " + return_value_type_->type_name_;
+}
+
+size_t Method::GetParamsNumber() {
+  return method_declaration_->formals_->formals_.size();
+}
+
+void Method::SetOwner(std::string owner_class) {
+  owner_class_ = std::move(owner_class);
+}
+
+void Method::SetArgsNames(std::vector<std::string> args_names) {
+  args_names_ = std::move(args_names);
+}
+
+void Method::SetArgsTypes(std::vector<std::string> args_types) {
+  args_names_ = std::move(args_types);
 }

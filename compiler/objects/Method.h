@@ -3,19 +3,26 @@
 #include <string>
 #include <vector>
 
-#include "Integer.h"
+#include "../classes/Type.h"
+#include "../classes/statements/MethodDeclaration.h"
 #include "Object.h"
 
 class Method : public Object {
  public:
-  Method(const std::vector<std::pair<std::string, std::string>>& args,
-         std::string owner_class, std::string return_type);
+  explicit Method(MethodDeclaration* method_declaration);
+
+  void SetOwner(std::string owner_class);
+  void SetArgsNames(std::vector<std::string> args_names);
+  void SetArgsTypes(std::vector<std::string> args_types);
 
   std::string GetTypename() override;
 
-  std::string return_type_;
+  size_t GetParamsNumber();
+
+  MethodDeclaration* method_declaration_;
+  Type* return_value_type_;
+
   std::string owner_class_;
-  std::vector<Object*> arguments_;
-  std::vector<std::string> argument_names_;
-  std::vector<std::string> types_;
+  std::vector<std::string> args_names_;
+  std::vector<std::string> args_types_;
 };
