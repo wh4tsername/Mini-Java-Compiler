@@ -2,6 +2,7 @@ class Main {
     public static void main() {
         Wrap[] x;
         x = new Wrap[10];
+        System.out.println(x.length);
         if (true) {
             Wrap[] y;
             y = new Wrap[12];
@@ -10,4 +11,6 @@ class Main {
     }
 }
 
-class Wrap {}
+class Wrap {
+    int x;
+}

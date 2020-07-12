@@ -150,9 +150,7 @@ void NewSymbolTreeVisitor::Visit(VariableDeclaration* variable_declaration) {
           ->user_type_system_[Symbol(variable_declaration->variable_name_)] =
           type_name;
     } else {
-      std::string new_type_name;
-
-      std::copy(type_name.begin(), type_name.end() - 2, new_type_name.begin());
+      std::string new_type_name(type_name.begin(), type_name.end() - 2);
 
       current_layer_
           ->user_type_system_[Symbol(variable_declaration->variable_name_)] =
@@ -182,7 +180,7 @@ void NewSymbolTreeVisitor::Visit(NewArrayExpression* expression) {
 }
 
 void NewSymbolTreeVisitor::Visit(LengthExpression* expression) {
-  current_layer_->GetVariableLayer(Symbol(expression->variable_name_));
+  current_layer_->GetArrayLayer(Symbol(expression->variable_name_));
 }
 
 void NewSymbolTreeVisitor::Visit(ArrayAccessExpression* expression) {
@@ -351,7 +349,11 @@ void NewSymbolTreeVisitor::PreVisit(ClassDeclaration* class_declaration) {
                              " has been already declared!");
   }
 
-  class_declaration->declarations_->PreAccept(this);
+  if (!class_declaration->declarations_->list_of_statements_.empty()) {
+    class_declaration->declarations_->PreAccept(this);
+  } else {
+
+  }
 }
 
 void NewSymbolTreeVisitor::PreVisit(ListOfStatements* list_of_statements) {

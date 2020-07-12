@@ -143,23 +143,23 @@ void NewFunctionProcessingVisitor::Visit(IfStatement* statement) {
 
 void NewFunctionProcessingVisitor::Visit(
     ScopeListOfStatements* scope_list_of_statements) {
-//  TraverseToChildByIndex();
-//
-//  offsets_.push(0);
-//  frame_.AllocScope();
-//  table_.BeginScope();
+  //  TraverseToChildByIndex();
+  //
+  //  offsets_.push(0);
+  //  frame_.AllocScope();
+  //  table_.BeginScope();
 
   scope_list_of_statements->list_of_statements_->Accept(this);
 
-//  offsets_.pop();
-//  size_t index = offsets_.top();
-//  offsets_.pop();
-//  offsets_.push(index + 1);
-//
-//  current_layer_ = current_layer_->parent_;
-//
-//  frame_.DeallocScope();
-//  table_.EndScope();
+  //  offsets_.pop();
+  //  size_t index = offsets_.top();
+  //  offsets_.pop();
+  //  offsets_.push(index + 1);
+  //
+  //  current_layer_ = current_layer_->parent_;
+  //
+  //  frame_.DeallocScope();
+  //  table_.EndScope();
 }
 
 void NewFunctionProcessingVisitor::Visit(ListOfStatements* list_of_statements) {
@@ -171,8 +171,10 @@ void NewFunctionProcessingVisitor::Visit(ListOfStatements* list_of_statements) {
 }
 
 void NewFunctionProcessingVisitor::Visit(WhileStatement* statement) {
+  ++current_layer_->traverse_index;
   while (Accept(statement->expression_)->GetValue()) {
-    TraverseToChildByIndex();
+    current_layer_ =
+        current_layer_->children_[current_layer_->traverse_index - 1];
 
     offsets_.push(0);
     frame_.AllocScope();
@@ -199,7 +201,8 @@ void NewFunctionProcessingVisitor::Visit(ArrayAccessExpression* expression) {
 
 void NewFunctionProcessingVisitor::Visit(NewArrayExpression* expression) {
   auto new_arr = new ArrayValue(new PrimitiveArrayObject(
-      new PrimitiveSimpleObject(expression->type_name_)));
+      new PrimitiveSimpleObject(new Type(std::string(
+          expression->type_name_->type_name_.begin(), expression->type_name_->type_name_.end() - 2)))));
 
   size_t size = Accept(expression->length_)->GetValue();
   new_arr->Resize(size);
@@ -254,12 +257,10 @@ void NewFunctionProcessingVisitor::Visit(LogicalExpression* expression) {
   if (expression->operation_ == "true") {
     tos_value_ =
         new VariableValue(new PrimitiveSimpleObject(new Type("boolean")), 1);
-  }
-  if (expression->operation_ == "false") {
+  } else if (expression->operation_ == "false") {
     tos_value_ =
         new VariableValue(new PrimitiveSimpleObject(new Type("boolean")), 0);
-  }
-  if (expression->lhs_ == nullptr) {
+  } else if (expression->lhs_ == nullptr) {
     auto value = Accept(expression->rhs_)->GetValue();
     tos_value_ = new VariableValue(
         new PrimitiveSimpleObject(new Type("boolean")), !value);

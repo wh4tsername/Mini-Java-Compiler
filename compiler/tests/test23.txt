@@ -1,7 +1,13 @@
 class Main {
-    public static main() {
-        this.g();
+    public static void main() {
+        if (!this.g()) {
+            System.out.println(1);
+        } else {
+            System.out.println(0);
+        }
     }
 
-
+    public boolean g() {
+        return false;
+    }
 }

@@ -1,63 +1,66 @@
 Program: 
-	Main class: Factorial
+	Main class: Main
 		Main: 
 			Method declaration: main, (return type): void, (arguments): 
 			no arguments
 				Statements: 
-					Variable declaration: fac -> Fac
+					Variable declaration: x -> Wrap[]
 					Assignment: 
 						Lvalue: 
-							fac
-						New var allocation: Fac
-					Method invocation: Print
-					(arguments): 
-						Method invocation: ComputeFac
-						(arguments): 
+							x
+						New array allocation: (type): Wrap[] (length): 
 							Number: 10
-						(called from): fac
-					(called from): fac
+					If statement: 
+					Expression: 
+						Logical expression: (operation): true
+					If: 
+						[new scope]
+						Statements: 
+							Variable declaration: y -> Wrap2[]
+							Assignment: 
+								Lvalue: 
+									y
+								New array allocation: (type): Wrap2[] (length): 
+									Number: 12
+							Variable declaration: u -> Wrap2
+							Assignment: 
+								Lvalue: 
+									u
+								Array access: 
+								(called from): y
+								(index): 
+									Number: 0
+							Assignment: 
+								Lvalue: 
+									x
+								Method invocation: foo
+								no arguments
+								(called from): u
+							Print: 
+								Length expression: (called from): 
+									x
 	Statements: 
-		Class: Fac
+		Class: Wrap2
 			Statements: 
-				Method declaration: ComputeFac, (return type): int, (arguments): 
-				num -> int
+				Method declaration: foo, (return type): Wrap[], (arguments): 
+				no arguments
 					Statements: 
-						Assert: 
-							Logical expression: (operation): >
-								Variable: num
-								Arithmetical expression: (operation): @
-									Number: 1
-						Variable declaration: num_aux -> int
+						Variable declaration: z -> Wrap[]
+						Assignment: 
+							Lvalue: 
+								z
+							New array allocation: (type): Wrap[] (length): 
+								Number: 10
 						If statement: 
 						Expression: 
-							Logical expression: (operation): ==
-								Variable: num
-								Number: 0
+							Logical expression: (operation): false
 						If: 
 							[new scope]
-							Statements: 
-								Assignment: 
-									Lvalue: 
-										num_aux
-									Number: 1
 						Else: 
 							[new scope]
 							Statements: 
-								Assignment: 
-									Lvalue: 
-										num_aux
-									Arithmetical expression: (operation): *
-										Variable: num
-										Method invocation: ComputeFac
-										(arguments): 
-											Arithmetical expression: (operation): -
-												Variable: num
-												Number: 1
-										(called from): this
-						Return: 
-							Variable: num_aux
-				Method declaration: Print, (return type): void, (arguments): 
-				arg -> int
-					Statements: 
-						Print: 
-							Variable: arg
+								Return: 
+									Variable: z
+		Class: Wrap
+			Statements: 
+				Variable declaration: x -> int
