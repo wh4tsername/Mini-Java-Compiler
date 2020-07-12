@@ -1,7 +1,6 @@
 #include "FrameEmulator.h"
 
 FrameEmulator::FrameEmulator(const std::shared_ptr<Method>& function) {
-  parameters_.resize(function->GetParamsNumber());
   num_parameters = function->GetParamsNumber();
 
   AllocScope();

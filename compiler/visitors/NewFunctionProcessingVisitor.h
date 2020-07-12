@@ -51,6 +51,7 @@ class NewFunctionProcessingVisitor : public TemplateVisitor<Value*> {
   void PreVisit(MethodDeclaration* method_declaration) override;
 
   FrameEmulator& GetFrame();
+  void SetParameters(const std::vector<Value*>& parameters);
 
  private:
   void TraverseToChildByIndex();

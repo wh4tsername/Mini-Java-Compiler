@@ -45,4 +45,15 @@ int VariableValue::GetValue() { return value_; }
 std::unordered_map<Symbol, Value*> VariableValue::GetFields() {
   return fields_;
 }
+
+void VariableValue::SetField(const Symbol& field, Value* value) {
+  if (fields_.find(field) == fields_.end()) {
+    throw std::runtime_error("Trying to set value to undeclared field");
+  }
+
+  // TODO delete old Value*
+
+  fields_[field] = value;
+}
+
 PrimitiveSimpleObject* VariableValue::GetType() { return type_; }

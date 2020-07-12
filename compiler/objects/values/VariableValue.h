@@ -16,6 +16,7 @@ class VariableValue : public Value {
 
   PrimitiveSimpleObject* GetType() override;
   std::unordered_map<Symbol, Value*> GetFields() override;
+  void SetField(const Symbol& field, Value* value);
 
  private:
   PrimitiveSimpleObject* type_;

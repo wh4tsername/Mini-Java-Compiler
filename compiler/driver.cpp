@@ -61,6 +61,7 @@ void Driver::Exec() {
       &scope_tree, scope_tree.layer_mapping_[Symbol(main_class_name + "$main")],
       main_object, class_obj);
 
+  func_visitor.SetParameters(std::vector<Value*>());
   func_visitor.Visit(main_method);
 
   std::cout << "func_calls_done" << std::endl;

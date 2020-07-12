@@ -9,7 +9,10 @@ std::string Method::GetTypename() {
 }
 
 size_t Method::GetParamsNumber() {
-  return method_declaration_->formals_->formals_.size();
+  if (method_declaration_->formals_) {
+    return method_declaration_->formals_->formals_.size();
+  }
+  return 0;
 }
 
 void Method::SetOwner(std::string owner_class) {
@@ -21,5 +24,5 @@ void Method::SetArgsNames(std::vector<std::string> args_names) {
 }
 
 void Method::SetArgsTypes(std::vector<std::string> args_types) {
-  args_names_ = std::move(args_types);
+  args_types_ = std::move(args_types);
 }

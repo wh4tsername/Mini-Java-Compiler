@@ -1,4 +1,5 @@
 #include "NewFunctionProcessingVisitor.h"
+#include "TemplateVisitor.h"
 
 NewFunctionProcessingVisitor::NewFunctionProcessingVisitor(
     NewScopeLayerTree* tree, NewScopeLayer* main_layer,
@@ -39,6 +40,11 @@ void NewFunctionProcessingVisitor::TraverseToChildByIndex() {
 
 FrameEmulator& NewFunctionProcessingVisitor::GetFrame() { return frame_; }
 
+void NewFunctionProcessingVisitor::SetParameters(
+    const std::vector<Value*>& parameters) {
+  frame_.SetParameters(parameters);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 void NewFunctionProcessingVisitor::Visit(AssertStatement* assert_statement) {
@@ -62,6 +68,9 @@ void NewFunctionProcessingVisitor::Visit(AssignmentStatement* statement) {
     int index =
         table_.Get(Symbol(statement->lvalue_->field_access_->field_name_));
 
+    this_->SetField(Symbol(statement->lvalue_->field_access_->field_name_),
+                    value);
+
     frame_.Set(index, value);
   } else {
     int index = table_.Get(Symbol(statement->lvalue_->variable_name_));
@@ -72,7 +81,7 @@ void NewFunctionProcessingVisitor::Visit(AssignmentStatement* statement) {
 
 void NewFunctionProcessingVisitor::Visit(IfStatement* statement) {
   if (statement->else_statement_ == nullptr) {
-    if (Accept(statement->if_statement_)->GetValue()) {
+    if (Accept(statement->expression_)->GetValue()) {
       TraverseToChildByIndex();
 
       offsets_.push(0);
@@ -92,7 +101,7 @@ void NewFunctionProcessingVisitor::Visit(IfStatement* statement) {
       table_.EndScope();
     }
   } else {
-    if (Accept(statement->if_statement_)->GetValue()) {
+    if (Accept(statement->expression_)->GetValue()) {
       TraverseToChildByIndex();
 
       offsets_.push(0);
@@ -282,7 +291,10 @@ void NewFunctionProcessingVisitor::Visit(NumeralExpression* expression) {
 
 void NewFunctionProcessingVisitor::Visit(
     MethodDeclaration* method_declaration) {
-  method_declaration->formals_->Accept(this);
+  if (method_declaration->formals_) {
+    method_declaration->formals_->Accept(this);
+  }
+
   method_declaration->list_of_statements_->Accept(this);
 }
 
@@ -305,28 +317,62 @@ void NewFunctionProcessingVisitor::Visit(
 void NewFunctionProcessingVisitor::Visit(MethodInvocation* method_invocation) {
   std::cerr << method_invocation->method_name_ << " called!" << std::endl;
 
-  auto methods = ClassStorage::GetInstance().GetMethods(
-      Symbol(method_invocation->call_from_));
+  Symbol class_symbol;
+  if (method_invocation->call_from_ == "this") {
+    class_symbol = current_layer_->class_symbol_;
+  } else {
+    if (!current_layer_->HasVariable(Symbol(method_invocation->call_from_))) {
+      throw std::runtime_error("Can't call methods from undeclared variable");
+    }
+
+    auto variable =
+        current_layer_->variables_[Symbol(method_invocation->call_from_)];
+    if (variable->IsArray()) {
+      throw std::runtime_error("Can't call methods from array object: " +
+                               method_invocation->call_from_);
+    }
+
+    auto casted_var =
+        std::dynamic_pointer_cast<PrimitiveSimpleObject>(variable);
+    if (!casted_var->IsClass()) {
+      throw std::runtime_error("Can't call methods from non-class object: " +
+                               method_invocation->call_from_);
+    }
+
+    class_symbol = Symbol(casted_var->GetTypename());
+  }
+
+  auto methods = ClassStorage::GetInstance().GetMethods(class_symbol);
   if (methods.find(Symbol(method_invocation->method_name_)) == methods.end()) {
     throw std::runtime_error("Can't call " + method_invocation->method_name_ +
                              " from " + method_invocation->call_from_);
   }
 
-  std::vector<Value*> params;
-  for (auto&& expr : method_invocation->arguments_list_->list_of_expressions_) {
-    params.emplace_back(Accept(expr));
+  std::vector<Value*> parameters;
+  if (method_invocation->arguments_list_) {
+    for (auto&& expr :
+         method_invocation->arguments_list_->list_of_expressions_) {
+      parameters.emplace_back(Accept(expr));
+    }
   }
 
   auto method = methods[Symbol(method_invocation->method_name_)];
 
-  int index = table_.Get(Symbol(method_invocation->call_from_));
-  auto class_obj = dynamic_cast<VariableValue*>(frame_.Get(index));
+  VariableValue* class_obj;
+  if (method_invocation->call_from_ == "this") {
+    class_obj = this_;
+  } else {
+    int index = table_.Get(Symbol(method_invocation->call_from_));
+    class_obj = dynamic_cast<VariableValue*>(frame_.Get(index));
+  }
+
   NewFunctionProcessingVisitor new_visitor(
       tree_,
-      tree_->layer_mapping_[Symbol(method_invocation->call_from_ + "$" +
+      tree_->layer_mapping_[Symbol(class_symbol.GetName() + "$" +
                                    method_invocation->method_name_)],
       method, class_obj);
 
+  new_visitor.SetParameters(parameters);
   new_visitor.GetFrame().SetParentFrame(&frame_);
   new_visitor.Visit(method->method_declaration_);
   tos_value_ = frame_.GetReturnValue();
@@ -354,12 +400,16 @@ void NewFunctionProcessingVisitor::Visit(PrintStatement* statement) {
   std::cout << Accept(statement->expression_)->GetValue() << std::endl;
 }
 
+void NewFunctionProcessingVisitor::Visit(FieldAccess* field_access) {
+  int index = table_.Get(Symbol(field_access->field_name_));
+  tos_value_ = frame_.Get(index);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 void NewFunctionProcessingVisitor::Visit(MethodExpression* method_expression) {}
 
 void NewFunctionProcessingVisitor::Visit(Lvalue* lvalue) {}
-void NewFunctionProcessingVisitor::Visit(FieldAccess* field_access) {}
 
 void NewFunctionProcessingVisitor::Visit(Type* type) {}
 void NewFunctionProcessingVisitor::Visit(ArrayType* array_type) {}
