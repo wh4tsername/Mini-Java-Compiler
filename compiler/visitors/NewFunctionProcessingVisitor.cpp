@@ -119,29 +119,47 @@ void NewFunctionProcessingVisitor::Visit(IfStatement* statement) {
 
       frame_.DeallocScope();
       table_.EndScope();
+    } else {
+      TraverseToChildByIndex();
+
+      offsets_.push(0);
+      frame_.AllocScope();
+      table_.BeginScope();
+
+      statement->else_statement_->Accept(this);
+
+      offsets_.pop();
+      size_t index = offsets_.top();
+      offsets_.pop();
+      offsets_.push(index + 2);
+
+      current_layer_ = current_layer_->parent_;
+
+      frame_.DeallocScope();
+      table_.EndScope();
     }
   }
 }
 
 void NewFunctionProcessingVisitor::Visit(
     ScopeListOfStatements* scope_list_of_statements) {
-  TraverseToChildByIndex();
-
-  offsets_.push(0);
-  frame_.AllocScope();
-  table_.BeginScope();
+//  TraverseToChildByIndex();
+//
+//  offsets_.push(0);
+//  frame_.AllocScope();
+//  table_.BeginScope();
 
   scope_list_of_statements->list_of_statements_->Accept(this);
 
-  offsets_.pop();
-  size_t index = offsets_.top();
-  offsets_.pop();
-  offsets_.push(index + 1);
-
-  current_layer_ = current_layer_->parent_;
-
-  frame_.DeallocScope();
-  table_.EndScope();
+//  offsets_.pop();
+//  size_t index = offsets_.top();
+//  offsets_.pop();
+//  offsets_.push(index + 1);
+//
+//  current_layer_ = current_layer_->parent_;
+//
+//  frame_.DeallocScope();
+//  table_.EndScope();
 }
 
 void NewFunctionProcessingVisitor::Visit(ListOfStatements* list_of_statements) {

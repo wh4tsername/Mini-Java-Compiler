@@ -9,11 +9,13 @@ Program:
 						Lvalue: 
 							fac
 						New var allocation: Fac
-					Print: 
+					Method invocation: Print
+					(arguments): 
 						Method invocation: ComputeFac
 						(arguments): 
 							Number: 10
 						(called from): fac
+					(called from): fac
 	Statements: 
 		Class: Fac
 			Statements: 
@@ -39,16 +41,23 @@ Program:
 										num_aux
 									Number: 1
 						Else: 
-							Assignment: 
-								Lvalue: 
-									num_aux
-								Arithmetical expression: (operation): *
-									Variable: num
-									Method invocation: ComputeFac
-									(arguments): 
-										Arithmetical expression: (operation): -
-											Variable: num
-											Number: 1
-									(called from): this
+							[new scope]
+							Statements: 
+								Assignment: 
+									Lvalue: 
+										num_aux
+									Arithmetical expression: (operation): *
+										Variable: num
+										Method invocation: ComputeFac
+										(arguments): 
+											Arithmetical expression: (operation): -
+												Variable: num
+												Number: 1
+										(called from): this
 						Return: 
 							Variable: num_aux
+				Method declaration: Print, (return type): void, (arguments): 
+				arg -> int
+					Statements: 
+						Print: 
+							Variable: arg

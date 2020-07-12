@@ -2,7 +2,7 @@ class Factorial {
   public static void main() {
     Fac fac;
     fac = new Fac();
-    System.out.println(fac.ComputeFac(10));
+    System.out.println(fac.ComputeFac(5));
   }
 }
 
@@ -13,8 +13,9 @@ class Fac {
     if (num == 0) {
       num_aux = 1;
     }
-    else
+    else {
       num_aux = num * this.ComputeFac(num-1);
+    }
     return num_aux;
   }
 }
