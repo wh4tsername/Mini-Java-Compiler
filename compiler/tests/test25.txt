@@ -1,0 +1,14 @@
+class Main {
+    public static void main() {
+        int copy;
+        copy = 10;
+        this.field_ = copy;
+        this.print();
+    }
+
+    public void print() {
+        System.out.println(this.field_);
+    }
+
+    int field_;
+}
