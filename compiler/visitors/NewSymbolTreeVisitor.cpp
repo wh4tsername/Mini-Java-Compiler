@@ -68,6 +68,10 @@ void NewSymbolTreeVisitor::Visit(MethodDeclaration* method_declaration) {
 
   method_declaration->list_of_statements_->Accept(this);
 
+  Symbol class_method_symbol = Symbol(current_layer_->class_symbol_.GetName() +
+                                      "$" + method_declaration->method_name_);
+  tree_.layer_mapping_[class_method_symbol] = current_layer_;
+
   current_layer_ = current_layer_->parent_;
 }
 
@@ -146,9 +150,7 @@ void NewSymbolTreeVisitor::Visit(VariableDeclaration* variable_declaration) {
           ->user_type_system_[Symbol(variable_declaration->variable_name_)] =
           type_name;
     } else {
-      std::string new_type_name;
-
-      std::copy(type_name.begin(), type_name.end() - 2, new_type_name.begin());
+      std::string new_type_name(type_name.begin(), type_name.end() - 2);
 
       current_layer_
           ->user_type_system_[Symbol(variable_declaration->variable_name_)] =
@@ -178,7 +180,7 @@ void NewSymbolTreeVisitor::Visit(NewArrayExpression* expression) {
 }
 
 void NewSymbolTreeVisitor::Visit(LengthExpression* expression) {
-  current_layer_->GetVariableLayer(Symbol(expression->variable_name_));
+  current_layer_->GetArrayLayer(Symbol(expression->variable_name_));
 }
 
 void NewSymbolTreeVisitor::Visit(ArrayAccessExpression* expression) {
@@ -347,7 +349,11 @@ void NewSymbolTreeVisitor::PreVisit(ClassDeclaration* class_declaration) {
                              " has been already declared!");
   }
 
-  class_declaration->declarations_->PreAccept(this);
+  if (!class_declaration->declarations_->list_of_statements_.empty()) {
+    class_declaration->declarations_->PreAccept(this);
+  } else {
+
+  }
 }
 
 void NewSymbolTreeVisitor::PreVisit(ListOfStatements* list_of_statements) {
@@ -371,7 +377,7 @@ void NewSymbolTreeVisitor::PreVisit(VariableDeclaration* variable_declaration) {
     std::get<0>(
         tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
         std::make_pair(variable_declaration->type_->type_name_,
-                       std::make_shared<UninitObject>());
+                       std::make_shared<PrimitiveSimpleObject>(variable_declaration->type_));
   } else {
     if (std::get<2>(tree_.class_symbols_table_[current_layer_->class_symbol_])
             .find(symbol) !=
@@ -385,7 +391,7 @@ void NewSymbolTreeVisitor::PreVisit(VariableDeclaration* variable_declaration) {
     std::get<2>(
         tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
         std::make_pair(variable_declaration->type_->type_name_,
-                       std::vector<std::shared_ptr<Object>>());
+                       std::make_shared<PrimitiveArrayObject>(dynamic_cast<ArrayType*>(variable_declaration->type_)));
   }
 
   if (tree_.class_members_table_[current_layer_->class_symbol_].find(symbol) !=
@@ -413,17 +419,27 @@ void NewSymbolTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {
     num_args = method_declaration->formals_->formals_.size();
   }
 
-  std::vector<std::pair<std::string, std::string>> args(num_args);
+  std::vector<std::string> args_types(num_args);
+  std::vector<std::string> args_names(num_args);
   for (int i = 0; i < num_args; ++i) {
-    args[i].first = method_declaration->formals_->formals_[i].first->type_name_;
-    args[i].second = method_declaration->formals_->formals_[i].second;
+    args_types[i] = method_declaration->formals_->formals_[i].first->type_name_;
+    args_names[i] = method_declaration->formals_->formals_[i].second;
   }
+
+//  std::get<1>(
+//      tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
+//      std::make_shared<Method>(std::move(args),
+//                               current_layer_->class_symbol_.GetName(),
+//                               method_declaration->type_->type_name_);
+
+  auto method_obj = std::make_shared<Method>(method_declaration);
+  method_obj->SetOwner(current_layer_->class_symbol_.GetName());
+  method_obj->SetArgsNames(args_names);
+  method_obj->SetArgsTypes(args_types);
 
   std::get<1>(
       tree_.class_symbols_table_[current_layer_->class_symbol_])[symbol] =
-      std::make_shared<Method>(std::move(args),
-                               current_layer_->class_symbol_.GetName(),
-                               method_declaration->type_->type_name_);
+      method_obj;
 
   if (tree_.class_members_table_[current_layer_->class_symbol_].find(symbol) !=
       tree_.class_members_table_[current_layer_->class_symbol_].end()) {
@@ -432,4 +448,8 @@ void NewSymbolTreeVisitor::PreVisit(MethodDeclaration* method_declaration) {
                              " member duplicate: " + symbol.GetName());
   }
   tree_.class_members_table_[current_layer_->class_symbol_].insert(symbol);
+
+  Symbol class_method_symbol = Symbol(current_layer_->class_symbol_.GetName() +
+                                      "$" + method_declaration->method_name_);
+  tree_.methods_[class_method_symbol] = method_declaration;
 }

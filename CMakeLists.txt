@@ -70,6 +70,7 @@ set(
         compiler/visitors/TemplateVisitor.cpp
 
         compiler/visitors/NewSymbolTreeVisitor.cpp
+        compiler/visitors/NewFunctionProcessingVisitor.cpp
         compiler/visitors/TypeCheckingVisitor.cpp
 )
 
@@ -77,10 +78,16 @@ set(
         OBJECTS
 
         compiler/objects/Object.cpp
-        compiler/objects/Integer.cpp
-        compiler/objects/UninitObject.cpp
         compiler/objects/Method.cpp
-        compiler/objects/Void.cpp
+        compiler/objects/Class.cpp
+
+        compiler/objects/PrimitiveObject.cpp
+        compiler/objects/PrimitiveSimpleObject.cpp
+        compiler/objects/PrimitiveArrayObject.cpp
+
+        compiler/objects/values/Value.cpp
+        compiler/objects/values/VariableValue.cpp
+        compiler/objects/values/ArrayValue.cpp
 )
 
 set(
@@ -96,6 +103,8 @@ set(
         compiler/function_processing/FrameEmulator.cpp
         compiler/function_processing/FunctionStorage.cpp
         compiler/function_processing/FunctionTable.cpp
+
+        compiler/function_processing/ClassStorage.cpp
 )
 
 add_executable(

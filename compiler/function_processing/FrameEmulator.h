@@ -4,37 +4,48 @@
 #include <stack>
 
 #include "../objects/Method.h"
+#include "../objects/PrimitiveArrayObject.h"
+#include "../objects/PrimitiveSimpleObject.h"
+#include "../objects/values/Value.h"
+#include "../objects/values/VariableValue.h"
+#include "../objects/values/ArrayValue.h"
 
 class FrameEmulator {
  public:
-  explicit FrameEmulator(std::shared_ptr<Method> function);
-  void SetParameters(const std::vector<int>& values);
+  explicit FrameEmulator(const std::shared_ptr<Method>& function);
+  void SetParameters(const std::vector<Value*>& values);
+  void SetFields(const std::vector<Value*>& values);
 
-  size_t AllocVariable();
+  size_t AllocVariable(PrimitiveObject* primitive_object);
 
   void DeallocScope();
   void AllocScope();
 
-  int Get(int index);
+  Value* Get(int index);
 
-  void Set(int index, int value);
+  void Set(int index, Value* value);
 
   void SetParentFrame(FrameEmulator* frame);
 
-  int GetReturnValue() const;
+  Value* GetReturnValue() const;
 
-  void SetParentReturnValue(int value);
+  void SetParentReturnValue(Value* value);
 
   bool HasParent();
 
+  int GetFieldSize() const;
+
  private:
   std::stack<int> offsets_;
-  std::vector<int> parameters_;
-  std::vector<int> variables_;
+  std::vector<Value*> parameters_;
+  std::vector<Value*> variables_;
 
-  int return_value_ = 0;
+  int num_parameters = 0;
+  int num_fields = 0;
 
-  void SetReturnValue(int value);
+  Value* return_value_{};
+
+  void SetReturnValue(Value* value);
 
   FrameEmulator* parent_ = nullptr;
 };

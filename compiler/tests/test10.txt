@@ -5,7 +5,7 @@ class Cat {
     this.play_with_sun(2);
   }
 
-  public int finish_playing() {
+  public void finish_playing() {
     System.out.println(this.sun_);
   }
 

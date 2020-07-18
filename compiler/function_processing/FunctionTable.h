@@ -7,7 +7,7 @@
 
 class FunctionTable {
  public:
-  void Put(Symbol symbol, int value);
+  void Put(const Symbol& symbol, int value);
 
   void CreateVariable(Symbol symbol);
 

@@ -12,7 +12,7 @@
 
 class TypeCheckingVisitor : public TemplateVisitor<int> {
  public:
-  explicit TypeCheckingVisitor(NewScopeLayerTree& tree);
+  explicit TypeCheckingVisitor(NewScopeLayerTree* tree);
   ~TypeCheckingVisitor() = default;
 
   void Visit(ArrayAccessExpression* expression) override;
@@ -63,6 +63,14 @@ class TypeCheckingVisitor : public TemplateVisitor<int> {
   std::unordered_map<std::string, int> type_system_;
   int type_count_;
 
-  NewScopeLayerTree tree_;
+  NewScopeLayerTree* tree_;
   NewScopeLayer* current_layer_;
 };
+
+//type_system_["int"] = 1;
+//type_system_["int[]"] = 2;
+//type_system_["boolean"] = 3;
+//type_system_["boolean[]"] = 4;
+
+//type_system_[class_declaration->class_name_] = type_count_;
+//type_system_[class_declaration->class_name_ + "[]"] = type_count_;

@@ -125,7 +125,7 @@
 %nterm <MethodExpression*> method_expression
 %nterm <Lvalue*> lvalue
 %nterm <VariableDeclaration*> variable_declaration local_variable_declaration
-%nterm <Statement*> statement declaration
+%nterm <Statement*> statement declaration bracket_statement
 %nterm <ListOfStatements*> statements declarations class_declarations
 %nterm <Formals*> formals
 %nterm <MethodDeclaration*> method_declaration
@@ -195,14 +195,16 @@ statements:
 statement:
     "assert" "(" expression ")" ";" {$$ = new AssertStatement($3);}
     | local_variable_declaration {$$ = $1;}
-    | "if"  "(" expression ")" statement %prec NO_ELSE {$$ = new IfStatement($3, $5, NULL);}
-    | "if"  "(" expression ")" statement "else" statement {$$ = new IfStatement($3, $5, $7);}
-    | "while"  "(" expression ")" statement {$$ = new WhileStatement($3, $5);}
+    | "if"  "(" expression ")" bracket_statement %prec NO_ELSE {$$ = new IfStatement($3, $5, NULL);}
+    | "if"  "(" expression ")" bracket_statement "else" bracket_statement {$$ = new IfStatement($3, $5, $7);}
+    | "while"  "(" expression ")" bracket_statement {$$ = new WhileStatement($3, $5);}
     | "System.out.println" "(" expression ")" ";" {$$ = new PrintStatement($3);}
     | lvalue "=" expression ";" {$$ = new AssignmentStatement($1, $3);}
     | "return" expression ";" {$$ = new ReturnStatement($2);}
     | method_invocation ";" {$$ = $1;}
-    | "{" statements "}" {$$ = new ScopeListOfStatements($2);}
+
+bracket_statement:
+    "{" statements "}" {$$ = new ScopeListOfStatements($2);}
 
 local_variable_declaration:
     variable_declaration {$$ = $1;}

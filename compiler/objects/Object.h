@@ -1,7 +1,10 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+
 class Object {
  public:
-  virtual int ToInt();
+  virtual std::string GetTypename() = 0;
   virtual ~Object() = default;
 };

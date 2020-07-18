@@ -4,60 +4,63 @@ Program:
 			Method declaration: main, (return type): void, (arguments): 
 			no arguments
 				Statements: 
-					Variable declaration: x -> Wrap[]
+					Variable declaration: copy -> int[]
 					Assignment: 
 						Lvalue: 
-							x
-						New array allocation: (type): Wrap[] (length): 
-							Number: 10
-					If statement: 
-					Expression: 
-						Logical expression: (operation): true
-					If: 
-						[new scope]
-						Statements: 
-							Variable declaration: y -> Wrap2[]
-							Assignment: 
-								Lvalue: 
-									y
-								New array allocation: (type): Wrap2[] (length): 
-									Number: 12
-							Variable declaration: u -> Wrap2
-							Assignment: 
-								Lvalue: 
-									u
-								Array access: 
-								(called from): y
-								(index): 
-									Number: 0
-							Assignment: 
-								Lvalue: 
-									x
-								Method invocation: foo
-								no arguments
-								(called from): u
-	Statements: 
-		Class: Wrap2
-			Statements: 
-				Method declaration: foo, (return type): Wrap[], (arguments): 
-				no arguments
-					Statements: 
-						[new scope]
-						Statements: 
-							Variable declaration: z -> Wrap[]
-							Assignment: 
-								Lvalue: 
-									z
-								New array allocation: (type): Wrap[] (length): 
-									Number: 10
-							If statement: 
-							Expression: 
-								Logical expression: (operation): false
-							If: 
-								[new scope]
-							Else: 
-								[new scope]
-								Statements: 
-									Return: 
-										Variable: z
-		Class: Wrap
+							copy
+						New array allocation: (type): int[] (length): 
+							Number: 2
+					Assignment: 
+						Lvalue: 
+							Array access: 
+							(called from): copy
+							(index): 
+								Number: 0
+						Number: 1
+					Assignment: 
+						Lvalue: 
+							Array access: 
+							(called from): copy
+							(index): 
+								Number: 1
+						Number: 2
+					Assignment: 
+						Lvalue: 
+							FieldAccess: 
+							field
+						New array allocation: (type): int[] (length): 
+							Number: 2
+					Assignment: 
+						Lvalue: 
+							FieldAccess: 
+							field
+						Variable: copy
+					Method invocation: print
+					no arguments
+					(called from): this
+		Statements: 
+			Method declaration: print, (return type): void, (arguments): 
+			no arguments
+				Statements: 
+					Variable declaration: copy -> int[]
+					Assignment: 
+						Lvalue: 
+							copy
+						New array allocation: (type): int[] (length): 
+							Number: 2
+					Assignment: 
+						Lvalue: 
+							copy
+						FieldAccess: 
+						field
+					Print: 
+						Array access: 
+						(called from): copy
+						(index): 
+							Number: 0
+					Print: 
+						Array access: 
+						(called from): copy
+						(index): 
+							Number: 1
+			Variable declaration: field -> int[]

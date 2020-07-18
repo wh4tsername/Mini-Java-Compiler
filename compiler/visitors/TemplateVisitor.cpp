@@ -1,4 +1,5 @@
 #include "TemplateVisitor.h"
+#include "../objects/values/Value.h"
 
 template<typename T>
 T TemplateVisitor<T>::Accept(Node* node) {
@@ -7,3 +8,4 @@ T TemplateVisitor<T>::Accept(Node* node) {
 }
 
 template int TemplateVisitor<int>::Accept(Node* node);
+template Value* TemplateVisitor<Value*>::Accept(Node* node);

@@ -10,21 +10,22 @@ class Main {
             u = y[0];
 
             x = u.foo();
+            System.out.println(x.length);
         }
     }
 }
 
 class Wrap2 {
     public Wrap[] foo() {
-        {
-            Wrap[] z;
-            z = new Wrap[10];
-            if (false) {
-            } else {
-                return z;
-            }
+        Wrap[] z;
+        z = new Wrap[10];
+        if (false) {
+        } else {
+            return z;
         }
     }
 }
 
-class Wrap {}
+class Wrap {
+    int x;
+}

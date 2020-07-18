@@ -1,17 +1,18 @@
 #pragma once
 
-#include "../objects/Method.h"
-#include "../symbol_table/ScopeLayer.h"
-#include "../symbol_table/ScopeLayerTree.h"
-#include "../nodes.h"
-#include "Visitor.h"
+#include <stack>
 
-class SymbolTreeVisitor : public Visitor {
+#include "../function_processing/FrameEmulator.h"
+#include "../function_processing/FunctionTable.h"
+#include "../symbol_table/NewScopeLayerTree.h"
+#include "TemplateVisitor.h"
+#include "../objects/values/VariableValue.h"
+
+class NewFunctionProcessingVisitor : public TemplateVisitor<Value*> {
  public:
-  SymbolTreeVisitor();
-  ~SymbolTreeVisitor() = default;
-  ScopeLayerTree GetRoot();
-  std::unordered_map<Symbol, MethodDeclaration*> GetFunctions();
+  explicit NewFunctionProcessingVisitor(
+      NewScopeLayerTree* tree, NewScopeLayer* main_layer,
+      const std::shared_ptr<Method>& main_func_ptr, VariableValue* this_main);
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -42,8 +43,28 @@ class SymbolTreeVisitor : public Visitor {
   void Visit(ClassDeclaration* class_declaration) override;
   void Visit(ScopeListOfStatements* scope_list_of_statements) override;
 
+  void PreVisit(Program* program) override;
+  void PreVisit(MainClass* main_class) override;
+  void PreVisit(ClassDeclaration* class_declaration) override;
+  void PreVisit(ListOfStatements* list_of_statements) override;
+  void PreVisit(VariableDeclaration* variable_declaration) override;
+  void PreVisit(MethodDeclaration* method_declaration) override;
+
+  FrameEmulator& GetFrame();
+  void SetParameters(const std::vector<Value*>& parameters);
+
  private:
-  ScopeLayerTree tree_;
-  ScopeLayer* current_layer_;
-  std::unordered_map<Symbol, MethodDeclaration*> functions_;
+  void TraverseToChildByIndex();
+
+  bool is_returned_;
+
+  VariableValue* this_;
+
+  NewScopeLayerTree* tree_;
+  NewScopeLayer* root_layer_;
+  NewScopeLayer* current_layer_;
+
+  FunctionTable table_;
+  FrameEmulator frame_;
+  std::stack<int> offsets_;
 };

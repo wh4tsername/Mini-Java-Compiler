@@ -1,0 +1,21 @@
+class Main {
+    public static void main() {
+        int[] copy;
+        copy = new int[2];
+        copy[0] = 1;
+        copy[1] = 2;
+        this.field = new int[2];
+        this.field = copy;
+        this.print();
+    }
+
+    public void print() {
+        int[] copy;
+        copy = new int[2];
+        copy = this.field;
+        System.out.println(copy[0]);
+        System.out.println(copy[1]);
+    }
+
+    int[] field;
+}
