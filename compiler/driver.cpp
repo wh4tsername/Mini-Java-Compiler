@@ -66,6 +66,11 @@ void Driver::Exec() {
 
   std::cout << "func_calls_done" << std::endl;
 
+  IRTreeBuildVisitor ir_tree_build_visitor(&scope_tree);
+  ir_tree_build_visitor.Visit(program_);
+
+  std::cout << "ir_tree_built" << std::endl;
+
   //  TODO(@wh4tsername) delete root
 }
 

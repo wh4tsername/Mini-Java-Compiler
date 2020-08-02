@@ -11,10 +11,10 @@
 #include "symbol_table/NewScopeLayer.h"
 #include "visitors/TypeCheckingVisitor.h"
 #include "visitors/PrintTreeVisitor.h"
-#include "function_processing/FunctionStorage.h"
 #include "function_processing/ClassStorage.h"
 #include "objects/Method.h"
 #include "visitors/NewFunctionProcessingVisitor.h"
+#include "visitors/IRTreeBuildVisitor.h"
 
 class Driver {
  public:
