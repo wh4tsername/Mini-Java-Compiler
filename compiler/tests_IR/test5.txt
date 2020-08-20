@@ -1,0 +1,16 @@
+class Main {
+    public static void main() {
+        Wrap[] x;
+        x = new Wrap[10];
+        System.out.println(x.length);
+        if (true) {
+            Wrap[] y;
+            y = new Wrap[12];
+            x = y;
+        }
+    }
+}
+
+class Wrap {
+    int x;
+}

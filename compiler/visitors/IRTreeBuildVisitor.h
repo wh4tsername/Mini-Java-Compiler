@@ -59,6 +59,8 @@ class IRTreeBuildVisitor : public TemplateVisitor<IRT::SubtreeWrapper*> {
   void PreVisit(MethodDeclaration* method_declaration) override;
 
  private:
+  std::string current_classname_;
+
   NewScopeLayerTree* tree_;
   NewScopeLayer* current_layer_;
 

@@ -199,7 +199,7 @@ void IRTreeBuildVisitor::Visit(ListOfStatements* list_of_statements) {
     }
 
     IRT::Statement* suffix = ir_statements.back();
-    for (size_t i = statements.size() - 2; i >= 0; --i) {
+    for (int i = static_cast<int>(statements.size()) - 2; i >= 0; --i) {
       suffix = new IRT::SeqStatement(ir_statements[i], suffix);
     }
 
@@ -261,7 +261,7 @@ void IRTreeBuildVisitor::Visit(ArrayAccessExpression* expression) {
 }
 
 void IRTreeBuildVisitor::Visit(NewArrayExpression* expression) {
-  auto size_expr = Accept(expression)->ToExpression();
+  auto size_expr = Accept(expression->length_)->ToExpression();
   auto array = CreateArray(size_expr);
 
   tos_value_ = new IRT::ExpressionWrapper(array);
@@ -390,8 +390,8 @@ void IRTreeBuildVisitor::Visit(NumeralExpression* expression) {
 }
 
 void IRTreeBuildVisitor::Visit(MethodDeclaration* method_declaration) {
-  current_layer_ =
-      tree_->layer_mapping_[Symbol(method_declaration->method_name_)];
+  current_layer_ = tree_->layer_mapping_[Symbol(
+      current_classname_ + "$" + method_declaration->method_name_)];
   offsets_.push(0);
 
   std::string method_name = current_layer_->class_symbol_.GetName() +
@@ -401,7 +401,12 @@ void IRTreeBuildVisitor::Visit(MethodDeclaration* method_declaration) {
       method_name, current_layer_->class_symbol_.GetName());
   frame_translator_[method_name] = current_frame_;
 
-  method_declaration->formals_->Accept(this);
+  if (method_declaration->formals_) {
+    method_declaration->formals_->Accept(this);
+  } else {
+    current_frame_->AddArgumentAddress("this");
+  }
+
   current_frame_->AddReturnAddress();
 
   auto statements_ir = Accept(method_declaration->list_of_statements_);
@@ -411,11 +416,11 @@ void IRTreeBuildVisitor::Visit(MethodDeclaration* method_declaration) {
         new IRT::SeqStatement(new IRT::LabelStatement(IRT::Label(method_name)),
                               statements_ir->ToStatement()));
   } else {
-    throw std::runtime_error("Empty list of statements of method!");
+    throw std::runtime_error("Empty list of statements of method " + method_name);
   }
   method_trees_.emplace(method_name, tos_value_->ToStatement());
 }
-// TODO class types
+
 void IRTreeBuildVisitor::Visit(VariableDeclaration* variable_declaration) {
   tos_value_ = nullptr;
   if (variable_declaration->type_->type_name_.back() != ']') {
@@ -437,10 +442,14 @@ void IRTreeBuildVisitor::Visit(VariableDeclaration* variable_declaration) {
 }
 
 void IRTreeBuildVisitor::Visit(ClassDeclaration* class_declaration) {
+  current_classname_ = class_declaration->class_name_;
+
   class_declaration->declarations_->Accept(this);
 }
 
 void IRTreeBuildVisitor::Visit(MainClass* main_class) {
+  current_classname_ = main_class->main_class_name_;
+
   main_class->main_->Accept(this);
   main_class->declarations_->Accept(this);
 }
@@ -484,13 +493,25 @@ void IRTreeBuildVisitor::Visit(Program* program) {
   program->class_declarations_->Accept(this);
 }
 
+void IRTreeBuildVisitor::Visit(Lvalue* lvalue) {
+  if (lvalue->code_ == lvalue->VAR) {
+    auto variable = current_frame_->GetAddress(lvalue->variable_name_);
+    tos_value_ = new IRT::ExpressionWrapper(variable);
+  } else if (lvalue->code_ == lvalue->ARR) {
+    lvalue->array_access_expression_->Accept(this);
+  } else if (lvalue->code_ == lvalue->FIELD) {
+    lvalue->field_access_->Accept(this);
+  }
+}
+
+void IRTreeBuildVisitor::Visit(FieldAccess* field_access) {
+  std::cerr << "IR of field access is not implemented" << std::endl;
+  exit(1);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-void IRTreeBuildVisitor::Visit(FieldAccess* field_access) {}
-
 void IRTreeBuildVisitor::Visit(MethodExpression* method_expression) {}
-
-void IRTreeBuildVisitor::Visit(Lvalue* lvalue) {}
 
 void IRTreeBuildVisitor::Visit(Type* type) {}
 

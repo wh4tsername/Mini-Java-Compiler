@@ -1,0 +1,38 @@
+class ArrayParameterChecker {
+    public static void main() {
+        int[] arr;
+        int size;
+        size = 10;
+        arr = new int[size];
+
+        int i;
+        i = 0;
+        while (i < size) {
+            arr[i] = 0;
+            i = i + 1;
+        }
+
+        Worker w;
+        w = new Worker();
+        arr = w.work(arr, size);
+
+        i = 0;
+        while (i < size) {
+            System.out.println(arr[i]);
+            i = i + 1;
+        }
+    }
+}
+
+class Worker {
+    public int[] work(int[] arr, int size) {
+        int i;
+        i = 0;
+        while (i < size) {
+            arr[i] = arr[i] + 1;
+            i = i + 1;
+        }
+
+        return arr;
+    }
+}

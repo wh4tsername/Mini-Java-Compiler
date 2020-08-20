@@ -5,6 +5,12 @@ cmake-build-debug/
 
 other/
 
+compiler/tests/logs/*
+!compiler/tests/logs/created_files.txt
+
+compiler/tests_IR/logs/*
+!compiler/tests_IR/logs/created_files.txt
+
 compiler/stack.hh
 
 compiler/scanner.cpp

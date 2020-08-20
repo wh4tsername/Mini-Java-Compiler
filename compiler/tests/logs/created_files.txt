@@ -1,0 +1,9 @@
+../compiler/tests/logs/tree_output.out
+../compiler/tests/logs/Fac::ComputeFac_ir_tree.out
+../compiler/tests/logs/Fac::ComputeFac_double_calls_eliminated.out
+../compiler/tests/logs/Fac::ComputeFac_eseq_eliminated.out
+../compiler/tests/logs/Fac::ComputeFac_linearized.out
+../compiler/tests/logs/Factorial::main_ir_tree.out
+../compiler/tests/logs/Factorial::main_double_calls_eliminated.out
+../compiler/tests/logs/Factorial::main_eseq_eliminated.out
+../compiler/tests/logs/Factorial::main_linearized.out

@@ -318,7 +318,7 @@ void NewFunctionProcessingVisitor::Visit(
 }
 
 void NewFunctionProcessingVisitor::Visit(MethodInvocation* method_invocation) {
-  std::cerr << method_invocation->method_name_ << " called!" << std::endl;
+  std::cout << method_invocation->method_name_ << " called!" << std::endl;
 
   Symbol class_symbol;
   if (method_invocation->call_from_ == "this") {

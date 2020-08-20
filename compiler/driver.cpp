@@ -1,4 +1,5 @@
 #include "driver.hh"
+#include "../LogCleaner.h"
 #include "parser.hh"
 
 Driver::Driver()
@@ -33,7 +34,11 @@ void Driver::ScanBegin() {
   }
 }
 
-void Driver::Exec() {
+void Driver::SetLogsPath(std::string logs_path) {
+  logs_path_ = std::move(logs_path);
+}
+
+void Driver::Exec() const {
   std::string main_class_name = program_->main_class_->main_class_name_;
 
   NewSymbolTreeVisitor symbol_visitor;
@@ -56,7 +61,8 @@ void Driver::Exec() {
   std::shared_ptr<Method> main_object = std::get<1>(
       scope_tree.class_symbols_table_[Symbol(main_class_name)])[Symbol("main")];
 
-  auto class_obj = new VariableValue(new PrimitiveSimpleObject(new Type(main_class_name)));
+  auto class_obj =
+      new VariableValue(new PrimitiveSimpleObject(new Type(main_class_name)));
   NewFunctionProcessingVisitor func_visitor(
       &scope_tree, scope_tree.layer_mapping_[Symbol(main_class_name + "$main")],
       main_object, class_obj);
@@ -71,10 +77,71 @@ void Driver::Exec() {
 
   std::cout << "ir_tree_built" << std::endl;
 
-  //  TODO(@wh4tsername) delete root
+  IrtMapping methods = ir_tree_build_visitor.GetTrees();
+
+  LogCleaner& log_cleaner = LogCleaner::GetInstance();
+
+  const size_t NUM_ITERATIONS = 5;
+  for (const auto& func_view : methods) {
+    IRT::PrintVisitor print_visitor_irt(logs_path_ + func_view.first +
+                                        "_ir_tree.out");
+    log_cleaner.AddLogFilePath(logs_path_ + func_view.first + "_ir_tree.out");
+
+    methods[func_view.first]->Accept(&print_visitor_irt);
+
+    // method bush printed
+
+    IRT::DoubleCallEliminateVisitor call_eliminate_visitor;
+    methods[func_view.first]->Accept(&call_eliminate_visitor);
+
+    auto root_stmt = call_eliminate_visitor.GetTree();
+
+    IRT::PrintVisitor print_visitor_double_call(logs_path_ + func_view.first +
+                                                "_double_calls_eliminated.out");
+    log_cleaner.AddLogFilePath(logs_path_ + func_view.first +
+                               "_double_calls_eliminated.out");
+
+    root_stmt->Accept(&print_visitor_double_call);
+
+    // double calls eliminated
+
+    IRT::ESEQEliminator eseq_eliminator;
+    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
+      root_stmt->Accept(&eseq_eliminator);
+      root_stmt = eseq_eliminator.GetTree();
+    }
+
+    IRT::PrintVisitor print_visitor_eseq(logs_path_ + func_view.first +
+                                         "_eseq_eliminated.out");
+    log_cleaner.AddLogFilePath(logs_path_ + func_view.first +
+                               "_eseq_eliminated.out");
+
+    root_stmt->Accept(&print_visitor_eseq);
+
+    // eseq eliminated
+
+    IRT::Linearizer linearizer;
+    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
+      root_stmt->Accept(&linearizer);
+      root_stmt = linearizer.GetTree();
+    }
+
+    IRT::PrintVisitor print_visitor_linearized(logs_path_ + func_view.first +
+                                               "_linearized.out");
+    log_cleaner.AddLogFilePath(logs_path_ + func_view.first +
+                               "_linearized.out");
+
+    root_stmt->Accept(&print_visitor_linearized);
+
+    // linearized
+  }
+
+  std::cout << "ir_canonization_done" << std::endl;
+
+  // TODO delete root
 }
 
-void Driver::PrintTree(const std::string& filename) {
+void Driver::PrintTree(const std::string& filename) const {
   PrintTreeVisitor visitor(filename);
   visitor.Visit(program_);
 

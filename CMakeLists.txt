@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-set(CMAKE_CXX_STANDARD_REQUIRED 17)
+set(CMAKE_CXX_STANDARD_REQUIRED 20)
 
 set(BISON_EXECUTABLE /usr/local/bin/bison)
 
@@ -164,11 +164,17 @@ set(
         IRVisitors
 
         compiler/IR/visitors/TemplateVisitor.cpp
+        compiler/IR/visitors/PrintVisitor.cpp
+
+        compiler/IR/visitors/Linearizer.cpp
+        compiler/IR/visitors/ESEQEliminator.cpp
+        compiler/IR/visitors/DoubleCallEliminateVisitor.cpp
 )
 
 add_executable(
         Compiler
         main.cpp
+        LogCleaner.cpp
         ${DRIVERS}
         ${NODES}
         ${VISITORS}
