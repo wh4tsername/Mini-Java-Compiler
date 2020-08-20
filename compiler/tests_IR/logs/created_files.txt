@@ -1,9 +1,0 @@
-../compiler/tests_IR/logs/tree_output.out
-../compiler/tests_IR/logs/Worker::work_ir_tree.out
-../compiler/tests_IR/logs/Worker::work_double_calls_eliminated.out
-../compiler/tests_IR/logs/Worker::work_eseq_eliminated.out
-../compiler/tests_IR/logs/Worker::work_linearized.out
-../compiler/tests_IR/logs/ArrayParameterChecker::main_ir_tree.out
-../compiler/tests_IR/logs/ArrayParameterChecker::main_double_calls_eliminated.out
-../compiler/tests_IR/logs/ArrayParameterChecker::main_eseq_eliminated.out
-../compiler/tests_IR/logs/ArrayParameterChecker::main_linearized.out
