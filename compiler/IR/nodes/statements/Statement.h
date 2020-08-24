@@ -13,6 +13,10 @@ class Statement : public BaseElement {
     return false;
   }
 
+  virtual bool IsLabel() {
+    return false;
+  }
+
   virtual ~Statement() = default;
 };
 }

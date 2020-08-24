@@ -161,6 +161,15 @@ set(
 )
 
 set(
+        IRBlocks
+
+        compiler/IR/blocks/Block.cpp
+        compiler/IR/blocks/BlockGraph.cpp
+        compiler/IR/blocks/SimpleBlock.cpp
+        compiler/IR/blocks/ConditionalBlock.cpp
+)
+
+set(
         IRVisitors
 
         compiler/IR/visitors/TemplateVisitor.cpp
@@ -169,6 +178,9 @@ set(
         compiler/IR/visitors/Linearizer.cpp
         compiler/IR/visitors/ESEQEliminator.cpp
         compiler/IR/visitors/DoubleCallEliminateVisitor.cpp
+
+        compiler/IR/visitors/BlockFormerVisitor.cpp
+        compiler/IR/visitors/BlockBuilderVisitor.cpp
 )
 
 add_executable(
@@ -185,6 +197,7 @@ add_executable(
         ${IRNodes}
         ${IRWrappers}
         ${IRVisitors}
+        ${IRBlocks}
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )

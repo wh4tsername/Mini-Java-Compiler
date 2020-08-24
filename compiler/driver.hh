@@ -6,10 +6,6 @@
 #include "parser.hh"
 #include "scanner.h"
 
-#include "IR/visitors/DoubleCallEliminateVisitor.h"
-#include "IR/visitors/ESEQEliminator.h"
-#include "IR/visitors/Linearizer.h"
-#include "IR/visitors/PrintVisitor.h"
 #include "classes/Program.h"
 #include "function_processing/ClassStorage.h"
 #include "objects/Method.h"
@@ -19,6 +15,12 @@
 #include "visitors/NewSymbolTreeVisitor.h"
 #include "visitors/PrintTreeVisitor.h"
 #include "visitors/TypeCheckingVisitor.h"
+#include "IR/visitors/DoubleCallEliminateVisitor.h"
+#include "IR/visitors/ESEQEliminator.h"
+#include "IR/visitors/Linearizer.h"
+#include "IR/visitors/PrintVisitor.h"
+#include "IR/visitors/BlockFormerVisitor.h"
+#include "IR/visitors/BlockBuilderVisitor.h"
 
 class Driver {
  public:

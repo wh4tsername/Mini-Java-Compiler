@@ -81,7 +81,7 @@ void Driver::Exec() const {
 
   LogCleaner& log_cleaner = LogCleaner::GetInstance();
 
-  const size_t NUM_ITERATIONS = 5;
+  const size_t NUM_ITERATIONS = 15;
   for (const auto& func_view : methods) {
     IRT::PrintVisitor print_visitor_irt(logs_path_ + func_view.first +
                                         "_ir_tree.out");
@@ -134,6 +134,27 @@ void Driver::Exec() const {
     root_stmt->Accept(&print_visitor_linearized);
 
     // linearized
+
+    IRT::BlockFormerVisitor former(func_view.first);
+    root_stmt->Accept(&former);
+    root_stmt = former.GetTree();
+
+    IRT::PrintVisitor print_visitor_blocks_formed(logs_path_ + func_view.first +
+                                                  "_blocks_formed.out");
+    log_cleaner.AddLogFilePath(logs_path_ + func_view.first +
+                               "_blocks_formed.out");
+
+    root_stmt->Accept(&print_visitor_blocks_formed);
+
+    // blocks formed
+
+    IRT::BlockBuilderVisitor block_builder;
+    root_stmt->Accept(&block_builder);
+
+    IRT::BlockGraph block_graph = block_builder.BuildGraph();
+    // TODO print block_graph
+
+    // blocks built
   }
 
   std::cout << "ir_canonization_done" << std::endl;
