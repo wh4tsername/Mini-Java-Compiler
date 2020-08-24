@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 
 #include "../blocks/BlockGraph.h"
 #include "IRTStorage.h"
@@ -34,7 +34,7 @@ class BlockBuilderVisitor : public Visitor {
   Statement *current_root_;
   Block *root_block_;
 
-  std::unordered_map<std::string, Block *> blocks_;
+  std::map<std::string, Block *> blocks_;
 };
 
 }  // namespace IRT

@@ -152,12 +152,13 @@ void Driver::Exec() const {
     root_stmt->Accept(&block_builder);
 
     IRT::BlockGraph block_graph = block_builder.BuildGraph();
-    // TODO print block_graph
+    block_graph.Print(logs_path_ + "block_graph_" + func_view.first + ".out");
+    log_cleaner.AddLogFilePath(logs_path_ + "block_graph_" + func_view.first + ".out");
 
     // blocks built
   }
 
-  std::cout << "ir_canonization_done" << std::endl;
+  std::cout << "blocks_built" << std::endl;
 
   // TODO delete root
 }

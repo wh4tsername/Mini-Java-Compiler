@@ -14,9 +14,6 @@ void BlockBuilderVisitor::Visit(ConstExpression *const_expression) {}
 
 void BlockBuilderVisitor::Visit(
     JumpConditionalStatement *jump_conditional_statement) {
-  std::cerr << jump_conditional_statement->label_true_.ToString() << " : "
-            << jump_conditional_statement->label_false_.ToString() << std::endl;
-
   blocks_[current_label_.ToString()] = new ConditionalBlock(
       current_label_, current_root_, jump_conditional_statement->label_true_,
       jump_conditional_statement->label_false_);
@@ -59,7 +56,6 @@ void BlockBuilderVisitor::Visit(MemExpression *mem_expression) {
 }
 
 void BlockBuilderVisitor::Visit(JumpStatement *jump_statement) {
-  std::cerr << jump_statement->label_.ToString() << std::endl;
   blocks_[current_label_.ToString()] =
       new SimpleBlock(current_label_, current_root_, jump_statement->label_);
 
@@ -87,15 +83,15 @@ void BlockBuilderVisitor::Visit(EseqExpression *eseq_expression) {
 }
 
 BlockGraph BlockBuilderVisitor::BuildGraph() {
-  for (auto &block_view : blocks_) {
-    auto &block = block_view.second;
+  for (auto& block_view : blocks_) {
+    auto& block = block_view.second;
 
     if (block != nullptr) {
       if (block->IsSimple()) {
         auto simple_block = dynamic_cast<SimpleBlock *>(block);
 
         simple_block->next_block_ =
-            blocks_[simple_block->next_block_->GetLabel().ToString()];
+            blocks_[simple_block->GetNextBlockLabel().ToString()];
       } else {
         auto conditional_block = dynamic_cast<ConditionalBlock *>(block);
 
