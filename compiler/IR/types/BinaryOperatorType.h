@@ -15,4 +15,6 @@ enum class BinaryOperatorType : char {
 
 std::string ToString(BinaryOperatorType type);
 
+bool IsCommutative(BinaryOperatorType type);
+
 }

@@ -21,6 +21,7 @@
 #include "IR/visitors/PrintVisitor.h"
 #include "IR/visitors/BlockFormerVisitor.h"
 #include "IR/visitors/BlockBuilderVisitor.h"
+#include "IR/visitors/AssemblyGenerationVisitor.h"
 
 class Driver {
  public:

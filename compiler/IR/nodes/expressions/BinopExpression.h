@@ -10,6 +10,8 @@ class BinopExpression : public Expression {
 
   void Accept(IRT::Visitor* visitor) override;
 
+  bool IsBINOP() override;
+
   BinaryOperatorType type_;
   Expression* lhs_;
   Expression* rhs_;

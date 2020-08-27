@@ -1,4 +1,6 @@
 #include "FrameTranslator.h"
+
+#include <utility>
 #include "../IR/nodes/expressions/BinopExpression.h"
 #include "../IR/nodes/expressions/ConstExpression.h"
 #include "../IR/nodes/expressions/MemExpression.h"
@@ -7,9 +9,9 @@
 #include "address/AddressInRegister.h"
 
 namespace IRT {
-FrameTranslator::FrameTranslator(const std::string& method_name,
-                                 const std::string class_name)
-    : method_name_(method_name), class_name_(class_name) {
+FrameTranslator::FrameTranslator(std::string method_name,
+                                 std::string class_name)
+    : method_name_(std::move(method_name)), class_name_(std::move(class_name)) {
   addresses_[frame_pointer_address_].push(
       new AddressInRegister(Temporary(frame_pointer_address_)));
 
@@ -41,12 +43,13 @@ Address* FrameTranslator::FramePointer() {
 }
 
 int FrameTranslator::GetOffset() {
-  int tmp = max_offset_;
+  int tmp = static_cast<int>(max_offset_);
   max_offset_ += word_size_;
   return tmp;
 }
 
 void FrameTranslator::AddArgumentAddress(const std::string& name) {
+  ++num_args_;
   AddVariable(name);
 }
 
@@ -101,5 +104,9 @@ void FrameTranslator::AddReturnAddress() { AddVariable(return_address_); }
 IRT::Expression* FrameTranslator::GetReturnValueAddress() {
   return GetAddress(return_value_address_);
 }
+
+size_t FrameTranslator::GetNumArgs() const { return num_args_; }
+
+size_t FrameTranslator::GetFrameSize() const { return max_offset_; }
 
 }  // namespace IRT

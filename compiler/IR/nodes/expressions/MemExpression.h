@@ -9,6 +9,8 @@ class MemExpression : public Expression {
 
   void Accept(Visitor* visitor) override;
 
+  bool IsMEM() override;
+
   Expression* expression_;
 };
 }

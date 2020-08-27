@@ -9,7 +9,7 @@
 #include "../symbol_table/NewScopeLayerTree.h"
 #include "TemplateVisitor.h"
 
-using IrtMapping = std::unordered_map<std::string, IRT::Statement*>;
+using IrtMapping = std::unordered_map<std::string, std::pair<IRT::Statement*, IRT::FrameTranslator*>>;
 
 class IRTreeBuildVisitor : public TemplateVisitor<IRT::SubtreeWrapper*> {
  public:

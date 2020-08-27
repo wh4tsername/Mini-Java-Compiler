@@ -170,6 +170,12 @@ set(
 )
 
 set(
+        AssemblyGeneration
+
+        compiler/IR/assembly/Instruction.cpp
+)
+
+set(
         IRVisitors
 
         compiler/IR/visitors/TemplateVisitor.cpp
@@ -181,6 +187,8 @@ set(
 
         compiler/IR/visitors/BlockFormerVisitor.cpp
         compiler/IR/visitors/BlockBuilderVisitor.cpp
+
+        compiler/IR/visitors/AssemblyGenerationVisitor.cpp
 )
 
 add_executable(
@@ -198,6 +206,7 @@ add_executable(
         ${IRWrappers}
         ${IRVisitors}
         ${IRBlocks}
+        ${AssemblyGeneration}
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )

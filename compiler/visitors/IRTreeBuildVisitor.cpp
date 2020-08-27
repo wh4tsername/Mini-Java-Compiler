@@ -304,32 +304,17 @@ void IRTreeBuildVisitor::Visit(LogicalExpression* expression) {
       tos_value_ = new IRT::RelativeConditionalWrapper(
           IRT::LogicOperatorType::LT, lhs->ToExpression(), rhs->ToExpression());
     } else if (op == ">=") {
-      auto first_part = new IRT::RelativeConditionalWrapper(
-          IRT::LogicOperatorType::GT, lhs->ToExpression(), rhs->ToExpression());
-
-      auto second_lhs = Accept(expression->lhs_);
-      auto second_rhs = Accept(expression->rhs_);
-      auto second_part = new IRT::RelativeConditionalWrapper(
-          IRT::LogicOperatorType::EQ, second_lhs->ToExpression(),
-          second_rhs->ToExpression());
-
-      tos_value_ = new IRT::OrConditionalWrapper(first_part, second_part);
+      tos_value_ = new IRT::RelativeConditionalWrapper(
+          IRT::LogicOperatorType::GE, lhs->ToExpression(), rhs->ToExpression()
+          );
     } else if (op == "<=") {
-      auto first_part = new IRT::RelativeConditionalWrapper(
-          IRT::LogicOperatorType::LT, lhs->ToExpression(), rhs->ToExpression());
-
-      auto second_lhs = Accept(expression->lhs_);
-      auto second_rhs = Accept(expression->rhs_);
-      auto second_part = new IRT::RelativeConditionalWrapper(
-          IRT::LogicOperatorType::EQ, second_lhs->ToExpression(),
-          second_rhs->ToExpression());
-
-      tos_value_ = new IRT::OrConditionalWrapper(first_part, second_part);
+      tos_value_ = new IRT::RelativeConditionalWrapper(
+          IRT::LogicOperatorType::LE, lhs->ToExpression(), rhs->ToExpression()
+      );
     } else if (op == "!=") {
-      auto wrapper = new IRT::RelativeConditionalWrapper(
-          IRT::LogicOperatorType::EQ, lhs->ToExpression(), rhs->ToExpression());
-
-      tos_value_ = new IRT::NegativeConditionalWrapper(wrapper);
+      tos_value_ = new IRT::RelativeConditionalWrapper(
+          IRT::LogicOperatorType::NE, lhs->ToExpression(), rhs->ToExpression()
+      );
     }
   }
 }
@@ -395,7 +380,7 @@ void IRTreeBuildVisitor::Visit(MethodDeclaration* method_declaration) {
   offsets_.push(0);
 
   std::string method_name = current_layer_->class_symbol_.GetName() +
-                            "::" + method_declaration->method_name_;
+                            "_" + method_declaration->method_name_;
 
   current_frame_ = new IRT::FrameTranslator(
       method_name, current_layer_->class_symbol_.GetName());
@@ -418,7 +403,7 @@ void IRTreeBuildVisitor::Visit(MethodDeclaration* method_declaration) {
   } else {
     throw std::runtime_error("Empty list of statements of method " + method_name);
   }
-  method_trees_.emplace(method_name, tos_value_->ToStatement());
+  method_trees_.emplace(method_name, std::make_pair(tos_value_->ToStatement(), current_frame_));
 }
 
 void IRTreeBuildVisitor::Visit(VariableDeclaration* variable_declaration) {
@@ -477,7 +462,7 @@ void IRTreeBuildVisitor::Visit(MethodInvocation* method_invocation) {
 
   tos_value_ = new IRT::ExpressionWrapper(new IRT::CallExpression(
       new IRT::NameExpression(IRT::Label(
-          class_name.GetName() + "::" + method_invocation->method_name_)),
+          class_name.GetName() + "_" + method_invocation->method_name_)),
       irt_expressions));
 }
 

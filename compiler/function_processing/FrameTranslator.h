@@ -1,8 +1,8 @@
 #pragma once
 
+#include <stack>
 #include <string>
 #include <unordered_map>
-#include <stack>
 #include <vector>
 
 #include "address/Address.h"
@@ -10,7 +10,8 @@
 namespace IRT {
 class FrameTranslator {
  public:
-  explicit FrameTranslator(const std::string& method_name, const std::string class_name);
+  explicit FrameTranslator(std::string method_name,
+                           std::string class_name);
   void SetupScope();
   void TearDownScope();
 
@@ -23,6 +24,9 @@ class FrameTranslator {
   Address* FramePointer();
   IRT::Expression* GetAddress(const std::string& name);
   IRT::Expression* GetReturnValueAddress();
+
+  size_t GetNumArgs() const;
+  size_t GetFrameSize() const;
 
  private:
   IRT::Expression* GetField(const std::string& name);
@@ -39,6 +43,7 @@ class FrameTranslator {
   std::string method_name_;
   std::string class_name_;
 
-  int max_offset_ = 0;
+  size_t max_offset_ = 0;
+  size_t num_args_ = 0;
 };
-}
+}  // namespace IRT

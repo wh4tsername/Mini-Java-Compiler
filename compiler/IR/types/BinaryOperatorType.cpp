@@ -18,3 +18,22 @@ std::string IRT::ToString(BinaryOperatorType type) {
       return "MOD";
   }
 }
+
+bool IRT::IsCommutative(BinaryOperatorType type) {
+  switch (type) {
+    case BinaryOperatorType::PLUS:
+      return true;
+    case BinaryOperatorType::MINUS:
+      return false;
+    case BinaryOperatorType::MUL:
+      return true;
+    case BinaryOperatorType::DIV:
+      return false;
+    case BinaryOperatorType::AND:
+      return true;
+    case BinaryOperatorType::OR:
+      return true;
+    case BinaryOperatorType::MOD:
+      return false;
+  }
+}
