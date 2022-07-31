@@ -1,11 +1,12 @@
-# Mini-Java-Compiler (WIP)
+# Mini-Java-Compiler
 Mini-Java Compiler written on C++ using bison and flex
 
-## tech stack
+Currently working on generating assembly for separate classes...
+
+## Tech stack
     C++, bison, flex
 
-## build
-    CMakeLists.txt
-
-## tests launch
-    tests -> CMake targets
+## Quick start
+    Build using CMake
+    ./compiler input/file/path output/log/directory
+    Examples of programs can be found in test directories
