@@ -1,24 +1,26 @@
 #pragma once
 
 #include <stack>
-#include <cassert>
 
-#include "../function_processing/FrameEmulator.h"
-#include "../function_processing/FunctionTable.h"
-#include "../function_processing/FunctionStorage.h"
-#include "../objects/Method.h"
-#include "../symbol_table/ScopeLayer.h"
-#include "../symbol_table/ScopeLayerTree.h"
+#include "../IR/nodes/statements/Statement.h"
+#include "../IR/wrappers/SubtreeWrapper.h"
+#include "../function_processing/FrameTranslator.h"
+#include "../symbol_table/NewScopeLayer.h"
+#include "../symbol_table/NewScopeLayerTree.h"
 #include "TemplateVisitor.h"
 
-class FunctionProcessingVisitor : public TemplateVisitor<int> {
- public:
-  explicit FunctionProcessingVisitor(ScopeLayer* function_scope,
-                                     std::shared_ptr<Method> function);
+using IrtMapping = std::unordered_map<std::string, std::pair<IRT::Statement*, IRT::FrameTranslator*>>;
 
-  void SetTree(ScopeLayerTree* tree);
-  void SetParams(const std::vector<int>& params);
-  FrameEmulator& GetFrame();
+class IRTreeBuildVisitor : public TemplateVisitor<IRT::SubtreeWrapper*> {
+ public:
+  explicit IRTreeBuildVisitor(NewScopeLayerTree* tree);
+
+  void TraverseToChildByIndex();
+  IrtMapping GetTrees();
+  NewScopeLayer* GetCurrentLayer() const;
+  std::string GetCurrentClassName() const;
+
+  std::string TypeResolving(const Symbol& symbol) const;
 
   void Visit(ArrayAccessExpression* expression) override;
   void Visit(ArithmeticalExpression* expression) override;
@@ -57,11 +59,14 @@ class FunctionProcessingVisitor : public TemplateVisitor<int> {
   void PreVisit(MethodDeclaration* method_declaration) override;
 
  private:
-  ScopeLayer* root_layer_;
-  ScopeLayer* current_layer_;
+  std::string current_classname_;
+
+  NewScopeLayerTree* tree_;
+  NewScopeLayer* current_layer_;
+
   std::stack<int> offsets_;
-  FrameEmulator frame_;
-  FunctionTable table_;
-  ScopeLayerTree* tree_;
-  bool returned_ = false;
+  std::unordered_map<std::string, IRT::FrameTranslator*> frame_translator_;
+  IRT::FrameTranslator* current_frame_;
+
+  IrtMapping method_trees_;
 };

@@ -1,9 +1,13 @@
 
-cmake-build-debug/
+cmake-*/
 
 .idea/
 
 other/
+
+compiler/tests/logs/*
+
+compiler/tests_IR/logs/*
 
 compiler/stack.hh
 

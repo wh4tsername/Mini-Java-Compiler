@@ -1,4 +1,5 @@
 #include "driver.hh"
+#include "../LogCleaner.h"
 #include "parser.hh"
 
 Driver::Driver()
@@ -33,7 +34,11 @@ void Driver::ScanBegin() {
   }
 }
 
-void Driver::Exec() {
+void Driver::SetLogsPath(std::string logs_path) {
+  logs_path_ = std::move(logs_path);
+}
+
+void Driver::Exec() const {
   std::string main_class_name = program_->main_class_->main_class_name_;
 
   NewSymbolTreeVisitor symbol_visitor;
@@ -56,7 +61,8 @@ void Driver::Exec() {
   std::shared_ptr<Method> main_object = std::get<1>(
       scope_tree.class_symbols_table_[Symbol(main_class_name)])[Symbol("main")];
 
-  auto class_obj = new VariableValue(new PrimitiveSimpleObject(new Type(main_class_name)));
+  auto class_obj =
+      new VariableValue(new PrimitiveSimpleObject(new Type(main_class_name)));
   NewFunctionProcessingVisitor func_visitor(
       &scope_tree, scope_tree.layer_mapping_[Symbol(main_class_name + "$main")],
       main_object, class_obj);
@@ -66,10 +72,112 @@ void Driver::Exec() {
 
   std::cout << "func_calls_done" << std::endl;
 
-  //  TODO(@wh4tsername) delete root
+  IRTreeBuildVisitor ir_tree_build_visitor(&scope_tree);
+  ir_tree_build_visitor.Visit(program_);
+
+  std::cout << "ir_tree_built" << std::endl;
+
+  IrtMapping methods = ir_tree_build_visitor.GetTrees();
+
+  LogCleaner& log_cleaner = LogCleaner::GetInstance();
+
+  const size_t NUM_ITERATIONS = 15;
+  for (const auto& method_view : methods) {
+    const auto& method_name = method_view.first;
+    const auto& method_tree_root = method_view.second.first;
+    const auto& method_frame = method_view.second.second;
+
+    IRT::PrintVisitor print_visitor_irt(logs_path_ + method_name +
+                                        "_ir_tree.out");
+    log_cleaner.AddLogFilePath(logs_path_ + method_name + "_ir_tree.out");
+
+    method_tree_root->Accept(&print_visitor_irt);
+
+    // method bush printed
+
+    IRT::DoubleCallEliminateVisitor call_eliminate_visitor;
+    method_tree_root->Accept(&call_eliminate_visitor);
+
+    auto root_stmt = call_eliminate_visitor.GetTree();
+
+    IRT::PrintVisitor print_visitor_double_call(logs_path_ + method_name +
+                                                "_double_calls_eliminated.out");
+    log_cleaner.AddLogFilePath(logs_path_ + method_name +
+                               "_double_calls_eliminated.out");
+
+    root_stmt->Accept(&print_visitor_double_call);
+
+    // double calls eliminated
+
+    IRT::ESEQEliminator eseq_eliminator;
+    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
+      root_stmt->Accept(&eseq_eliminator);
+      root_stmt = eseq_eliminator.GetTree();
+    }
+
+    IRT::PrintVisitor print_visitor_eseq(logs_path_ + method_name +
+                                         "_eseq_eliminated.out");
+    log_cleaner.AddLogFilePath(logs_path_ + method_name +
+                               "_eseq_eliminated.out");
+
+    root_stmt->Accept(&print_visitor_eseq);
+
+    // eseq eliminated
+
+    IRT::Linearizer linearizer;
+    for (size_t i = 0; i < NUM_ITERATIONS; ++i) {
+      root_stmt->Accept(&linearizer);
+      root_stmt = linearizer.GetTree();
+    }
+
+    IRT::PrintVisitor print_visitor_linearized(logs_path_ + method_name +
+                                               "_linearized.out");
+    log_cleaner.AddLogFilePath(logs_path_ + method_name +
+                               "_linearized.out");
+
+    root_stmt->Accept(&print_visitor_linearized);
+
+    // linearized
+
+    IRT::BlockFormerVisitor former(method_name);
+    root_stmt->Accept(&former);
+    root_stmt = former.GetTree();
+
+    IRT::PrintVisitor print_visitor_blocks_formed(logs_path_ + method_name +
+                                                  "_blocks_formed.out");
+    log_cleaner.AddLogFilePath(logs_path_ + method_name +
+                               "_blocks_formed.out");
+
+    root_stmt->Accept(&print_visitor_blocks_formed);
+
+    // blocks formed
+
+    IRT::BlockBuilderVisitor block_builder;
+    root_stmt->Accept(&block_builder);
+
+    IRT::BlockGraph block_graph = block_builder.BuildGraph();
+    block_graph.Print(logs_path_ + "block_graph_" + method_name + ".out");
+    log_cleaner.AddLogFilePath(logs_path_ + "block_graph_" + method_name + ".out");
+
+    // blocks built
+
+    size_t num_args = method_frame->GetNumArgs();
+    size_t frame_size = method_frame->GetFrameSize();
+    IRT::AssemblyGenerationVisitor assembly_generator(num_args, frame_size);
+    root_stmt->Accept(&assembly_generator);
+
+    assembly_generator.PrintAssembly(logs_path_ + method_name + ".s");
+    log_cleaner.AddLogFilePath(logs_path_ + method_name + ".s");
+
+    // assembly generated
+  }
+
+  std::cout << "assembly_generated" << std::endl;
+
+  // TODO delete root
 }
 
-void Driver::PrintTree(const std::string& filename) {
+void Driver::PrintTree(const std::string& filename) const {
   PrintTreeVisitor visitor(filename);
   visitor.Visit(program_);
 

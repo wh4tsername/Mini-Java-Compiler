@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-set(CMAKE_CXX_STANDARD_REQUIRED 17)
+set(CMAKE_CXX_STANDARD_REQUIRED 20)
 
-set(BISON_EXECUTABLE /usr/local/bin/bison)
+include(cmake/Sanitize.cmake)
 
 project(Compiler)
 set(
@@ -65,13 +65,12 @@ set(
         VISITORS
 
         compiler/visitors/PrintTreeVisitor.cpp
-#        compiler/visitors/FunctionProcessingVisitor.cpp
-#        compiler/visitors/SymbolTreeVisitor.cpp
         compiler/visitors/TemplateVisitor.cpp
 
         compiler/visitors/NewSymbolTreeVisitor.cpp
-        compiler/visitors/NewFunctionProcessingVisitor.cpp
         compiler/visitors/TypeCheckingVisitor.cpp
+        compiler/visitors/NewFunctionProcessingVisitor.cpp
+        compiler/visitors/IRTreeBuildVisitor.cpp
 )
 
 set(
@@ -91,29 +90,123 @@ set(
 )
 
 set(
+        SCOPES
+
+        compiler/symbol_table/Symbol.cpp
+        compiler/symbol_table/NewScopeLayer.cpp
+        compiler/symbol_table/NewScopeLayerTree.cpp
+)
+
+set(
+        FUNC_CALLS
+
+        compiler/function_processing/FrameEmulator.cpp
+        compiler/function_processing/FunctionTable.cpp
+        compiler/function_processing/ClassStorage.cpp
+)
+
+set(
         DRIVERS
 
         compiler/driver.cpp
+)
 
-        compiler/symbol_table/Symbol.cpp
+set(
+        IRT
 
-        compiler/symbol_table/NewScopeLayer.cpp
-        compiler/symbol_table/NewScopeLayerTree.cpp
+        compiler/function_processing/address/AddressInFrame.cpp
+        compiler/function_processing/address/AddressInRegister.cpp
 
-        compiler/function_processing/FrameEmulator.cpp
-        compiler/function_processing/FunctionStorage.cpp
-        compiler/function_processing/FunctionTable.cpp
+        compiler/function_processing/FrameTranslator.cpp
 
-        compiler/function_processing/ClassStorage.cpp
+        compiler/IR/generators/Label.cpp
+        compiler/IR/generators/Temporary.cpp
+
+        compiler/IR/types/BinaryOperatorType.cpp
+        compiler/IR/types/LogicOperatorType.cpp
+)
+
+set(
+        IRWrappers
+
+        compiler/IR/wrappers/ExpressionWrapper.cpp
+        compiler/IR/wrappers/StatementWrapper.cpp
+
+        compiler/IR/wrappers/conditional_wrapper/ConditionalWrapper.cpp
+        compiler/IR/wrappers/conditional_wrapper/AndConditionalWrapper.cpp
+        compiler/IR/wrappers/conditional_wrapper/OrConditionalWrapper.cpp
+        compiler/IR/wrappers/conditional_wrapper/NegativeConditionalWrapper.cpp
+        compiler/IR/wrappers/conditional_wrapper/RelativeConditionalWrapper.cpp
+)
+
+set(
+        IRNodes
+
+        compiler/IR/nodes/expressions/BinopExpression.cpp
+        compiler/IR/nodes/expressions/ConstExpression.cpp
+        compiler/IR/nodes/expressions/MemExpression.cpp
+        compiler/IR/nodes/expressions/TempExpression.cpp
+        compiler/IR/nodes/expressions/CallExpression.cpp
+        compiler/IR/nodes/expressions/EseqExpression.cpp
+        compiler/IR/nodes/expressions/NameExpression.cpp
+
+        compiler/IR/nodes/statements/ExpStatement.cpp
+        compiler/IR/nodes/statements/JumpConditionalStatement.cpp
+        compiler/IR/nodes/statements/JumpStatement.cpp
+        compiler/IR/nodes/statements/LabelStatement.cpp
+        compiler/IR/nodes/statements/SeqStatement.cpp
+        compiler/IR/nodes/statements/MoveStatement.cpp
+
+        compiler/IR/nodes/ExpressionList.cpp
+)
+
+set(
+        IRBlocks
+
+        compiler/IR/blocks/Block.cpp
+        compiler/IR/blocks/BlockGraph.cpp
+        compiler/IR/blocks/SimpleBlock.cpp
+        compiler/IR/blocks/ConditionalBlock.cpp
+)
+
+set(
+        AssemblyGeneration
+
+        compiler/IR/assembly/Instruction.cpp
+)
+
+set(
+        IRVisitors
+
+        compiler/IR/visitors/TemplateVisitor.cpp
+        compiler/IR/visitors/PrintVisitor.cpp
+
+        compiler/IR/visitors/Linearizer.cpp
+        compiler/IR/visitors/ESEQEliminator.cpp
+        compiler/IR/visitors/DoubleCallEliminateVisitor.cpp
+
+        compiler/IR/visitors/BlockFormerVisitor.cpp
+        compiler/IR/visitors/BlockBuilderVisitor.cpp
+
+        compiler/IR/visitors/AssemblyGenerationVisitor.cpp
 )
 
 add_executable(
         Compiler
         main.cpp
+        LogCleaner.cpp
         ${DRIVERS}
         ${NODES}
         ${VISITORS}
         ${OBJECTS}
+        ${SCOPES}
+        ${FUNC_CALLS}
+        ${IRT}
+        ${IRNodes}
+        ${IRWrappers}
+        ${IRVisitors}
+        ${IRBlocks}
+        ${AssemblyGeneration}
         ${BISON_Parser_OUTPUTS}
         ${FLEX_Scanner_OUTPUTS}
 )

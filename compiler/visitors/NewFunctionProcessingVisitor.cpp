@@ -143,23 +143,7 @@ void NewFunctionProcessingVisitor::Visit(IfStatement* statement) {
 
 void NewFunctionProcessingVisitor::Visit(
     ScopeListOfStatements* scope_list_of_statements) {
-  //  TraverseToChildByIndex();
-  //
-  //  offsets_.push(0);
-  //  frame_.AllocScope();
-  //  table_.BeginScope();
-
   scope_list_of_statements->list_of_statements_->Accept(this);
-
-  //  offsets_.pop();
-  //  size_t index = offsets_.top();
-  //  offsets_.pop();
-  //  offsets_.push(index + 1);
-  //
-  //  current_layer_ = current_layer_->parent_;
-  //
-  //  frame_.DeallocScope();
-  //  table_.EndScope();
 }
 
 void NewFunctionProcessingVisitor::Visit(ListOfStatements* list_of_statements) {
@@ -334,7 +318,7 @@ void NewFunctionProcessingVisitor::Visit(
 }
 
 void NewFunctionProcessingVisitor::Visit(MethodInvocation* method_invocation) {
-  std::cerr << method_invocation->method_name_ << " called!" << std::endl;
+  std::cout << method_invocation->method_name_ << " called!" << std::endl;
 
   Symbol class_symbol;
   if (method_invocation->call_from_ == "this") {
