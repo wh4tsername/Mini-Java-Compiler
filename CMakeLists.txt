@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10.2)
 
 set(CMAKE_CXX_STANDARD_REQUIRED 20)
 
-set(BISON_EXECUTABLE /usr/local/bin/bison)
+include(cmake/Sanitize.cmake)
 
 project(Compiler)
 set(
